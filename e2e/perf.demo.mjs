@@ -9,11 +9,13 @@ import { serve } from "./demo.mjs";
 const STAGE = '[data-testid="stage"]';
 
 // planes: the `.ky-up` elements; drawn: those not left out because they face away from the eye; nodes: every element of the page.
-// Rogers Arena's nodes went from 2800 to 2810 for the page's row of tabs (2026-11-02: a row and its buttons, no more planes).
+// Rogers Arena's nodes went from 2800 to 2810 for the page's row of tabs (2026-11-02: a row and its buttons, no more planes), and to 2820 for the presets and the circuits to choose (2026-11-03: a tab and a checkbox each, no more planes).
 const BUDGETS = [
-  { name: "Rogers Arena alone", query: "venues=rogers-arena", planes: 600, drawn: 500, nodes: 2810 },
+  { name: "Rogers Arena alone", query: "venues=rogers-arena", planes: 600, drawn: 500, nodes: 2820 },
   { name: "Seattle, three venues", query: "venues=t-mobile-park:mlb,lumen-field:nfl,climate-pledge-arena&mode=city", planes: 2300, drawn: 1900, nodes: 8400 },
   { name: "Tokyo Dome City with the Kodokan", query: "venues=tokyo-dome:mlb,korakuen-hall:boxing,kodokan", planes: 2400, drawn: 1950, nodes: 8400 },
+  // The Strip Circuit, T-Mobile Arena and the Strip between them, with its four landmarks named (2026-11-03: 1,965 planes, 1,330 drawn, 6,977 elements).
+  { name: "Las Vegas: the Strip Circuit and T-Mobile Arena", query: "venues=t-mobile-arena&circuit=las-vegas&labels=1", planes: 2100, drawn: 1450, nodes: 7300 },
 ];
 
 // What each lower tier holds the same views to (`quality=` in the address): the planes drawn, which are what a step of the turn costs.
@@ -21,6 +23,7 @@ const TIER_BUDGETS = [
   { name: "Rogers Arena alone", query: "venues=rogers-arena", medium: 480, low: 320 },
   { name: "Seattle, three venues", query: "venues=t-mobile-park:mlb,lumen-field:nfl,climate-pledge-arena&mode=city", medium: 320, low: 120 },
   { name: "Tokyo Dome City with the Kodokan", query: "venues=tokyo-dome:mlb,korakuen-hall:boxing,kodokan", medium: 950, low: 120 },
+  { name: "Las Vegas: the Strip Circuit and T-Mobile Arena", query: "venues=t-mobile-arena&circuit=las-vegas&labels=1", medium: 760, low: 420 },
 ];
 
 for (const budget of TIER_BUDGETS) {

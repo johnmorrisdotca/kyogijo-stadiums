@@ -2,7 +2,9 @@
 // (`buildTurn`: the stands, the walls and the roof, the goals and posts of its field), its planes are turned about the middle of its surface and moved to where the plan puts it, and the floor is the district's flat
 // plan drawn with each venue's building only. The model it makes is a `TurnModel`, so the camera, the controls, the pointer, the auto-turn and the steady fit of every other 3D view are this one's; its
 // buildings are stacked building by building (`Plane.group`), the far one first, so that a roof never shows through a nearer building.
-import { describeDistrict, districtId, drawDistrict, drawMember, nestedDrawing, planDistrict, surfaceCentre, type DistrictOptions, type DistrictPlan } from "./district.ts";
+import { circuitInDistrict, circuitPointIn, describeDistrict, districtId, drawDistrict, drawMember, nestedDrawing, planDistrict, surfaceCentre, type DistrictOptions, type DistrictPlan } from "./district.ts";
+import { circuitSupport } from "./district.circuit.ts";
+import { landmarkUprights } from "./landmarks.ts";
 import { blockPlanes, contextUprights, shellBlock, slabPlanes, thinTrees } from "./context.ts";
 import { TIER_PROFILES, tierOf } from "./quality.ts";
 import type { Box3 } from "./turn.camera.ts";
@@ -201,8 +203,23 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
       items.push({ id: `${prefix}plate-name`, kind: "scoreboard", at: placed.at, height: level + size * 1.7, planes: [sign(`${prefix}plate-name`, label, placed.at, level + size * 0.4, size, i)] });
     }
   });
+  // The circuit's pit building and its turns' numbers, standing where the district puts the circuit, apart from every venue's group.
+  if (plan.circuit !== undefined) {
+    const placed = plan.circuit;
+    const { circuitUprights, circuitDrawing } = circuitSupport();
+    for (const item of circuitUprights(circuitDrawing(circuitInDistrict(options, base, true)), Math.hypot(plan.view.w, plan.view.h) * 0.0012)) {
+      items.push({ ...item, id: `ci-${item.id}`, at: circuitPointIn(placed, [item.at[0], item.at[1]]), planes: item.planes.map((p) => placeInDistrict(p, placed, [0, 0], "ci-", APART)) });
+    }
+  }
   // The buildings round the venues stand apart from them: each block's planes are of no venue's group.
   if (plan.context !== undefined) for (const item of contextUprights(plan.context, profile.blocks)) items.push({ ...item, planes: item.planes.map((p) => ({ ...p, group: APART })) });
+  // The landmarks round them, each by its own shape (a dome, a wheel, the jets of a fountain), apart from every venue too; and with names, each one's name over it.
+  const landmarks = plan.context?.landmarks ?? [];
+  for (const item of landmarkUprights(landmarks, profile.simple)) items.push({ ...item, planes: item.planes.map((p) => ({ ...p, group: APART })) });
+  if (labels) {
+    const size = Math.max(plan.view.w, plan.view.h) * (plan.mode === "city" ? 0.013 : 0.018);
+    for (const l of landmarks) items.push({ id: `lm-${l.key}-name`, kind: "scoreboard", at: l.label, height: l.height + size * 2.3, planes: [sign(`lm-${l.key}-name`, l.name[language], l.label, l.height + size * 0.5, size, APART)] });
+  }
   if (labels) {
     const size = Math.max(plan.view.w, plan.view.h) * (plan.mode === "city" ? 0.016 : 0.022);
     plan.members.forEach((placed, i) => {
@@ -210,6 +227,13 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
       const middle: Pt = [placed.footprint.reduce((s, p) => s + p[0], 0) / placed.footprint.length, placed.footprint.reduce((s, p) => s + p[1], 0) / placed.footprint.length];
       items.push({ id: `m${i}-name`, kind: "scoreboard", at: middle, height: top + size * 1.7, planes: [sign(`m${i}-name`, placed.member.name[language], middle, top + size * 0.6, size, i)] });
     });
+  }
+  if (labels && plan.circuit !== undefined) {
+    const size = Math.max(plan.view.w, plan.view.h) * (plan.mode === "city" ? 0.016 : 0.022);
+    // Over the start, where the pits are, so that it does not stand in front of what the lap goes round.
+    const at = circuitPointIn(plan.circuit, plan.circuit.plan.start.at);
+    const top = (plan.circuit.plan.building?.height ?? 0) + size * 0.6;
+    items.push({ id: "ci-name", kind: "scoreboard", at, height: top + size * 1.7, planes: [sign("ci-name", plan.circuit.plan.circuit.names[language], at, top, size, APART)] });
   }
   const view = plan.view;
   const scale = WORLD_PX / Math.max(view.w, view.h);

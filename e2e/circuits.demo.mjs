@@ -148,3 +148,15 @@ test.describe("the 3D view's freeze rules", () => {
     expect(await count()).toBe(elements);
   });
 });
+
+test("links each circuit to the district page, where it stands among its surroundings, and that page draws it", async ({ page }) => {
+  const errors = await open(page, "circuits.html");
+  const href = await page.locator('[data-testid="city"]').getAttribute("href");
+  expect(href).toContain("district.html?");
+  expect(href).toContain("circuit=las-vegas");
+  expect(href).toContain("venues=t-mobile-arena");
+  await page.locator('[data-testid="city"]').click();
+  await page.waitForSelector('body[data-ready="true"]');
+  await expect(page.locator(`${STAGE} g.ky-dist-circuit[data-circuit="las-vegas"]`)).toHaveCount(1);
+  expect(errors).toEqual([]);
+});

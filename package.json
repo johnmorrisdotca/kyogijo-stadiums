@@ -75,6 +75,7 @@
     "./dist/grounds.js",
     "./dist/venues.all.js",
     "./dist/walk.full.js",
+    "./dist/circuits.held.js",
     "./dist/strings.js",
     "./dist/strings.en.js",
     "./dist/strings.ja.js"

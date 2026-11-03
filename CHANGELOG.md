@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Las Vegas: the Strip Circuit, T-Mobile Arena and the Strip's landmarks on one ground (KYOGIJO-STADIUMS-30)** ([districts](./docs/district.md#las-vegas-a-circuit-on-the-ground-and-the-strips-landmarks)): a district's `circuit` option lays a circuit on its ground with the venues, turned as it lies, its pit building and turns' numbers standing in 3D (`circuitPointIn` maps a point of the circuit's plan into the district's, for a race on it); a circuit alone is a district too. A new area of context, `LAS_VEGAS` (`las-vegas`, OpenStreetMap, ODbL), 1.9 km round the lap and the arena: the Strip's buildings and towers at their mapped heights, the streets and the water, and four landmarks by shapes of their own at published sizes, named in English and Japanese (`ContextArea.landmarks`, `landmarks.ts`): the Sphere a dome, the High Roller a wheel, the jets of the Fountains of Bellagio, and Caesars Palace's name over its tallest building. `areaKeysFor` and `loadAreasFor` take the circuit; the lean district reads the circuits with `loadCircuits()` (`CIRCUIT_INDEX` names them). Held to 2,100 planes in 3D (under Seattle's three venues) and 2,565 KB for the demo's page. The demo's district page has the preset "Las Vegas: the Strip Circuit, T-Mobile Arena and the Sphere".
+
 ## [0.57.0] - 2026-11-03
 
 ### Changed

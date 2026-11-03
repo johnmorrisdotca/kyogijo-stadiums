@@ -51,7 +51,7 @@ A circuit is an entry of its own, `@johnmorrisdotca/kyogijo-stadiums/circuits`, 
 
 **The turns agree with the article.** OpenStreetMap's numbers lie where the English article's account of the lap puts them: Turn 1, a hairpin after the pits; Turns 5 to 9 round the Sphere (the Japanese article); Turns 10 and 11 on Sands Avenue; Turn 12, a slow left onto Las Vegas Boulevard; Turn 13 on the Strip; Turns 14 to 16 onto Harmon Avenue; Turn 17, a fast left before the pits.
 
-**Beside it.** T-Mobile Arena, which the package draws among [the real venues](./venues.md), stands about 790 metres south-west of the nearest point of the lap, across the Strip from it: not beside the circuit, but near enough for [a district](./district.md) that puts the two (and the hotels and the Sphere between them) on one ground. That is not built yet.
+**Beside it.** T-Mobile Arena, which the package draws among [the real venues](./venues.md), stands about 790 metres south-west of the nearest point of the lap, across the Strip from it: not beside the circuit, but near enough for [a district](./district.md#las-vegas-a-circuit-on-the-ground-and-the-strips-landmarks) that puts the two on one ground: `planDistrict({ venues: ["t-mobile-arena"], circuit: "las-vegas" })`, and with `context` the hotels of the Strip, the Sphere, the High Roller and the Fountains of Bellagio round them. The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?venues=t-mobile-arena&circuit=las-vegas&labels=1) has it as a preset.
 
 ## Options
 
@@ -157,6 +157,6 @@ A circuit is mostly data: an entry in `scripts/circuits.data.json`, a fetch and 
 ## Limits
 
 - The lap is the middle of the carriageway OpenStreetMap maps, not a racing line; the track's width is one plausible figure along the whole lap, so where the real track is wider or narrower the ribbon is not.
-- The barriers, the grandstands, the bridges for pedestrians over the Strip and the hotels and the Sphere beside the lap are not drawn: only what the circuit's relation and its area map.
+- The barriers, the grandstands and the bridges for pedestrians over the Strip are not drawn: only what the circuit's relation and its area map. The hotels and the Sphere beside the lap are [the district's](./district.md#las-vegas-a-circuit-on-the-ground-and-the-strips-landmarks), with `circuit` and its surroundings.
 - The race is a model: the dots run on the middle of the carriageway, not a racing line, so two cars side by side are one dot over another; there is no safety car, weather or named tyre, and nothing of a real race.
 - One circuit so far. Suzuka, with its crossing, is the next in mind, and the steps above say what it needs.

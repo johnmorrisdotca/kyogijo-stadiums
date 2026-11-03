@@ -2,7 +2,8 @@
 import type { ContextArea } from "./context.ts";
 import { SEATTLE_CENTER, SEATTLE_CITY, SEATTLE_SODO, VANCOUVER_NATURE } from "./cityctx.data.ts";
 import { VANCOUVER_CENTRE } from "./osm.context.data.ts";
-import { CITYCTX_DETAIL, CITYCTX_VENUES, MOST_DETAIL_AREAS } from "./areas.ts";
+import { CIRCUIT_AREAS, CITYCTX_DETAIL, CITYCTX_VENUES, MOST_DETAIL_AREAS } from "./areas.ts";
+import { LAS_VEGAS } from "./cityctx.las-vegas.data.ts";
 import { BELMONT_PARK } from "./cityctx.belmont-park.data.ts";
 import { MEADOWLANDS } from "./cityctx.meadowlands.data.ts";
 import { MONTREAL_CITY } from "./cityctx.montreal-city.data.ts";
@@ -19,7 +20,7 @@ export { CITYCTX_VENUES };
 /**
  * The areas of context that go with some venues, for a district's `context` option: downtown Vancouver's buildings and streets (`VANCOUVER_CENTRE`, of `./osm`) with its water, green and trees (`VANCOUVER_NATURE`) for BC Place and
  * Rogers Arena; Seattle's SoDo for Lumen Field and T-Mobile Park, Seattle Center's for Climate Pledge Arena, and the city's own, with streets and the buildings that matter from far, for a district that holds venues of both (they are
- * three kilometres apart, so the detail of either would be a speck). A venue of neither city has none. This one carries every area's data; `loadAreasFor` of the `areas` entry reads only the ones asked for.
+ * three kilometres apart, so the detail of either would be a speck); Las Vegas's for T-Mobile Arena and the Las Vegas Strip Circuit (`circuit`). A venue of none of these cities has none. This one carries every area's data; `loadAreasFor` of the `areas` entry reads only the ones asked for.
  * @example
  * ```ts
  * import { contextFor } from "@johnmorrisdotca/kyogijo-stadiums/cityctx";
@@ -27,10 +28,13 @@ export { CITYCTX_VENUES };
  * // [ 'vancouver', 'vancouver-nature' ]
  * ```
  */
-export function contextFor(venues: readonly string[]): ContextArea[] {
+export function contextFor(venues: readonly string[], circuit?: string): ContextArea[] {
   const ids = new Set(venues.map((key) => key.split(":")[0]));
   const has = (list: readonly string[]): boolean => list.some((id) => ids.has(id));
   const areas: ContextArea[] = [];
+  // A circuit's surroundings, for the circuit or a venue beside it.
+  const circuits: Record<string, ContextArea> = { "las-vegas": LAS_VEGAS };
+  for (const [key, round] of Object.entries(CIRCUIT_AREAS)) if (has(round.venues) || (circuit !== undefined && round.circuits.includes(circuit))) areas.push(circuits[key]);
   if (has(CITYCTX_VENUES.vancouver)) areas.push(VANCOUVER_CENTRE, VANCOUVER_NATURE);
   const [sodo, center] = [has(CITYCTX_VENUES.sodo), has(CITYCTX_VENUES.center)];
   if (sodo && center) areas.push(SEATTLE_CITY);

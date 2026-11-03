@@ -268,6 +268,42 @@ console.log(among.context!.blocks.length > 800, among.context!.attribution.en.jo
 
 **The terms.** OpenStreetMap's data is ODbL 1.0 ("(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright"); each file is a derived database kept apart from the CC0 files. The City of New York's Building Footprints are a public data set under its Open Data Law (Administrative Code 23-502: no registration, licence requirement or restriction on use; the City may ask that the source and the version be named and what was changed said), and the City gives no warranty of its accuracy, which the credit says: "Building outlines and roof heights: City of New York, Building Footprints, NYC Open Data (no warranty of accuracy); simplified and edited by Kyogijo Stadiums". Each layer has its credit in English and Japanese and a district that uses the area carries them in its description, once. [NOTICE](../NOTICE.md) lists the sources.
 
+## Las Vegas: a circuit on the ground, and the Strip's landmarks
+
+`circuit` lays a race circuit of [the circuits](./circuits.md) on a district's ground with the venues: `planDistrict({ venues: ["t-mobile-arena"], circuit: "las-vegas" })` puts the Las Vegas Strip Circuit and T-Mobile Arena where they stand, the lap about 790 metres north-east of the arena, and `context` stands them among the Strip, its hotels, the Sphere, the High Roller and the Fountains of Bellagio, each by a shape of its own and named.
+
+![The Las Vegas Strip Circuit and T-Mobile Arena in 3D from the south-west, close in, among the hotels of the Strip at their mapped heights: the lap with its numbered turns, the Sphere as a dome by Turns 5 to 9, the High Roller as a wheel, the jets of the Fountains of Bellagio over their lake, and each named](./pictures/district-lasvegas-3d-desk-light.webp)
+
+```ts
+import { loadAreasFor } from "@johnmorrisdotca/kyogijo-stadiums/areas";
+import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
+
+const venues = ["t-mobile-arena"];
+const plan = planDistrict({ venues, circuit: "las-vegas", context: await loadAreasFor(venues, "las-vegas"), labels: true });
+console.log(plan.circuit!.plan.circuit.id, plan.context!.landmarks!.map((l) => `${l.key} ${l.shape}`).join(", "));
+// las-vegas sphere dome, high-roller wheel, fountains-of-bellagio fountains, caesars-palace named
+```
+
+- **The circuit is the circuit's own drawing**, laid on the district's ground: its lap, pit lane, ground and pit building, the start and the finish, the arrows and the turns' numbers, turned as it lies (`plan.circuit.angle`, its heading less a quarter turn and the map's turn) and put where its middle is. It has no frame of its own there: the district draws one north arrow, one scale and one credit. In 3D its pit building and its turns' numbers stand up as in [its own view](./circuits.md#in-3d), apart from every venue. `circuitPointIn(plan.circuit, p)` gives where a point of the circuit's own plan (feet, `circuitPlan`) lies in the district's frame, for a page that draws on the lap (a race's cars).
+- **A circuit alone** is a district too: `venues: []` with a `circuit` draws the circuit among its surroundings, titled "Las Vegas Strip Circuit and its surroundings". A district needs a venue or a circuit.
+- **The surroundings** are one area of OpenStreetMap's (`LAS_VEGAS` of `@johnmorrisdotca/kyogijo-stadiums/cityctx`, key `las-vegas`), 1.9 kilometres round the middle of the lap and the arena on a grid of two metres: the buildings that matter from far (1,200 square metres or more on the ground, or 24 metres or more tall), with the towers of the Strip that OpenStreetMap maps as parts of their buildings, at the height or the levels it gives (202 of the 421; the rest are 10 metres, ours), the streets and the railways, and the water. `areaKeysFor(["t-mobile-arena"])` and `areaKeysFor([], "las-vegas")` both name it, and `loadAreasFor(venues, circuit)` reads it. It is 62 KB of data before gzip.
+- **The landmarks** are a part of the area (`ContextArea.landmarks`), each by a shape of its own (`landmarks.ts`): its outline is OpenStreetMap's, its names are its Wikidata item's labels, and its sizes are published, each with where it was read.
+
+| Landmark | Drawn as | From |
+| --- | --- | --- |
+| Sphere | a dome: a sphere 157.3 m across cut by the ground, 111.6 m high, in 96 lit facets (40 in the lower tiers) | Wikidata's height (P2048, 366 ft), and the English article's width (516 ft); the building OpenStreetMap maps is the dome's own and stands no block |
+| High Roller | a wheel 158.5 m across standing along the long way of its outline, its top 167.6 m up: its rim, twelve spokes and two legs (its 28 cabins are not drawn) | Wikidata's height (P2048, 550 ft), the English infobox's diameter (520 ft) |
+| Fountains of Bellagio | nine jets in a row along the lake, up to 140.2 m, over the lake's water | the English article: they shoot as high as 460 ft; the row and the heights under the most are ours, a pattern; the lower tiers leave the jets out |
+| Caesars Palace | a name over the tallest building OpenStreetMap maps in the complex's outline, at its height (133 m) | the complex's outline; the buildings are the area's own, raised in 3D whatever the count |
+
+- **Names.** `labels` writes each landmark's name and the circuit's: flat beside each, and in 3D on a sign over it. The Japanese names are the items' Japanese labels, but for two of ours, each with its reason: `スフィア` (the label carries the Japanese article's word to tell it apart, `スフィア (アリーナ)`) and `ベラージオの噴水` (the item has no Japanese label).
+- **What it costs.** A district of the circuit and the arena among the Strip is 1,965 planes in 3D at the best tier (1,330 drawn at the opening view, 6,977 elements in the demo's page), under Seattle's three venues (2,300): the area raises at most 100 of its buildings (`ContextArea.blocks`), not the 130 of the others, because the Strip's casinos are big, many-sided buildings. The lower tiers hold it to 700 and 384 planes. The flat plan is 148 KB of markup. `e2e/perf.demo.mjs` and `src/district.circuit.test.ts` hold these.
+- **The lean district carries no circuit** until `await loadCircuits()` has read them (`CIRCUIT_INDEX` lists them by name meanwhile); the `district` entry has every circuit, as it has every venue. A page of venues alone carries no race track.
+
+The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?venues=t-mobile-arena&circuit=las-vegas&labels=1) has it as a preset, "Las Vegas: the Strip Circuit, T-Mobile Arena and the Sphere", and the circuit as a choice beside the venues.
+
+![The plan of the Las Vegas Strip Circuit and T-Mobile Arena among the Strip: the lap with its numbered turns, the Sphere's round footprint, the High Roller's line, the lake of the Fountains of Bellagio, the hotels in four tones by height, and the names](./pictures/district-lasvegas-plan-desk-light.webp)
+
 ## A page that carries only the venues it shows
 
 Every entry has every arena, park and ground there is data for (about 440 kilobytes of data before gzip, 58 after), the real venues of the NHL's arenas (79), the words in both languages (156) and the layers part of the drawing (about 300 kilobytes of code), because the drawing reads a venue's record from a table the full lists fill and the layers when the options ask for them. A page that shows one district needs a few of them. `@johnmorrisdotca/kyogijo-stadiums/district-lean` is the district with none of it: the same exports, a table that is empty, and `loadVenueDataFor(venues)`, which reads the file of each venue's record (`arenas/rogers-arena.data.js`, 0.9 kilobytes; for an arena of the NHL also its real venue's two files, `venues/rogers-arena.data.js` and `venues/rogers-arena.osm.data.js`, about 2 kilobytes together) with a dynamic `import()` and holds it for the drawing. Call it before the first `planDistrict`, `drawDistrict`, `mountDistrict` or `mountDistrictTurn` and again when the venues change (a record that is held is not read twice); it is what `loadAreasFor` is for the areas. `loadStrings(language)` does the same for the words of a language (below).
@@ -306,7 +342,7 @@ The 3D view of BC Place has its roof's **36 masts**, each 47.5 metres over the r
 
 ## Limits
 
-- The plan is the venues' own outlines and, with `context`, what lies round them (PLATEAU's buildings in Tokyo; the streets and buildings of downtown Vancouver; the streets, buildings, water and trees of Seattle and the water and trees of Vancouver), drawn faintly for company: it is not a map to find your way by, and a district with no `context` has no street, water or park (a [crowd outside](./outside.md) shows where the roads are by where it is not). `city` is the real distances without a base map (a base map from OpenStreetMap, or Chizu's, is not here).
+- The plan is the venues' own outlines and, with `context`, what lies round them (PLATEAU's buildings in Tokyo; the streets and buildings of downtown Vancouver; the streets, buildings, water and trees of Seattle and the water and trees of Vancouver; the Strip in Las Vegas), drawn faintly for company: it is not a map to find your way by, and a district with no `context` has no street, water or park (a [crowd outside](./outside.md) shows where the roads are by where it is not). `city` is the real distances without a base map (a base map from OpenStreetMap, or Chizu's, is not here).
 - A venue a few kilometres off is a small building on a large ground: the 3D view zooms to it, and flying from one to the next is [the fly-through](./flythrough.md)'s, which does not take a district.
 - A building's outline is OpenStreetMap's: where it takes in a plaza or a wing, so does the plan, and two outlines can touch.
 - Depth between buildings is exact for buildings a line can separate; two that no line separates (outlines that overlap) are ordered by their middles.

@@ -144,8 +144,8 @@
       import { loadAreasFor } from "./dist/areas-entry.js";
       import { loadOutside, loadStrings, loadVenueDataFor } from "./dist/venue-data-entry.js";
       const asked = new URLSearchParams(location.search);
-      const first = (asked.get("venues") ?? "bc-place:cfl,rogers-arena").split(",");
-      if (asked.get("context") !== "0") loadAreasFor(first).catch(() => {});
+      const first = (asked.get("venues") ?? "bc-place:cfl,rogers-arena").split(",").filter((key) => key !== "");
+      if (asked.get("context") !== "0") loadAreasFor(first, asked.get("circuit") ?? undefined).catch(() => {});
       loadVenueDataFor(first).catch(() => {});
       // The walkable ground of a crowd outside is read only for venues that have one (Vancouver's): for any other choice this reads nothing.
       loadOutside(first).catch(() => {});
@@ -156,7 +156,7 @@
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       // The lean district: it holds the records of the venues it is asked to show and no others (`loadVenueDataFor`), and lists the rest by name alone (`venueName`).
-      import { areaKeysFor, DISTRICT_IDS, KODOKAN_FLOORS, loadAreasFor, loadOutside, loadStrings, loadVenueDataFor, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, QUALITIES, STADIUMS, unknownVenues, venueName, VENUE_ATTRIBUTION } from "./dist/district-lean-entry.js";
+      import { areaKeysFor, CIRCUIT_INDEX, DISTRICT_IDS, KODOKAN_FLOORS, loadAreasFor, loadCircuits, loadOutside, loadStrings, loadVenueDataFor, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, QUALITIES, STADIUMS, unknownVenues, venueName, VENUE_ATTRIBUTION } from "./dist/district-lean-entry.js";
       import { replaceAddress } from "./address.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
@@ -182,7 +182,8 @@
           outside: "People outside", outsideNote: "A crowd outside is drawn for BC Place and Rogers Arena for now; the other venues come later.",
           outsideCount: "{people} people outside, {percent}% of the {seats} seats. They stand on sidewalks, plazas and the venues' grounds, never on a road. Walkable ground: OpenStreetMap.", outsideNone: "Nobody outside. Choose a share of the seats to put outside the venues.",
           credit: "Building outlines, roofs and the ground a crowd outside may stand on (sidewalks, plazas, roads, buildings): (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
-          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone", sodo: "Seattle SoDo: T-Mobile Park and Lumen Field", seattlecenter: "Seattle Center", seattle: "Seattle city: all three venues", tokyo: "Tokyo Dome City: Tokyo Dome and Korakuen Hall", tokyokodokan: "Tokyo Dome City and the Kodokan", kodokan: "Tokyo Dome City and the Kodokan", midtown: "New York Midtown: Madison Square Garden", newyork: "New York: six venues at their real distances", montrealolympic: "Montreal: the Olympic Stadium and its tower", montreal: "Montreal: the Bell Centre and the Olympic Stadium" },
+          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone", sodo: "Seattle SoDo: T-Mobile Park and Lumen Field", seattlecenter: "Seattle Center", seattle: "Seattle city: all three venues", tokyo: "Tokyo Dome City: Tokyo Dome and Korakuen Hall", tokyokodokan: "Tokyo Dome City and the Kodokan", kodokan: "Tokyo Dome City and the Kodokan", midtown: "New York Midtown: Madison Square Garden", newyork: "New York: six venues at their real distances", montrealolympic: "Montreal: the Olympic Stadium and its tower", montreal: "Montreal: the Bell Centre and the Olympic Stadium", lasvegas: "Las Vegas: the Strip Circuit, T-Mobile Arena and the Sphere" },
+          circuit: "Race circuit", circuitLap: "{km} km lap, {turns} turns",
         },
         ja: {
           title: "実在の会場の地区",
@@ -199,7 +200,8 @@
           outside: "会場の外の人出", outsideNote: "会場の外の人出は、今のところBCプレイスとロジャーズ・アリーナの周辺で描けます。ほかの会場には、まだ対応していません。",
           outsideCount: "会場の外に{people}人（{seats}席の{percent}％）。人が立つのは歩道、広場、会場の敷地だけで、車道には立ちません。人が立てる場所のデータは、OpenStreetMapをもとにしています。", outsideNone: "会場の外には誰もいません。座席数に対する割合を選ぶと、その分の人が外に出ます。",
           credit: "建物の輪郭、屋根、および会場の外で人が立てる場所を判断するためのデータ（歩道、広場、道路、建物）：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数、スタンドの層、屋根：Wikidata（CC0）と、各会場が出典としている英語版ウィキペディアの記事（内容は自分たちの言葉でまとめ直しています）。",
-          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ", sodo: "シアトルのSoDo：T-モバイル・パークとルーメン・フィールド", seattlecenter: "シアトル・センター", seattle: "シアトル市内：3つの会場", tokyo: "東京ドームシティ：東京ドームと後楽園ホール", tokyokodokan: "東京ドームシティと講道館", midtown: "ニューヨーク・ミッドタウン：マディソン・スクエア・ガーデン", newyork: "ニューヨーク：6つの会場を実際の距離で", montrealolympic: "モントリオール：オリンピック・スタジアムとその塔", montreal: "モントリオール：ベル・センターとオリンピック・スタジアム" },
+          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ", sodo: "シアトルのSoDo：T-モバイル・パークとルーメン・フィールド", seattlecenter: "シアトル・センター", seattle: "シアトル市内：3つの会場", tokyo: "東京ドームシティ：東京ドームと後楽園ホール", tokyokodokan: "東京ドームシティと講道館", midtown: "ニューヨーク・ミッドタウン：マディソン・スクエア・ガーデン", newyork: "ニューヨーク：6つの会場を実際の距離で", montrealolympic: "モントリオール：オリンピック・スタジアムとその塔", montreal: "モントリオール：ベル・センターとオリンピック・スタジアム", lasvegas: "ラスベガス：ストリップ・サーキット、T-モバイル・アリーナとスフィア" },
+          circuit: "サーキット", circuitLap: "1周{km} km、{turns}コーナー",
         },
       };
       /** The choices a preset sets: the venues, and the fit (neighbours where the venues are close, a city where they are kilometres apart). */
@@ -216,6 +218,8 @@
         newyork: { venues: ["madison-square-garden", "barclays-center:nba", "yankee-stadium:mlb", "citi-field:mlb", "metlife-stadium:nfl", "ubs-arena"], mode: "city", turn: "auto", context: true },
         montrealolympic: { venues: ["olympic-stadium-montreal:mlb"], mode: "neighbours", context: true },
         montreal: { venues: ["bell-centre", "olympic-stadium-montreal:mlb"], mode: "city", turn: "auto", context: true },
+        // A race circuit on the same ground as a venue beside it, with the Strip's hotels and its landmarks round them, each named.
+        lasvegas: { venues: ["t-mobile-arena"], circuit: "las-vegas", mode: "neighbours", context: true, labels: true },
       };
       const $ = (id) => document.getElementById(id);
       const params = new URLSearchParams(location.search);
@@ -226,6 +230,8 @@
       const KEYS = DISTRICT_IDS.flatMap((id) => (Object.hasOwn(STADIUMS, id) ? Object.keys(STADIUMS[id].configs).map((config) => `${id}:${config}`) : [id]));
       const asked = (params.get("venues") ?? PRESETS.pair.venues.join(",")).split(",").map((v) => (Object.hasOwn(STADIUMS, v) ? `${v}:${Object.keys(STADIUMS[v].configs)[0]}` : v));
       const state = { venues: asked.filter((v, i) => KEYS.includes(v) && asked.indexOf(v) === i) };
+      /** The race circuit on the same ground, or none: the address's `circuit`. */
+      state.circuit = Object.hasOwn(CIRCUIT_INDEX, params.get("circuit") ?? "") ? params.get("circuit") : undefined;
       let turn;
       let flat;
       /** What is asked of the 3D view's detail: `auto` (the frames it makes choose the tier), or a tier held. The address's `quality`. */
@@ -243,7 +249,9 @@
       /** Whether the venues chosen are Tokyo Dome City's (with PLATEAU's buildings round them): the Kodokan's choice is theirs. */
       const hasTokyo = () => state.venues.some((key) => ["tokyo-dome", "korakuen-hall", "kodokan"].includes(idOf(key)));
       /** Whether the venues chosen have buildings and streets round them: Tokyo Dome City's (Project PLATEAU), downtown Vancouver's (OpenStreetMap) or Seattle's. Only the keys are asked here; an area's data is read, from its own file, when it is drawn. */
-      const hasContext = () => areaKeysFor(state.venues).length > 0;
+      const hasContext = () => areaKeysFor(state.venues, state.circuit).length > 0;
+      /** Whether the page has something to draw: a venue, or a circuit. */
+      const anything = () => state.venues.length > 0 || state.circuit !== undefined;
       /** Whether a venue chosen has gates (`venueGates`) or a retractable roof that opens. */
       const hasGates = () => state.venues.some((key) => ["bc-place", "rogers-arena"].includes(idOf(key)));
       const hasOpening = () => state.venues.some((key) => ["bc-place", "t-mobile-park"].includes(idOf(key)));
@@ -309,12 +317,25 @@
           button.role = "tab";
           button.dataset.preset = preset;
           button.textContent = w.presets[preset];
-          button.setAttribute("aria-selected", String(PRESETS[preset].venues.join() === state.venues.join() && PRESETS[preset].mode === $("mode").value));
+          button.setAttribute("aria-selected", String(PRESETS[preset].venues.join() === state.venues.join() && PRESETS[preset].mode === $("mode").value && PRESETS[preset].circuit === state.circuit));
           return button;
         }));
         // (A chosen preset that has scrolled out of the phone's row of them comes back into it.)
         $("tabs").querySelector('[aria-selected="true"]')?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
-        $("picks").replaceChildren(...KEYS.map((key) => {
+        // The circuits first, one at a time (a district lays one circuit on its ground), then the venues.
+        const circuits = Object.keys(CIRCUIT_INDEX).map((id) => {
+          const label = document.createElement("label");
+          label.className = "check";
+          const box = document.createElement("input");
+          box.type = "checkbox";
+          box.dataset.circuit = id;
+          box.checked = state.circuit === id;
+          const text = document.createElement("span");
+          text.textContent = CIRCUIT_INDEX[id][$("language").value];
+          label.append(box, text);
+          return label;
+        });
+        $("picks").replaceChildren(...circuits, ...KEYS.map((key) => {
           const label = document.createElement("label");
           label.className = "check";
           const box = document.createElement("input");
@@ -332,7 +353,14 @@
         const w = words();
         const lang = $("language").value;
         $("head").replaceChildren(...[w.venue, w.rink, w.seats, w.orientation].map((text) => { const th = document.createElement("th"); th.textContent = text; return th; }));
-        $("list").replaceChildren(...plan.members.map((placed) => {
+        const lap = plan.circuit === undefined ? [] : [(() => {
+          const c = plan.circuit.plan.circuit;
+          const tr = document.createElement("tr");
+          tr.dataset.circuit = c.id;
+          for (const text of [c.names[lang], w.circuit, fillIn(w.circuitLap, { km: (c.length.value / 1000).toLocaleString(lang, { minimumFractionDigits: 3 }), turns: c.corners.value }), `${Math.round(plan.circuit.plan.heading * 10) / 10}°`]) { const td = document.createElement("td"); td.textContent = text; tr.append(td); }
+          return tr;
+        })()];
+        $("list").replaceChildren(...lap, ...plan.members.map((placed) => {
           const m = placed.member;
           const tr = document.createElement("tr");
           const sport = m.options.sport;
@@ -345,6 +373,7 @@
       function syncUrl() {
         const next = new URLSearchParams();
         if (state.venues.join() !== PRESETS.pair.venues.join()) next.set("venues", state.venues.join(","));
+        if (state.circuit !== undefined) next.set("circuit", state.circuit);
         if ($("mode").value !== "neighbours") next.set("mode", $("mode").value);
         if ($("turn").value !== "0") next.set("turn", $("turn").value);
         if ($("labels").checked !== ($("mode").value === "city")) next.set("labels", $("labels").checked ? "1" : "0");
@@ -399,7 +428,7 @@
       function paintQualityBar() {
         const w = words();
         const bar = $("quality-bar");
-        bar.hidden = $("view").value !== "3d" || state.venues.length === 0;
+        bar.hidden = $("view").value !== "3d" || !anything();
         if (bar.hidden) return;
         // The buttons are kept and only changed, so that a press that is in the middle of being made is not lost when the tier changes.
         const list = $("quality-levels");
@@ -457,7 +486,7 @@
         $("error").hidden = true;
         document.body.dataset.view = $("view").value;
         const stage = $("stage");
-        if (state.venues.length === 0 || unknownVenues(state.venues).length > 0) {
+        if (!anything() || unknownVenues(state.venues).length > 0) {
           camera.carry(turn);
           if (turn !== undefined) { turn.destroy(); turn = undefined; }
           if (flat !== undefined) { flat.destroy(); flat = undefined; }
@@ -473,13 +502,13 @@
         }
         // A district with a mask asks for the crowd at every level, 0 included: the plan keeps room round the buildings for it, so that nothing moves when the level does.
         // The records of the venues chosen, the area round them if it is on, the walkable ground of the crowd outside if they have one, and the words of the language chosen, are read from their own files. A choice that was made before is held: it is drawn at once, without waiting for anything.
-        const heldKey = `${state.venues.join()}|${contextOn()}|${$("language").value}`;
+        const heldKey = `${state.venues.join()}|${state.circuit}|${contextOn()}|${$("language").value}`;
         let context;
         if (held.has(heldKey)) context = held.get(heldKey);
         else {
           document.body.dataset.ready = "false";
           try {
-            [context] = await Promise.all([contextOn() ? loadAreasFor(state.venues) : undefined, loadVenueDataFor(state.venues), masked() ? loadOutside(state.venues) : undefined, loadStrings($("language").value)]);
+            [context] = await Promise.all([contextOn() ? loadAreasFor(state.venues, state.circuit) : undefined, loadVenueDataFor(state.venues), masked() ? loadOutside(state.venues) : undefined, loadStrings($("language").value), state.circuit === undefined ? undefined : loadCircuits()]);
           } catch (error) {
             $("error").textContent = String(error.message);
             $("error").hidden = false;
@@ -489,12 +518,12 @@
           held.set(heldKey, context);
           if (mine !== drawing) return;
         }
-        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(context === undefined ? {} : { context }), ...(hasGates() && $("gates").checked ? { gates: true } : {}), ...(hasKodokan() ? { building: $("building").value } : {}), ...(hasKodokan() && floorNow() !== undefined ? { floor: floorNow() } : {}) };
+        const options = { venues: state.venues, ...(state.circuit === undefined ? {} : { circuit: state.circuit }), mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(context === undefined ? {} : { context }), ...(hasGates() && $("gates").checked ? { gates: true } : {}), ...(hasKodokan() ? { building: $("building").value } : {}), ...(hasKodokan() && floorNow() !== undefined ? { floor: floorNow() } : {}) };
         try {
           const plan = planDistrict(options);
           if (three) {
             const settings = { preset: $("viewpoint").value, venue: { roof: $("roof").checked, walls: $("walls").checked, roofOpen: $("roofopen").checked, boards: boardsNow(), lighting: lightingNow() }, ...wayOf(syncUrl) };
-            const key = JSON.stringify([state.venues, options.mode, options.turn]);
+            const key = JSON.stringify([state.venues, state.circuit, options.mode, options.turn]);
             // Another choice of venues draws the scene again, and the camera goes on where the reader left it: the view is opened on it. The walls, the roof, the area round, the gates, the building and its floor are changed in place, so that a turn goes on.
             if (turn !== undefined && turnKey !== key) { camera.carry(turn); turn.destroy(); turn = undefined; }
             if (turn === undefined) {
@@ -559,10 +588,11 @@
         if (button === null) return;
         const preset = PRESETS[button.dataset.preset];
         state.venues = [...preset.venues];
+        state.circuit = preset.circuit;
         $("mode").value = preset.mode;
         // (Venues that lie north and south of each other, as Montreal's two do, are fitted across the page.)
         $("turn").value = preset.turn ?? "0";
-        $("labels").checked = preset.mode === "city";
+        $("labels").checked = preset.labels ?? preset.mode === "city";
         $("context").checked = preset.context === true;
         $("building").value = "xray";
         $("floor").value = "all";
@@ -570,6 +600,14 @@
         draw();
       });
       $("picks").addEventListener("input", (event) => {
+        // A circuit, one at a time: choosing one takes another away.
+        const lap = event.target.closest("input[data-circuit]");
+        if (lap !== null) {
+          state.circuit = lap.checked ? lap.dataset.circuit : undefined;
+          labelPage();
+          draw();
+          return;
+        }
         const box = event.target.closest("input[data-key]");
         if (box === null) return;
         const next = KEYS.filter((key) => (key === box.dataset.key ? box.checked : state.venues.includes(key)));
@@ -585,7 +623,7 @@
         state.outside = Number(button.dataset.level);
         // Only the crowd changes: the plan or the view is not drawn again, so that a turn goes on.
         (turn ?? flat)?.setOutside(state.outside);
-        paintOutsideBar(planDistrict({ venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, outside: { level: state.outside } }));
+        paintOutsideBar(planDistrict({ venues: state.venues, ...(state.circuit === undefined ? {} : { circuit: state.circuit }), mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, outside: { level: state.outside } }));
         noteCost();
         syncUrl();
         document.querySelector('#outside-levels button[aria-pressed="true"]')?.focus();

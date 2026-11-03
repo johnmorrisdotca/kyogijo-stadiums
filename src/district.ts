@@ -19,6 +19,9 @@ import { walkIdFor } from "./walk.ts";
 import type { OutsideOptions } from "./outside.ts";
 import type { Pt } from "./crowd.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
+import type { CircuitPlan } from "./circuits.ts";
+import type { CircuitOptions } from "./circuits.types.ts";
+import { circuitSupport } from "./district.circuit.ts";
 
 /** How a district is fitted: `neighbours` tight round venues that stand close together, `city` at the real distances between venues that are kilometres apart. */
 export type DistrictMode = "neighbours" | "city";
@@ -30,8 +33,13 @@ export type DistrictVenueInput = string | { id: string; config?: StadiumConfigId
 
 /** What can be asked of a district. */
 export interface DistrictOptions {
-  /** The venues, by key: any key of `VENUES` (the arenas) and `STADIUMS` (the stadiums); at least one. */
+  /** The venues, by key: any key of `VENUES` (the arenas) and `STADIUMS` (the stadiums); at least one, unless the district has a `circuit`. */
   venues: readonly DistrictVenueInput[];
+  /**
+   * A race circuit laid on the same ground (a key of `CIRCUIT_IDS`: `las-vegas`): its lap, pit lane, ground and pit building where OpenStreetMap maps them, under the venues, turned as it lies; in 3D its pit building and its turns'
+   * numbers stand up and a lap that crosses itself stands its pass over on a bridge, as in the circuit's own view. Missing: no circuit.
+   */
+  circuit?: string;
   /** `neighbours` (the default) or `city`. */
   mode?: DistrictMode;
   /** How far the plan is turned, in degrees clockwise: 0 (the default) has north at the top; `"auto"` turns it so that the district's long way lies across the page. */
@@ -250,6 +258,24 @@ export interface DistrictGate {
   basis: "documented" | "plausible";
 }
 
+/** A circuit placed in a district: its own plan (feet round its own middle, its long side along x), and where that middle is put and how far the plan is turned to lie as it does in the world. */
+export interface DistrictCircuit {
+  plan: CircuitPlan;
+  /** Where the circuit's own origin (the middle of its plan) is in the district's frame, in feet. */
+  at: Pt;
+  /** The degrees the circuit's plan is turned clockwise to lie in the district (its heading less a quarter turn, and the map's turn). */
+  angle: number;
+  /** The outline of everything it draws on the ground (its plan's box), and of its pit building, in the district's frame. */
+  footprint: Pt[];
+  building?: Pt[];
+}
+
+/** A point of a circuit's own plan (feet, `circuitPlan`) where the district puts it: for a page that draws something on the lap (a race's cars) in a district's frame. */
+export function circuitPointIn(placed: Pick<DistrictCircuit, "at" | "angle">, p: Pt): Pt {
+  const [x, y] = turnBy(p, placed.angle);
+  return [x + placed.at[0], y + placed.at[1]];
+}
+
 /** What a district is: its venues placed, the box that fits them, and how the map lies. */
 export interface DistrictPlan {
   options: DistrictOptions;
@@ -267,8 +293,10 @@ export interface DistrictPlan {
   view: { x: number; y: number; w: number; h: number };
   /** The distance between each pair of surfaces' middles, in metres, as the ground gives it. */
   between: { a: string; b: string; metres: number }[];
-  /** The `[longitude, latitude]` the plan's metres are measured from: the middle of the venues' surfaces. */
+  /** The `[longitude, latitude]` the plan's metres are measured from: the middle of the venues' surfaces (and of the circuit's plan, where there is one). */
   origin: readonly [number, number];
+  /** The circuit on the ground, where the options name one. */
+  circuit?: DistrictCircuit;
 }
 
 /** The margin round the buildings, as a share of the longer side of the district: tight for neighbours, wide for a city's grid and names. */
@@ -296,7 +324,9 @@ const haversine = (a: readonly [number, number], b: readonly [number, number]): 
  * ```
  */
 export function planDistrict(options: DistrictOptions): DistrictPlan {
-  if (options.venues.length === 0) throw new Error("a district needs a venue");
+  // (An unknown circuit throws here, naming the keys.)
+  const circuit = options.circuit === undefined ? undefined : circuitSupport().circuitOf(options.circuit);
+  if (options.venues.length === 0 && circuit === undefined) throw new Error("a district needs a venue or a circuit");
   const language: Language = options.language === "ja" ? "ja" : "en";
   const mode: DistrictMode = options.mode === "city" ? "city" : "neighbours";
   const members = options.venues.map((v) => districtMember(v, language, options.floor));
@@ -305,14 +335,22 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
     if (keys.has(m.key)) throw new Error(`${m.key} is in the district twice`);
     keys.add(m.key);
   }
-  const origin = middleOf(members.map((m) => m.centre as LonLat));
+  const lap = circuit === undefined ? undefined : circuitSupport().circuitPlan(circuit);
+  const origin = middleOf([...members.map((m) => m.centre as LonLat), ...(lap === undefined ? [] : [lap.origin])]);
   const ground = (ring: readonly LonLat[]): Pt[] => metresFrom(origin, ring).map(([east, north]): Pt => [east * FEET_PER_METRE, -north * FEET_PER_METRE]);
   const raw = members.map((m) => ({ at: ground([m.centre as LonLat])[0], footprint: ground(m.ring as LonLat[]) }));
-  // The map's turn: as asked, or the one that lays the district's long way across the page (the smallest box round every building).
-  const all = raw.flatMap((r) => r.footprint);
+  // The circuit, unturned: its plan's middle on the ground, and its own frame turned back to east and down the page (its plan lies with its long side along x, turned `90 - heading` from the map).
+  const lapBox = lap === undefined ? [] : ([[lap.box.x0, lap.box.y0], [lap.box.x1, lap.box.y0], [lap.box.x1, lap.box.y1], [lap.box.x0, lap.box.y1]] as Pt[]);
+  const lapAt = lap === undefined ? undefined : ground([lap.origin])[0];
+  const lapGround = (p: Pt): Pt => {
+    const [x, y] = turnBy(p, lap!.heading - 90);
+    return [x + lapAt![0], y + lapAt![1]];
+  };
+  // The map's turn: as asked, or the one that lays the district's long way across the page (the smallest box round every building, and the circuit's ground).
+  const all = [...raw.flatMap((r) => r.footprint), ...lapBox.map(lapGround)];
   let turn = 0;
   if (typeof options.turn === "number" && Number.isFinite(options.turn)) turn = ((options.turn % 360) + 360) % 360;
-  else if (options.turn === "auto" && members.length > 1) {
+  else if (options.turn === "auto" && members.length + (lap === undefined ? 0 : 1) > 1) {
     // `smallestBox` reads its points as east and north; these are east and down the page, so its heading is 90 degrees less the long side's angle on the page, and turning the map by (heading - 90) lays that side along x.
     const box = smallestBox(all);
     turn = (((box.heading - 90) % 360) + 360) % 360;
@@ -323,8 +361,18 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
     const parts: PlacedPart[] = (member.parts ?? [{ key: member.key, options: member.options, centre: member.centre, heading: member.heading, ...(member.elevation === undefined ? {} : { elevation: member.elevation }) }]).map((part) => ({ part, at: turnBy(ground([part.centre as LonLat])[0], turn), angle: part.heading - 90 + turn }));
     return { member, parts, at: turnBy(raw[i].at, turn), angle: member.heading - 90 + turn, footprint, hull: hullOf(footprint) };
   });
-  const xs = placed.flatMap((p) => p.footprint.map((q) => q[0]));
-  const ys = placed.flatMap((p) => p.footprint.map((q) => q[1]));
+  const placedCircuit: DistrictCircuit | undefined =
+    lap === undefined
+      ? undefined
+      : (() => {
+          const at = turnBy(lapAt!, turn);
+          const angle = lap.heading - 90 + turn;
+          const put = (p: Pt): Pt => circuitPointIn({ at, angle }, p);
+          return { plan: lap, at, angle, footprint: lapBox.map(put), ...(lap.building === undefined ? {} : { building: lap.building.ring.map(put) }) };
+        })();
+  const outlines = [...placed.map((p) => p.footprint), ...(placedCircuit === undefined ? [] : [placedCircuit.footprint])];
+  const xs = outlines.flatMap((f) => f.map((q) => q[0]));
+  const ys = outlines.flatMap((f) => f.map((q) => q[1]));
   const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
   const context = options.context !== undefined && options.context.length > 0;
   // A district that asks for a crowd outside (and has a mask to put it on) keeps room round its buildings for it, whatever the level, so that the plan stays where it is as the level changes.
@@ -337,9 +385,11 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
   const view = { x: framed.x0, y: framed.y0, w: framed.x1 - framed.x0, h: framed.y1 - framed.y0 };
   const between: DistrictPlan["between"] = [];
   members.forEach((a, i) => members.slice(i + 1).forEach((b) => between.push({ a: a.key, b: b.key, metres: Math.round(haversine(a.centre, b.centre) * 10) / 10 })));
-  const around = context ? placeContext(options.context!, origin, turn, view, placed.map((p) => ({ footprint: p.footprint, shell: p.member.shell !== undefined }))) : undefined;
+  // (The circuit's pit building is the circuit's: a building of the context that is the same one is left out. Its ground and its lap are not buildings, and every building on them stays.)
+  const owners = [...placed.map((p) => ({ footprint: p.footprint, shell: p.member.shell !== undefined })), ...(placedCircuit?.building === undefined ? [] : [{ footprint: placedCircuit.building }])];
+  const around = context ? placeContext(options.context!, origin, turn, view, owners) : undefined;
   const gates: DistrictGate[] = options.gates !== true ? [] : placed.flatMap((p) => venueGates(p.member.id).map((g): DistrictGate => ({ key: g.key, venue: p.member.key, name: g.name, at: turnBy(ground([g.at])[0], turn), angle: ((g.bearing + turn) % 360 + 360) % 360, basis: g.basis })));
-  return { options, mode, turn, north: turn, members: placed, origin, context: around, gates, view, between };
+  return { options, mode, turn, north: turn, members: placed, origin, context: around, gates, view, between, ...(placedCircuit === undefined ? {} : { circuit: placedCircuit }) };
 }
 
 // ---- The drawing. ----
@@ -366,6 +416,7 @@ export const KYOGIJO_DISTRICT_STYLE = `
 .ky-district .ky-dist-green{fill:var(--ky-dist-green)}
 .ky-district .ky-dist-wood{fill:var(--ky-dist-wood)}
 .ky-district .ky-dist-tree{fill:none;stroke:var(--ky-dist-tree);stroke-linecap:round}
+.ky-district .ky-dist-jet{fill:none;stroke:var(--ky-dist-halo);stroke-linecap:round}
 .ky-district .ky-dist-gate rect{fill:var(--ky-dist-gate);stroke:var(--ky-dist-gate);stroke-width:2.4}
 .ky-district .ky-dist-gate-plausible rect{fill:var(--ky-dist-ground);fill-opacity:.85}
 .ky-district .ky-dist-gate-queue{fill:none;stroke:var(--ky-dist-gate);stroke-width:3;stroke-dasharray:9 7}
@@ -427,20 +478,27 @@ export function scaleOf(view: { w: number }): number {
 export const metresText = (metres: number): string => (metres >= 1000 ? `${metres / 1000} km` : `${metres} m`);
 
 /** The id of a district's drawing: the option's, or a hash of the options. */
-export const districtId = (options: DistrictOptions): string => (typeof options.id === "string" && options.id !== "" ? options.id : `ky-district-${hash(JSON.stringify([options.venues, options.mode, options.turn, options.language, options.theme, options.stands, ...(options.context === undefined || options.context.length === 0 ? [] : [options.context.map((a) => a.key)]), ...(options.building === undefined ? [] : [options.building]), ...(options.floor === undefined ? [] : [`floor${options.floor}`])]))}`);
+export const districtId = (options: DistrictOptions): string => (typeof options.id === "string" && options.id !== "" ? options.id : `ky-district-${hash(JSON.stringify([options.venues, options.mode, options.turn, options.language, options.theme, options.stands, ...(options.context === undefined || options.context.length === 0 ? [] : [options.context.map((a) => a.key)]), ...(options.building === undefined ? [] : [options.building]), ...(options.floor === undefined ? [] : [`floor${options.floor}`]), ...(options.circuit === undefined ? [] : [`circuit:${options.circuit}`])]))}`);
 
 /** The title and the description of a district, in its language: what is drawn, where each venue stands from the first, how far apart they are, and the credit. */
 export function describeDistrict(options: DistrictOptions, plan: DistrictPlan = planDistrict(options)): { title: string; description: string } {
   const language: Language = options.language === "ja" ? "ja" : "en";
-  const names = plan.members.map((p) => p.member.name[language]);
+  const lap = plan.circuit?.plan.circuit;
+  const names = [...(lap === undefined ? [] : [lap.names[language]]), ...plan.members.map((p) => p.member.name[language])];
   const words = KYOGIJO_STRINGS[language].said;
   const list = language === "ja" ? (names.length > 1 ? `${names.slice(0, -1).join("、")}と${names[names.length - 1]}` : names[0]) : names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0];
-  const title = language === "ja" ? `${list}の位置関係` : `${list}: where they stand`;
+  const title = plan.members.length === 0 && lap !== undefined ? fillWords(circuitSupport().words[language].districtTitle, { name: lap.names[language] }) : language === "ja" ? `${list}の位置関係` : `${list}: where they stand`;
   const gap = language === "ja" ? "" : " ";
   const first = plan.between[0];
   const nameOf = (key: string): string => plan.members.find((p) => p.member.key === key)!.member.name[language];
   const apart = first === undefined ? "" : language === "ja" ? `${gap}${nameOf(first.a)}と${nameOf(first.b)}の中心は約${Math.round(first.metres)}m離れています。` : `${gap}The middles of ${nameOf(first.a)} and ${nameOf(first.b)} are about ${Math.round(first.metres)} metres apart.`;
-  const text = fillWords(words.district, { count: String(plan.members.length), mode: words[plan.mode === "city" ? "districtCity" : "districtNeighbours"] });
+  const cw = lap === undefined ? undefined : circuitSupport().words[language];
+  const km = lap === undefined ? "" : (lap.length.value / 1000).toLocaleString(language === "ja" ? "ja-JP" : "en-US", { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+  // A district of a circuit alone says what the circuit's own plan does; with venues, the venues' sentence, then the circuit's.
+  const text =
+    plan.members.length === 0 && lap !== undefined
+      ? fillWords(cw!.districtAlone, { name: lap.names[language], km })
+      : `${fillWords(words.district, { count: String(plan.members.length), mode: words[plan.mode === "city" ? "districtCity" : "districtNeighbours"] })}${lap === undefined ? "" : `${gap}${fillWords(cw!.inDistrict, { name: lap.names[language], km })}`}`;
   const level = options.outside?.level ?? 0;
   const standing = level > 0 ? Math.round(plan.members.filter((p) => walkIdFor([p.member.id]) !== undefined).reduce((sum, p) => sum + p.member.seats, 0) * level / 100) : 0;
   const crowd = standing > 0 ? `${gap}${fillWords(words.districtOutside, { percent: String(level), people: String(standing).replace(/\B(?=(\d{3})+(?!\d))/g, ",") })}` : "";
@@ -511,6 +569,12 @@ export function drawDistrict(options: DistrictOptions, plan: DistrictPlan = plan
     }
   }
   const styles: string[] = [];
+  // The circuit, on the ground under the venues: its own drawing without its frame (no ground, name, arrow, scale or credit), turned and put where it lies.
+  if (plan.circuit !== undefined) {
+    const { markup, styles: own } = nestedDrawing(circuitSupport().circuitDrawing(circuitInDistrict(options, id, drawing !== undefined)).svg);
+    for (const block of own) if (!styles.includes(block)) styles.push(block);
+    parts.push(`<g class="ky-dist-circuit" data-circuit="${esc(plan.circuit.plan.circuit.id)}" transform="translate(${num(plan.circuit.at[0])} ${num(plan.circuit.at[1])}) rotate(${num(plan.circuit.angle)})">${markup}</g>`);
+  }
   plan.members.forEach((placed, i) => {
     placed.parts.forEach((pp, j) => {
       const svg = drawing === undefined ? drawMember(placed.member, options, i, id, {}, j) : drawing(placed.member, i, j);
@@ -529,6 +593,18 @@ export function drawDistrict(options: DistrictOptions, plan: DistrictPlan = plan
   }
   if (labels) {
     const size = diag * (plan.mode === "city" ? 0.018 : 0.026);
+    // The landmarks' names, smaller, under each.
+    for (const l of plan.context?.landmarks ?? []) {
+      const bottom = Math.max(...l.ring.map((p) => p[1]));
+      parts.push(`<text class="ky-dist-text" data-name="${esc(l.key)}" x="${num(l.label[0])}" y="${num(l.shape === "named" ? l.label[1] : bottom + size)}" text-anchor="middle" font-size="${num(size * 0.72)}" stroke-width="${num(size * 0.16)}">${esc(l.name[language])}</text>`);
+    }
+    if (plan.circuit !== undefined) {
+      // The circuit's name under its ground, as a venue's is under its building.
+      const bottom = Math.max(...plan.circuit.footprint.map((p) => p[1]));
+      const x = plan.circuit.footprint.reduce((sum, p) => sum + p[0], 0) / plan.circuit.footprint.length;
+      const y = Math.min(bottom + size * 1.3, plan.view.y + plan.view.h - size * 0.4);
+      parts.push(`<text class="ky-dist-text" data-name="circuit" x="${num(x)}" y="${num(y)}" text-anchor="middle" font-size="${num(size)}" stroke-width="${num(size * 0.22)}">${esc(plan.circuit.plan.circuit.names[language])}</text>`);
+    }
     plan.members.forEach((placed) => {
       const bottom = Math.max(...placed.footprint.map((p) => p[1]));
       const x = placed.footprint.reduce((s, p) => s + p[0], 0) / placed.footprint.length;
@@ -546,11 +622,28 @@ export function drawDistrict(options: DistrictOptions, plan: DistrictPlan = plan
   parts.push(`<g class="ky-dist-north" aria-hidden="true"><path class="ky-dist-ink" stroke-width="${num(arrow * 0.06)}" d="M${num(ax + tail[0])} ${num(ay + tail[1])}L${num(ax + tip[0])} ${num(ay + tip[1])}M${num(ax + left[0])} ${num(ay + left[1])}L${num(ax + tip[0])} ${num(ay + tip[1])}L${num(ax + right[0])} ${num(ay + right[1])}"/><text class="ky-dist-text" x="${num(ax + nPos[0])}" y="${num(ay + nPos[1] + arrow * 0.18)}" text-anchor="middle" font-size="${num(arrow * 0.5)}" stroke-width="${num(arrow * 0.1)}">N</text></g>`);
   const metres = scaleOf(view);
   const bar = metres * FEET_PER_METRE;
-  const [sx, sy] = [view.x + diag * 0.03, view.y + view.h - diag * 0.04];
+  // At the bottom left, unless a venue or its name is there (T-Mobile Arena, at the south-west corner of the Las Vegas district): then at the bottom right.
+  const named = (placed: DistrictPlaced): Pt[] => [...placed.footprint, ...(labels ? [[placed.footprint.reduce((sum, p) => sum + p[0], 0) / placed.footprint.length, Math.max(...placed.footprint.map((p) => p[1])) + diag * 0.03] as Pt] : [])];
+  const corner = { x0: view.x, x1: view.x + diag * 0.06 + bar, y0: view.y + view.h - diag * 0.08 };
+  const crowded = plan.members.some((placed) => named(placed).some(([x, y]) => x >= corner.x0 && x <= corner.x1 && y >= corner.y0));
+  const [sx, sy] = [crowded ? view.x + view.w - diag * 0.03 - bar : view.x + diag * 0.03, view.y + view.h - diag * 0.04];
   parts.push(`<g class="ky-dist-scale" aria-hidden="true"><path class="ky-dist-ink" stroke-width="${num(diag * 0.004)}" d="M${num(sx)} ${num(sy - diag * 0.01)}V${num(sy)}H${num(sx + bar)}V${num(sy - diag * 0.01)}"/><text class="ky-dist-text" x="${num(sx + bar / 2)}" y="${num(sy - diag * 0.018)}" text-anchor="middle" font-size="${num(diag * 0.022)}" stroke-width="${num(diag * 0.005)}">${metresText(metres)}</text></g>`);
   const sheet = options.style === "none" ? "" : `<style>${KYOGIJO_DISTRICT_STYLE}</style>${styles.join("")}`;
   const theme = options.theme === "light" || options.theme === "dark" ? ` data-theme="${options.theme}"` : "";
   return `<svg xmlns="http://www.w3.org/2000/svg" class="kyogijo ky-district" viewBox="${num(view.x)} ${num(view.y)} ${num(view.w)} ${num(view.h)}" role="img" aria-labelledby="${id}-t ${id}-d" data-sport="district" data-mode="${plan.mode}"${(options.outside?.level ?? 0) > 0 ? ` data-outside="${options.outside?.level}"` : ""}${theme} lang="${language}"><title id="${id}-t">${esc(title)}</title><desc id="${id}-d">${esc(description)}</desc>${sheet}${parts.join("")}</svg>`;
+}
+
+/** The options a district's circuit is drawn from: the circuit's own drawing in the district's language and theme, without its frame, and for the floor of the 3D view without its turns' numbers (they stand up). */
+export function circuitInDistrict(options: DistrictOptions, id: string, floor: boolean): CircuitOptions {
+  return {
+    circuit: options.circuit!,
+    language: options.language === "ja" ? "ja" : "en",
+    ...(options.theme === undefined ? {} : { theme: options.theme }),
+    id: `${id}-ci`,
+    label: false,
+    frame: false,
+    ...(floor ? { turns: false } : {}),
+  };
 }
 
 /** The venues a district was asked for that the package has no key for: none when it can be drawn. */

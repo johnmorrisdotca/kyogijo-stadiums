@@ -7,6 +7,7 @@ import { boxOf, hullOf, inside, metresFrom, type LonLat } from "./venues.geo.ts"
 import { n, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
 import { pointList, raked, type Slope } from "./venue.geom.ts";
 import type { Pt } from "./crowd.ts";
+import { landmarksFloor, ownedByLandmark, placeLandmarks, underLandmark, type ContextLandmark, type PlacedLandmark } from "./landmarks.ts";
 
 /** One layer of an area's data: its rows, and where they came from and under what terms, since a layer has a source of its own (buildings from PLATEAU; trees and land cover from another). */
 export interface ContextLayer {
@@ -41,6 +42,11 @@ export interface ContextArea {
   /** A building this tall, in metres, is a landmark that the plan's frame grows to take in; `CONTEXT_LANDMARK` when missing. A city of many tall buildings (Vancouver's downtown) sets it above them, so that the frame stays round the venues. */
   landmark?: number;
   layers: { buildings?: ContextLayer; streets?: ContextLayer; trees?: ContextLayer; landCover?: ContextLayer };
+  /** The most of this area's buildings the 3D view raises, when that is fewer than the tier's count (`CONTEXT_BLOCKS` at its best): a city of big, many-sided buildings (the casinos of the Las Vegas Strip) raises fewer, to stay within the
+   * district's budget of planes. Missing: the tier's count. */
+  blocks?: number;
+  /** The area's famous landmarks, each drawn by a shape of its own and named (`landmarks.ts`): the Sphere, the High Roller and the Fountains of Bellagio round the Las Vegas Strip Circuit. Missing: none. */
+  landmarks?: readonly ContextLandmark[];
 }
 
 /** One building as the district holds it: its outline in feet in the district's frame (x to the right, y down the page), its height and the rise of its roof in feet. */
@@ -93,6 +99,10 @@ export interface ContextPlan {
   trees?: ContextTree[];
   /** The buildings of the model that are a venue (the Dome's own parts), left out: the venue draws them. */
   owned: number;
+  /** The landmarks of the areas in the frame, each with its own shape; missing when the areas have none. */
+  landmarks?: PlacedLandmark[];
+  /** The most buildings the areas let the 3D view raise (the least of their `blocks`); missing when none sets it. */
+  most?: number;
   /** The credits of the areas used, in each language. */
   attribution: { en: string[]; ja: string[] };
 }
@@ -180,6 +190,7 @@ export function placeContext(areas: readonly ContextArea[], origin: LonLat, turn
   let owned = 0;
   const hulls = venues.map((v) => hullOf([...v.footprint]));
   const [fx0, fy0, fx1, fy1] = [frame.x, frame.y, frame.x + frame.w, frame.y + frame.h];
+  const landmarks = placeLandmarks(areas, origin, turn, frame);
   for (const area of areas) {
     const [east, north] = metresFrom(origin, [area.origin as LonLat])[0];
     (area.layers.buildings?.rows ?? []).forEach((row, index) => {
@@ -193,6 +204,11 @@ export function placeContext(areas: readonly ContextArea[], origin: LonLat, turn
       // A venue inside the building (its middle and at least half of its outline's points): the building is a ghost round it.
       const holds = venues.some((v) => v.shell !== true && inside(ring, centroid(v.footprint)) && v.footprint.filter((p) => inside(ring, p)).length * 2 >= v.footprint.length);
       if (!holds && hulls.some((hull) => inside(hull, middle) || share(hull) >= 0.7)) {
+        owned += 1;
+        return;
+      }
+      // A building that is a landmark's own (the Sphere's, drawn as a dome) is left out too.
+      if (ownedByLandmark(landmarks, ring)) {
         owned += 1;
         return;
       }
@@ -244,7 +260,8 @@ export function placeContext(areas: readonly ContextArea[], origin: LonLat, turn
   // An empty credit (a layer whose credit another layer of the area has said) adds nothing.
   const layers = areas.flatMap((a) => Object.values(a.layers));
   const credits = (language: "en" | "ja"): string[] => [...new Set(layers.map((l) => l.attribution[language]).filter((text) => text !== ""))];
-  return { blocks, streets, land, trees, owned, attribution: { en: credits("en"), ja: credits("ja") } };
+  const most = areas.reduce((least, a) => (a.blocks === undefined ? least : Math.min(least, a.blocks)), Infinity);
+  return { blocks, streets, land, trees, owned, ...(landmarks.length === 0 ? {} : { landmarks }), ...(Number.isFinite(most) ? { most } : {}), attribution: { en: credits("en"), ja: credits("ja") } };
 }
 
 /** A share of the trees, spread evenly over the lot: every tree at 1, none at 0, and at 0.5 every other. The same trees every time, so that a view drawn again at a tier keeps the ones it kept. */
@@ -310,11 +327,11 @@ export function treesFloor(trees: readonly ContextTree[]): string {
  */
 export function contextFloor(plan: ContextPlan): string {
   const under = `${landFloor(plan.land ?? [])}${streetsFloor(plan.streets ?? [])}${treesFloor(plan.trees ?? [])}`;
-  if (plan.blocks.length === 0) return under;
+  if (plan.blocks.length === 0) return `${under}${landmarksFloor(plan.landmarks ?? [])}`;
   const paths: string[][] = [[], [], [], [], []];
   for (const b of plan.blocks) paths[b.ghost ? 4 : toneOf(b.height)].push(`M${b.ring.map(([x, y]) => `${num(x)} ${num(y)}`).join("L")}Z`);
   const classes = ["ky-dist-b0", "ky-dist-b1", "ky-dist-b2", "ky-dist-b3", "ky-dist-ghost"];
-  return `${under}<g class="ky-dist-context" aria-hidden="true">${paths.map((d, i) => (d.length === 0 ? "" : `<path class="ky-dist-block ${classes[i]}" d="${d.join("")}"/>`)).join("")}</g>`;
+  return `${under}<g class="ky-dist-context" aria-hidden="true">${paths.map((d, i) => (d.length === 0 ? "" : `<path class="ky-dist-block ${classes[i]}" d="${d.join("")}"/>`)).join("")}</g>${landmarksFloor(plan.landmarks ?? [])}`;
 }
 
 // ---- The blocks of the 3D view. ----
@@ -472,8 +489,11 @@ export function slabPlanes(ring: readonly Pt[], level: number, thickness: number
 }
 
 /** The blocks of the 3D view: the `most` buildings that matter most (the tallest and widest, by height times the side of their ground), each a few planes, in the order the plan lists them. */
-export function contextUprights(plan: ContextPlan, most = CONTEXT_BLOCKS): Upright[] {
+export function contextUprights(plan: ContextPlan, asked = CONTEXT_BLOCKS): Upright[] {
+  const most = Math.min(asked, plan.most ?? Infinity);
   const wanted = new Set(plan.blocks.filter((b) => b.whole).sort((a, b) => weight(b) - weight(a) || (a.id < b.id ? -1 : 1)).slice(0, Math.max(0, most)).map((b) => b.id));
+  // The buildings of a named landmark stand whatever the count (at a tier that raises any).
+  if (most > 0) for (const b of plan.blocks) if (b.whole && underLandmark(plan.landmarks ?? [], b.ring)) wanted.add(b.id);
   const items: Upright[] = [];
   for (const b of plan.blocks) {
     if (!wanted.has(b.id)) continue;

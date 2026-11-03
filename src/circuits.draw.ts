@@ -188,7 +188,8 @@ export function circuitDrawing(options: CircuitOptions): CircuitDrawing {
   const r = 13 * k;
   const placed = badgesOf(plan, r, k);
 
-  let body = el("rect", { class: "ky-ci-ground", x: viewBox.x, y: viewBox.y, width: viewBox.w, height: viewBox.h });
+  const framed = options.frame !== false;
+  let body = framed ? el("rect", { class: "ky-ci-ground", x: viewBox.x, y: viewBox.y, width: viewBox.w, height: viewBox.h }) : "";
   body += el("path", { class: "ky-ci-area", d: path(plan.area, true), "stroke-width": num(1.2 * k) });
   if (plan.building !== undefined) body += el("path", { class: "ky-ci-building", d: path(plan.building.ring, true), "stroke-width": num(1.2 * k), "data-height": num(plan.building.height / FT) });
   const lapD = path(plan.lap, true);
@@ -222,9 +223,11 @@ export function circuitDrawing(options: CircuitOptions): CircuitDrawing {
     body += el("text", { class: "ky-ci-name", x: viewBox.x + pad * 0.6, y: viewBox.y + 36 * k, "font-size": num(26 * k) }, esc(circuit.names[language]));
     body += el("text", { class: "ky-ci-facts", x: viewBox.x + pad * 0.6, y: viewBox.y + 60 * k, "font-size": num(16 * k) }, esc(fill(words.facts, { km: km(circuit.length.value, language), turns: circuit.corners.value })));
   }
-  body += northArrow([viewBox.x + viewBox.w - pad * 0.6 - 20 * k, viewBox.y + (label ? 44 * k : pad)], plan.north, 40 * k, words.northArrow);
-  body += scaleBar([viewBox.x + pad * 0.6, viewBox.y + viewBox.h - 14 * k], viewBox.w, k, words.metres);
-  body += el("text", { class: "ky-ci-credit", x: viewBox.x + viewBox.w - pad * 0.6, y: viewBox.y + viewBox.h - 14 * k, "font-size": num(11 * k), "text-anchor": "end" }, esc(CIRCUIT_ATTRIBUTION));
+  if (framed) {
+    body += northArrow([viewBox.x + viewBox.w - pad * 0.6 - 20 * k, viewBox.y + (label ? 44 * k : pad)], plan.north, 40 * k, words.northArrow);
+    body += scaleBar([viewBox.x + pad * 0.6, viewBox.y + viewBox.h - 14 * k], viewBox.w, k, words.metres);
+    body += el("text", { class: "ky-ci-credit", x: viewBox.x + viewBox.w - pad * 0.6, y: viewBox.y + viewBox.h - 14 * k, "font-size": num(11 * k), "text-anchor": "end" }, esc(CIRCUIT_ATTRIBUTION));
+  }
 
   const titleId = `${gid}-t`;
   const descId = `${gid}-d`;

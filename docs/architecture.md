@@ -142,6 +142,8 @@ src/
 ├── circuits.draw.ts    a circuit drawn: the lap as a ribbon of the track's width, the pit lane, the start and finish, the arrows, the turns' numbers, the north arrow, the scale and the credit; `circuitTable`
 ├── circuits.style.ts   a circuit's colours and rules, light and dark, for the drawing and the markers of its 3D view
 ├── circuits.words.ts   the words of a circuit's drawing and 3D view in English and Japanese
+├── circuits.index.ts   the circuits by key and name without their data, and `loadCircuits` for the lean district
+├── circuits.held.ts    every circuit held for a district: importing it fills `district.circuit.ts`'s table
 ├── circuits.turn.ts    a circuit in 3D: its drawing as the floor, the pit building standing, each turn's number on a post, as a `TurnModel`; `mountCircuitTurn`
 ├── circuits.pace.ts    how fast a racing car can go round a lap: a speed every few metres from the bends' radii, held to the engine and the brakes (`paceProfile`, `RACE_PACE`)
 ├── circuits.race.field.ts the made-up field of a simulated race: ten invented teams and twenty invented drivers, with their colours
@@ -326,7 +328,8 @@ src/
 ├── stadiums.osm.data.ts made by scripts/build-stadiums.mjs from data-sources/stadiums/: what OpenStreetMap gave (outline, roof, opening), ODbL 1.0, kept apart
 ├── stadiums-entry.ts   the stadiums' entry
 ├── district.ts         a district: several real venues placed on one plan at their real relative positions and orientations, tight (neighbours) or at the distances of a city, in 2D
-├── district.turn.ts    a district in 3D: each venue's planes turned and moved to its place, stacked building by building
+├── district.circuit.ts the table of the circuits' code a district lays a circuit with, filled by `circuits.held.ts`
+├── district.turn.ts    a district in 3D: each venue's planes turned and moved to its place, stacked building by building, a circuit's pit building and turns standing where it lies, and the landmarks
 ├── district.dom.ts     a district's 2D plan in a page, with the crowd outside over it
 ├── district-entry.ts   the district's entry
 ├── district.api.ts     everything the district entries export
@@ -346,6 +349,7 @@ src/
 ├── cityctx.nyc-brooklyn.data.ts Brooklyn, round Barclays Center (the same)
 ├── cityctx.meadowlands.data.ts the Meadowlands, round MetLife Stadium: OpenStreetMap alone
 ├── cityctx.belmont-park.data.ts Belmont Park, round UBS Arena: OpenStreetMap alone
+├── cityctx.las-vegas.data.ts Las Vegas, round the Strip Circuit and T-Mobile Arena: the buildings and towers of the Strip, the streets and the water, OpenStreetMap alone, and its five landmarks
 ├── cityctx.montreal-downtown.data.ts downtown Montreal, round the Bell Centre: OpenStreetMap alone
 ├── cityctx.montreal-olympic.data.ts Montreal's Olympic Park, round the Olympic Stadium: OpenStreetMap alone, without the tower, which the stadium draws
 ├── cityctx.montreal-city.data.ts Montreal between the Bell Centre and the Olympic Stadium: the buildings and streets that matter from far, and the water
@@ -361,6 +365,7 @@ src/
 ├── walk/               made by scripts/build-walk.mjs: one file for each district (`vancouver.data.ts`), what stands in a crowd's way or holds it, read when that district's crowd is shown
 ├── walk.full.ts        holds the data of every district for the drawing: the district entry imports it, the lean district does not
 ├── context.ts          the buildings round a district: an area's layers in one frame, the buildings placed in the district's, flat on its floor and as blocks in 3D
+├── landmarks.ts        an area's famous landmarks, each by its own shape: a dome, a big wheel, the jets of a fountain, a name over its buildings, on the floor and in 3D
 ├── kodokan.ts          the Kodokan as a venue of a district: its main dojo in the air on the 7th floor, in PLATEAU's building
 ├── kodokan.data.ts     the Kodokan's building and the room's place in it (made by scripts/build-plateau.mjs)
 ├── plateau.credit.ts   the credit that goes with PLATEAU's buildings, in English and in Japanese

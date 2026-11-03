@@ -1,7 +1,7 @@
 // A circuit in 3D: the 3D view of `turn.ts` over the circuit's own drawing (`circuitDrawing`, its turns' badges left off the floor), with the pit building stood up at the height OpenStreetMap maps for it and each
 // turn's number on a post over its bend, turned to face the eye so that it is read from wherever the view is. Nothing is drawn a second way, and nothing moves by itself: the camera, the controls, the pointer, the
 // auto-turn (which waits for the reader and stops while the page is hidden or the view is out of sight) are every 3D view's. The model is a `TurnModel` of a few dozen planes; the floor is one SVG.
-import { circuitDrawing, circuitText } from "./circuits.draw.ts";
+import { circuitDrawing, circuitText, type CircuitDrawing } from "./circuits.draw.ts";
 import { circuitOf } from "./circuits.ts";
 import type { CircuitOptions } from "./circuits.types.ts";
 import { CIRCUIT_WORDS } from "./circuits.words.ts";
@@ -30,6 +30,34 @@ export const CIRCUIT_MARKER = Object.freeze({ size: 30, post: 22 });
 export const CIRCUIT_PLANES_MAX = 120;
 
 /**
+ * What stands up on a circuit's floor, in its plan's frame (feet): the pit building at its mapped height and each turn's number on a post over its badge's place beside the bend, the marker turned to face the eye and leaning
+ * back to be read square on. `drawn` is the circuit's drawing (its badges are where the markers stand) and `thin` the width of a post. The 3D view of the circuit stands these, and a district with the circuit stands them where
+ * it puts the circuit.
+ */
+export function circuitUprights(drawn: CircuitDrawing, thin: number): Upright[] {
+  const plan = drawn.plan;
+  const k = drawn.k;
+  const items: Upright[] = [];
+  if (plan.building !== undefined) {
+    const planes = blockPlanes(shellBlock("pit", plan.building.ring, plan.building.height, undefined), "pit-");
+    const [cx, cy] = plan.building.ring.reduce((s, p) => [s[0] + p[0] / plan.building!.ring.length, s[1] + p[1] / plan.building!.ring.length], [0, 0]);
+    items.push({ id: "pit-building", kind: "blocks", at: [cx, cy], height: plan.building.height, planes });
+  }
+  const size = CIRCUIT_MARKER.size * k;
+  const top = CIRCUIT_MARKER.post * k;
+  const marks: Plane[] = [];
+  for (const b of drawn.badges) {
+    const [x, y] = b.at;
+    const r = size / 2;
+    const svg = `<circle class="u-ci-badge" cx="${num(r)}" cy="${num(r)}" r="${num(r * 0.94)}" stroke-width="${num(r * 0.1)}"/><text class="u-ci-badge-n" x="${num(r)}" y="${num(r + r * 0.4)}" font-size="${num(r * (b.n >= 10 ? 1.05 : 1.25))}">${b.n}</text>`;
+    marks.push({ ...plane(`turn-${b.n}`, "sign", [x - r, y, top + size], [size, 0, 0], [0, 0, -size], svg), billboard: true, lean: true });
+    marks.push(...pole(`turn-${b.n}-post`, "pole", x, y, 0, top, thin, "u-pole"));
+  }
+  if (marks.length > 0) items.push({ id: "turns", kind: "flags", at: [(plan.box.x0 + plan.box.x1) / 2, (plan.box.y0 + plan.box.y1) / 2], height: top + size, planes: marks });
+  return items;
+}
+
+/**
  * A circuit as a 3D model: its drawing as the floor, the pit building standing on it at its mapped height, and a marker with each turn's number on a post over its bend. `settings.uprights: false` is the floor alone.
  * A `TurnModel` like any other: `turnMarkupOf` and `mountCircuitTurn` make a view of it.
  */
@@ -43,27 +71,7 @@ export function buildCircuitTurn(options: CircuitOptions, settings: TurnSettings
   const drawn = circuitDrawing({ ...options, id: `${id}-floor`, label: false, turns: !standUp });
   const plan = drawn.plan;
   const { x: vx, y: vy, w: vw, h: vh } = drawn.viewBox;
-  const k = drawn.k;
-  const items: Upright[] = [];
-  if (standUp && plan.building !== undefined) {
-    const planes = blockPlanes(shellBlock("pit", plan.building.ring, plan.building.height, undefined), "pit-");
-    const [cx, cy] = plan.building.ring.reduce((s, p) => [s[0] + p[0] / plan.building!.ring.length, s[1] + p[1] / plan.building!.ring.length], [0, 0]);
-    items.push({ id: "pit-building", kind: "blocks", at: [cx, cy], height: plan.building.height, planes });
-  }
-  if (standUp) {
-    // Each turn's number on a post, over the badge's place beside the bend; the marker turns to face the eye and leans back to be read square on, and lies flat seen from above.
-    const size = CIRCUIT_MARKER.size * k;
-    const top = CIRCUIT_MARKER.post * k;
-    const marks: Plane[] = [];
-    for (const b of drawn.badges) {
-      const [x, y] = b.at;
-      const r = size / 2;
-      const svg = `<circle class="u-ci-badge" cx="${num(r)}" cy="${num(r)}" r="${num(r * 0.94)}" stroke-width="${num(r * 0.1)}"/><text class="u-ci-badge-n" x="${num(r)}" y="${num(r + r * 0.4)}" font-size="${num(r * (b.n >= 10 ? 1.05 : 1.25))}">${b.n}</text>`;
-      marks.push({ ...plane(`turn-${b.n}`, "sign", [x - r, y, top + size], [size, 0, 0], [0, 0, -size], svg), billboard: true, lean: true });
-      marks.push(...pole(`turn-${b.n}-post`, "pole", x, y, 0, top, thinnest(vw, vh), "u-pole"));
-    }
-    items.push({ id: "turns", kind: "flags", at: [(plan.box.x0 + plan.box.x1) / 2, (plan.box.y0 + plan.box.y1) / 2], height: top + size, planes: marks });
-  }
+  const items: Upright[] = standUp ? circuitUprights(drawn, thinnest(vw, vh)) : [];
   const area = plan.box;
   const uprights: Uprights = { items, lift: 0, thin: thinnest(vw, vh), area };
   const planes = planesOf(uprights);

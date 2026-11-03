@@ -5,7 +5,7 @@ export { CIRCUITS, CIRCUIT_ATTRIBUTION, CIRCUIT_IDS, circuitById, circuitPlan } 
 export type { CircuitPlan, PlanTurn } from "./circuits.ts";
 export { circuitDrawing, circuitTable, circuitText, drawCircuit } from "./circuits.draw.ts";
 export type { CircuitDrawing } from "./circuits.draw.ts";
-export { CIRCUIT_MARKER, CIRCUIT_PLANES_MAX, CIRCUIT_PRESETS, buildCircuitTurn, circuitTurnMarkup, mountCircuitTurn } from "./circuits.turn.ts";
+export { CIRCUIT_MARKER, CIRCUIT_PLANES_MAX, CIRCUIT_PRESETS, buildCircuitTurn, circuitTurnMarkup, circuitUprights, mountCircuitTurn } from "./circuits.turn.ts";
 export { KYOGIJO_CIRCUIT_STYLE } from "./circuits.style.ts";
 export { CIRCUIT_WORDS } from "./circuits.words.ts";
 export type { CircuitWords } from "./circuits.words.ts";

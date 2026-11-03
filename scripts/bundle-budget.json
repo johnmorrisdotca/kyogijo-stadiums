@@ -54,6 +54,11 @@
     "totalGzipKB": 735,
     "dataKB": 70
   },
+  "district:lasvegas": {
+    "totalKB": 2565,
+    "totalGzipKB": 810,
+    "dataKB": 190
+  },
   "stadiums": {
     "totalKB": 3160,
     "totalGzipKB": 905,

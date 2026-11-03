@@ -58,12 +58,13 @@ const RECORDS = {
   tokyo: ["parks/tokyo-dome"],
   tokyokodokan: ["parks/tokyo-dome"],
   kodokan: [],
+  lasvegas: ["arenas/t-mobile-arena"],
 };
 const RECORD_FILE = /\/dist\/(?:arenas|parks|grounds)\/[a-z0-9-]+\.data\.js$/;
 const TABLES = /\/dist\/(?:arenas|parks|grounds|walk|venues|venues\.osm)\.data\.js$|\/dist\/(?:layers|heat|heat\.zones|full|walk\.full|venues\.all)\.js$/;
 // An arena of the NHL also has a real venue: two files, the facts and the outline (OpenStreetMap's, kept apart), and no table of every venue.
 const VENUE_FILE = /\/dist\/venues\/[a-z0-9-]+\.(?:osm\.)?data\.js$/;
-const VENUES_OF = { pair: ["rogers-arena"], alone: ["rogers-arena"], soccer: ["rogers-arena"], seattlecenter: ["climate-pledge-arena"], seattle: ["climate-pledge-arena"] };
+const VENUES_OF = { pair: ["rogers-arena"], alone: ["rogers-arena"], soccer: ["rogers-arena"], seattlecenter: ["climate-pledge-arena"], seattle: ["climate-pledge-arena"], lasvegas: ["t-mobile-arena"] };
 // The walkable ground of the crowd outside is read for the presets that have venues of Vancouver's and for no other: one file, the district's, and never the table of every district.
 const WALK_FILE = /\/dist\/walk\/[a-z0-9-]+\.data\.js$/;
 // The words are one file for each language, and a page reads the language it shows (and the other only when it is chosen): never the file of every language, never the Japanese on an English page.

@@ -20,6 +20,10 @@ export interface CircuitWords {
   standingNoBuilding: string;
   /** The credit of the data. */
   credit: string;
+  /** A circuit in a district: its sentence beside the venues', the description of a district of the circuit alone, and its title. */
+  inDistrict: string;
+  districtAlone: string;
+  districtTitle: string;
   /** A turn's number, for a screen reader. */
   turn: string;
   /** The scale bar's unit. */
@@ -44,6 +48,9 @@ export const CIRCUIT_WORDS: Readonly<Record<Language, CircuitWords>> = Object.fr
     standing: "In 3D the pit building stands {height} m high, and each turn's number stands on a post.",
     standingNoBuilding: "In 3D each turn's number stands on a post.",
     credit: "Map data: {credit}.",
+    inDistrict: "{name}, a lap of {km} km, lies on the same ground where OpenStreetMap maps it.",
+    districtAlone: "A plan of {name}, a lap of {km} km, where OpenStreetMap maps it, among what lies round it.",
+    districtTitle: "{name} and its surroundings",
     turn: "Turn {n}",
     metres: "m",
     northArrow: "North",
@@ -62,6 +69,9 @@ export const CIRCUIT_WORDS: Readonly<Record<Language, CircuitWords>> = Object.fr
     standing: "3D表示では、ピットビルは高さ{height} mで建ち、各コーナーの番号はポールの上に掲げられます。",
     standingNoBuilding: "3D表示では、各コーナーの番号はポールの上に掲げられます。",
     credit: "地図データ：{credit}。",
+    inDistrict: "1周{km} kmの{name}も、OpenStreetMapに登録された位置のとおり同じ地面に描いています。",
+    districtAlone: "1周{km} kmの{name}を、OpenStreetMapに登録された位置のとおり、周辺の様子とあわせて描いた平面図です。",
+    districtTitle: "{name}とその周辺",
     turn: "ターン{n}",
     metres: "m",
     northArrow: "北",

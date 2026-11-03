@@ -198,6 +198,95 @@
       ],
       "radius": 4200,
       "grid": 3
+    },
+    {
+      "id": "las-vegas",
+      "name": {
+        "en": "Las Vegas: the Strip Circuit, T-Mobile Arena and the Strip between them",
+        "ja": "ラスベガス：ストリップ・サーキット、T-モバイル・アリーナとその間のラスベガス・ストリップ"
+      },
+      "city": "osm",
+      "kind": "city",
+      "buildings": "all",
+      "parts": 24,
+      "origin": [
+        -115.1692,
+        36.1143
+      ],
+      "radius": 1900,
+      "grid": 2,
+      "blocks": 100,
+      "landmarks": [
+        {
+          "key": "sphere",
+          "wikidata": "Q60749353",
+          "osm": "way/976405284",
+          "shape": "dome",
+          "nameJa": {
+            "value": "スフィア",
+            "read": "ours: Wikidata's Japanese label, スフィア (アリーナ), carries the Japanese article's word to tell it from other spheres, which a name on a map does not need"
+          },
+          "height": {
+            "value": 111.6,
+            "basis": "documented",
+            "source": "wikidata",
+            "read": "P2048, 366 ft; the English article: 366 ft high"
+          },
+          "width": {
+            "value": 157.3,
+            "basis": "documented",
+            "source": "wikipedia",
+            "line": "516 ft wide",
+            "read": "the English article: 366 ft high and 516 ft wide, the widest point 108 ft above the ground (a sphere of that width and height is widest 33 m up, which agrees)"
+          },
+          "read": "the outline is OpenStreetMap's building; the height and the width are published, the shape a sphere cut by the ground is ours (it is a geodesic sphere)"
+        },
+        {
+          "key": "high-roller",
+          "wikidata": "Q892103",
+          "osm": "way/402543930",
+          "shape": "wheel",
+          "height": {
+            "value": 167.6,
+            "basis": "documented",
+            "source": "wikidata",
+            "read": "P2048, 550 ft; the English infobox gives the same"
+          },
+          "width": {
+            "value": 158.5,
+            "basis": "documented",
+            "source": "wikipedia",
+            "line": "diameter = 520 ft",
+            "read": "the English infobox: diameter 520 ft"
+          },
+          "read": "the wheel stands along the long way of the outline OpenStreetMap maps for it; its rim, spokes and two legs are drawn plainly, and its 28 cabins are not"
+        },
+        {
+          "key": "fountains-of-bellagio",
+          "wikidata": "Q2735117",
+          "osm": "relation/19511963",
+          "shape": "fountains",
+          "nameJa": {
+            "value": "ベラージオの噴水",
+            "read": "ours: Wikidata has no Japanese label for the fountains"
+          },
+          "height": {
+            "value": 140.2,
+            "basis": "documented",
+            "source": "wikipedia",
+            "line": "as high as 460 ft",
+            "read": "the English article: the fountains shoot as high as 460 ft; the row of nine jets and their heights under that are ours, a pattern"
+          },
+          "read": "the water is OpenStreetMap's lake in front of the hotel"
+        },
+        {
+          "key": "caesars-palace",
+          "wikidata": "Q569978",
+          "osm": "way/495449303",
+          "shape": "named",
+          "read": "the outline is OpenStreetMap's of the complex; the name stands over the tallest building OpenStreetMap maps inside it, at that building's height"
+        }
+      ]
     }
   ]
 }

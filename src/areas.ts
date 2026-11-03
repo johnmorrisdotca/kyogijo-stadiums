@@ -25,11 +25,16 @@ export const CITYCTX_DETAIL: Readonly<Record<string, readonly string[]>> = Objec
 /** The most patches of New York's surroundings a choice of venues takes: more than this many venues of the city are too far apart for patches of detail round each. */
 export const MOST_DETAIL_AREAS = 2;
 
+/** The venues and the circuits each area of a circuit's surroundings is drawn round: Las Vegas's (the Strip Circuit, T-Mobile Arena and the Strip between them, with the Sphere, the High Roller and the Fountains of Bellagio). */
+export const CIRCUIT_AREAS: Readonly<Record<string, { venues: readonly string[]; circuits: readonly string[] }>> = Object.freeze({
+  "las-vegas": { venues: ["t-mobile-arena"], circuits: ["las-vegas"] },
+});
+
 /** The venues of Tokyo Dome City, round which Project PLATEAU's buildings are drawn (the Kodokan stands a little way off, inside the area). */
 export const TOKYO_VENUES: readonly string[] = Object.freeze(["tokyo-dome", "korakuen-hall", "kodokan"]);
 
 /** The key of every area there is data for, in the order a district draws them: each is one file. */
-export const AREA_KEYS: readonly string[] = Object.freeze(["vancouver", "vancouver-nature", "seattle-sodo", "seattle-center", "seattle-city", "tokyo-dome-city", "nyc-midtown", "nyc-bronx", "nyc-flushing", "nyc-brooklyn", "meadowlands", "belmont-park", "montreal-downtown", "montreal-olympic", "montreal-city"]);
+export const AREA_KEYS: readonly string[] = Object.freeze(["vancouver", "vancouver-nature", "seattle-sodo", "seattle-center", "seattle-city", "tokyo-dome-city", "nyc-midtown", "nyc-bronx", "nyc-flushing", "nyc-brooklyn", "meadowlands", "belmont-park", "montreal-downtown", "montreal-olympic", "montreal-city", "las-vegas"]);
 
 /** Each area's loader: the one `import()` of the one file that holds it. */
 const LOADERS: Readonly<Record<string, () => Promise<ContextArea>>> = {
@@ -48,12 +53,13 @@ const LOADERS: Readonly<Record<string, () => Promise<ContextArea>>> = {
   "montreal-downtown": async () => (await import("./cityctx.montreal-downtown.data.ts")).MONTREAL_DOWNTOWN,
   "montreal-olympic": async () => (await import("./cityctx.montreal-olympic.data.ts")).MONTREAL_OLYMPIC,
   "montreal-city": async () => (await import("./cityctx.montreal-city.data.ts")).MONTREAL_CITY,
+  "las-vegas": async () => (await import("./cityctx.las-vegas.data.ts")).LAS_VEGAS,
 };
 
 /**
  * The keys of the areas that go with some venues, in the order to draw them: downtown Vancouver's buildings and streets and its water, green and trees for BC Place and Rogers Arena; Seattle's SoDo for Lumen Field and
  * T-Mobile Park, Seattle Center's for Climate Pledge Arena, and the city's own for a district that holds venues of both (they are three kilometres apart, so the detail of either would be a speck); Tokyo Dome City's for
- * Tokyo Dome, Korakuen Hall and the Kodokan, which take it before any other. A venue of none of these has no area.
+ * Tokyo Dome, Korakuen Hall and the Kodokan, which take it before any other; Las Vegas's for T-Mobile Arena and for the Las Vegas Strip Circuit (`circuit`, a district's circuit). A venue of none of these has no area.
  * @example
  * ```ts
  * import { areaKeysFor } from "@johnmorrisdotca/kyogijo-stadiums/areas";
@@ -61,11 +67,13 @@ const LOADERS: Readonly<Record<string, () => Promise<ContextArea>>> = {
  * // [ 'vancouver', 'vancouver-nature' ]
  * ```
  */
-export function areaKeysFor(venues: readonly string[]): string[] {
+export function areaKeysFor(venues: readonly string[], circuit?: string): string[] {
   const ids = new Set(venues.map((key) => key.split(":")[0]));
   const has = (list: readonly string[]): boolean => list.some((id) => ids.has(id));
   if (has(TOKYO_VENUES)) return ["tokyo-dome-city"];
   const keys: string[] = [];
+  // A circuit's surroundings, for the circuit or a venue beside it (T-Mobile Arena, by the Las Vegas Strip Circuit).
+  for (const [key, round] of Object.entries(CIRCUIT_AREAS)) if (has(round.venues) || (circuit !== undefined && round.circuits.includes(circuit))) keys.push(key);
   // Montreal's two venues stand six kilometres apart: together they take the city between them, each alone its own surroundings. New York's and New Jersey's venues are in different boroughs and states: each shown takes its own.
   const montreal = ["montreal-downtown", "montreal-olympic"].filter((key) => has(CITYCTX_DETAIL[key]));
   if (montreal.length === 2) keys.push("montreal-city");
@@ -118,6 +126,6 @@ export function loadArea(key: string): Promise<ContextArea> {
  * console.log(plan.context?.attribution.en.length);
  * ```
  */
-export function loadAreasFor(venues: readonly string[]): Promise<ContextArea[]> {
-  return Promise.all(areaKeysFor(venues).map(loadArea));
+export function loadAreasFor(venues: readonly string[], circuit?: string): Promise<ContextArea[]> {
+  return Promise.all(areaKeysFor(venues, circuit).map(loadArea));
 }

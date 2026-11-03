@@ -32,6 +32,9 @@ const read = (name) => {
   return JSON.parse(readFileSync(new URL(`${from}/${name}`, root), "utf8"));
 };
 const FT = 0.3048;
+const fail = (message) => {
+  throw new Error(message);
+};
 
 // ---- Small helpers. ----
 const parseMetres = (text) => {
@@ -69,14 +72,16 @@ function steps(points, g) {
 }
 
 // ---- The buildings. ----
-function osmBuildings(osm, origin, exclude = []) {
+function osmBuildings(osm, origin, exclude = [], parts = undefined) {
   const found = [];
   for (const e of osm.elements) {
     const tags = e.tags ?? {};
     // A building a venue draws itself (the Olympic Stadium's tower, which leans: a block would stand it up straight).
     if (exclude.includes(`${e.type}/${e.id}`)) continue;
+    // A tall part of a building, where the area asks for them (`parts`, in metres: the Strip's towers are mapped as parts over their podiums): it stands as a block of its own, over the building it is a part of.
+    const part = parts !== undefined && tags["building:part"] !== undefined && tags["building:part"] !== "no" && tags.building === undefined && (buildingHeight(tags) ?? 0) >= parts;
     // A building that stops a crowd (the rule the walkable mask has): not a roof, a canopy, a carport or a ruin.
-    if (tags.building === undefined || classify(tags, true)?.kind !== "block-area") continue;
+    if (!part && (tags.building === undefined || classify(tags, true)?.kind !== "block-area")) continue;
     const ring = outerRingOf(e);
     if (ring === undefined) continue;
     const metres = metresFrom(origin, ring.slice(0, -1).map((p) => [p.lon, p.lat]));
@@ -145,7 +150,7 @@ function matcher(source) {
 
 function buildingsOf(area, files) {
   const origin = area.origin;
-  const osm = osmBuildings(files.osm, origin, area.exclude);
+  const osm = osmBuildings(files.osm, origin, area.exclude, area.parts);
   const sources = area.city === "nyc" ? nycOutlines(files.nyc, origin) : seattleOutlines(files.outlines, files.ground, origin);
   const find = matcher(sources);
   const used = new Set();
@@ -277,6 +282,84 @@ function treesOf(area, files, blocks) {
   return kept.sort((a, b) => a.y - b.y || a.x - b.x);
 }
 
+// ---- The landmarks. ----
+/** The outline of a landmark's element: a way's ring, or the largest outer ring of a relation (its outer ways joined end to end), as `[longitude, latitude]` without the closing point. */
+function landmarkRing(element) {
+  if (element.type === "way") {
+    const g = element.geometry.map((p) => [p.lon, p.lat]);
+    return g.length > 1 && g[0][0] === g.at(-1)[0] && g[0][1] === g.at(-1)[1] ? g.slice(0, -1) : g;
+  }
+  const lines = element.members.filter((m) => m.type === "way" && (m.role === "outer" || m.role === "perimeter") && m.geometry !== undefined).map((m) => m.geometry.map((p) => [p.lon, p.lat]));
+  const rings = [];
+  while (lines.length > 0) {
+    const ring = lines.shift();
+    for (let guard = 0; guard < 500 && (ring[0][0] !== ring.at(-1)[0] || ring[0][1] !== ring.at(-1)[1]); guard += 1) {
+      const tail = ring.at(-1);
+      const next = lines.findIndex((l) => (l[0][0] === tail[0] && l[0][1] === tail[1]) || (l.at(-1)[0] === tail[0] && l.at(-1)[1] === tail[1]));
+      if (next < 0) break;
+      const [line] = lines.splice(next, 1);
+      if (line[0][0] !== tail[0] || line[0][1] !== tail[1]) line.reverse();
+      ring.push(...line.slice(1));
+    }
+    rings.push(ring.slice(0, -1));
+  }
+  return rings.sort((a, b) => Math.abs(areaOf(metresFrom(a[0], b))) - Math.abs(areaOf(metresFrom(a[0], a))))[0];
+}
+
+/**
+ * The landmarks of an area (`landmarks` of its entry in scripts/cityctx.data.json), each checked against the raw answers: its OpenStreetMap element must be in the area's answer and carry the record's Wikidata item, its names are
+ * the item's labels, and each figure the record calls documented must be in the item's claims (P2048 height, P2386 diameter, in metres or feet) or, as the record names it, in a line of the English article. A named landmark
+ * stands at the top of the tallest building inside its outline. The build stops at the first that is not so.
+ */
+function landmarksOf(area, files, buildings) {
+  const list = area.landmarks ?? [];
+  if (list.length === 0) return [];
+  const facts = files.landmarks ?? fail(`${area.id}: no landmarks-${area.id}.json`);
+  const metres = (claim) => {
+    const v = claim?.mainsnak?.datavalue?.value;
+    if (v === undefined) return undefined;
+    const unit = v.unit.split("/").at(-1);
+    const amount = Number(v.amount);
+    return unit === "Q11573" ? amount : unit === "Q3710" ? amount * FT : undefined;
+  };
+  return list.map((l) => {
+    const [type, id] = l.osm.split("/");
+    const element = files.osm.elements.find((e) => e.type === type && e.id === Number(id)) ?? fail(`${area.id}: ${l.osm} is not in the answer`);
+    if (element.tags?.wikidata !== undefined && element.tags.wikidata !== l.wikidata) fail(`${area.id}: ${l.osm} is tagged ${element.tags.wikidata}, not ${l.wikidata}`);
+    const item = facts.entities[l.wikidata] ?? fail(`${area.id}: no Wikidata ${l.wikidata}`);
+    // The names are the item's labels; a Japanese name of ours stands where the record says why (`nameJa.read`: the item has none, or its label carries an article's disambiguation).
+    const name = { en: item.labels.en?.value ?? fail(`${l.key}: no English label`), ja: l.nameJa?.value ?? item.labels.ja?.value ?? fail(`${l.key}: no Japanese label`) };
+    if (l.nameJa !== undefined && typeof l.nameJa.read !== "string") fail(`${l.key}: a Japanese name of ours needs its reason`);
+    const check = (fact, property) => {
+      if (fact === undefined) return undefined;
+      if (fact.basis !== "documented") return fact.value;
+      if (fact.source === "wikidata") {
+        const found = (item.claims[property] ?? []).map(metres).filter((v) => v !== undefined);
+        if (!found.some((v) => Math.abs(v - fact.value) < 0.06)) fail(`${l.key}: ${property} of ${l.wikidata} is ${found.join(", ")} m, not ${fact.value}`);
+      } else {
+        const article = Object.values(facts.articles).find((a) => [...a.infobox, ...a.sentences].some((line) => line.includes(fact.line)));
+        if (article === undefined) fail(`${l.key}: no line of the English article says "${fact.line}"`);
+      }
+      return fact.value;
+    };
+    // The outline, simplified to a metre (a landmark is seen from far) and kept to a tenth of a metre.
+    const ring = simplified(metresFrom(area.origin, landmarkRing(element)), 1).map(([x, y]) => [Math.round(x * 10) / 10, Math.round(y * 10) / 10]);
+    let height = check(l.height, "P2048");
+    let top;
+    if (l.shape === "named") {
+      // The top of the tallest building of the area's inside the outline, and where it stands: the name stands over it.
+      const under = buildings.filter((b) => inside(ring, centroidOf(b.ring))).sort((a, b) => b.height - a.height);
+      if (under.length === 0) fail(`${l.key}: no building inside its outline`);
+      height = Math.round(under[0].height * 10) / 10;
+      top = centroidOf(under[0].ring).map((v) => Math.round(v * 10) / 10);
+    }
+    if (height === undefined) fail(`${l.key}: no height`);
+    const width = check(l.width, "P2386");
+    const reads = [l.read, l.height?.read, l.width?.read, l.nameJa?.read].filter((x) => x !== undefined).join("; ");
+    return { key: l.key, wikidata: l.wikidata, name, shape: l.shape, source: l.osm, ring, height, ...(width === undefined ? {} : { width }), ...(top === undefined ? {} : { top }), read: reads };
+  });
+}
+
 // ---- The areas. ----
 const areas = {};
 for (const area of config.areas) {
@@ -288,6 +371,7 @@ for (const area of config.areas) {
     ground: read(`seattle-ground-${area.id}.json`),
     strees: read(`seattle-trees-${area.id}.json`),
     vox: read(`voxcity-${area.id}.json`),
+    landmarks: read(`landmarks-${area.id}.json`),
   };
   if (files.osm === undefined) {
     console.log(`${area.id}: no OpenStreetMap file in ${day}, skipped`);
@@ -320,10 +404,11 @@ for (const area of config.areas) {
   const treeList = treesOf(area, files, kept).map((t) => [snap(t.x, g), snap(t.y, g), Math.max(1, Math.round(t.r / g))]);
   // One row: the first tree (east, north, radius), then each next tree's step from the one before in east and north, and its radius.
   const trees = treeList.length === 0 ? [] : [treeList.flatMap((t, i) => (i === 0 ? t : [t[0] - treeList[i - 1][0], t[1] - treeList[i - 1][1], t[2]]))];
+  const landmarks = landmarksOf(area, files, everything);
   const text = (list) => list.map((row) => `        [${row.join(",")}],`).join("\n");
   const bytes = { buildings: Buffer.byteLength(text(rows)), streets: Buffer.byteLength(text(streets)), landCover: Buffer.byteLength(text(landCover)), trees: Buffer.byteLength(text(trees)) };
   const treeCount = treeList.length;
-  areas[area.id] = { area, read: readFrom.get(`osm-${area.id}.json`), files, rows, streets, landCover, trees, treeCount, text, bytes, bySource };
+  areas[area.id] = { area, read: readFrom.get(`osm-${area.id}.json`), files, rows, streets, landCover, trees, treeCount, text, bytes, bySource, landmarks };
   console.log(`${area.id}: ${rows.length} buildings (heights from ${JSON.stringify(bySource)}), ${streets.length} street lines, ${landCover.length} land cover rings, ${treeCount} trees; bytes ${JSON.stringify(bytes)} = ${Object.values(bytes).reduce((a, b) => a + b, 0)}`);
 }
 
@@ -384,7 +469,7 @@ import type { ContextArea } from "./context.ts";
 
 `;
 const files = Object.values(areas)
-  .map(({ area, read: day, rows, streets, landCover, trees, treeCount, text, files }) => {
+  .map(({ area, read: day, rows, streets, landCover, trees, treeCount, text, files, landmarks }) => {
     const credits = LAYER_CREDITS(area);
     const vox = files.vox;
     const layer = (name, source, read, licence, attribution, list, doc) => `    ${JSON.stringify(name)}: {
@@ -409,10 +494,15 @@ export const ${symbol(area.id)}: ContextArea = {
   "name": ${JSON.stringify(area.name)},
   "origin": ${JSON.stringify(area.origin)},
   "radius": ${area.radius},
-  "grid": ${area.grid},
+  "grid": ${area.grid},${area.blocks === undefined ? "" : `
+  "blocks": ${area.blocks},`}
   "layers": {
 ${layers}
-  },
+  },${landmarks.length === 0 ? "" : `
+  /** The area's landmarks (landmarks.ts): the outline is OpenStreetMap's (ODbL), the names Wikidata's labels (CC0), the figures published ones, each with where it was read. */
+  "landmarks": [
+${landmarks.map((l) => `    ${JSON.stringify(l)},`).join("\n")}
+  ],`}
 };
 `;
     return { id: area.id, day, city: area.city, text: text1 };

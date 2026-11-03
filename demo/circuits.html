@@ -89,7 +89,7 @@
         <div class="table-wrap" id="table" data-testid="table"></div>
       </details>
       <p class="note" id="credit"></p>
-      <p class="note"><a href="./docs/circuits.html" id="docs"></a></p>
+      <p class="note"><a href="./district.html" id="city" data-testid="city"></a> · <a href="./docs/circuits.html" id="docs"></a></p>
     </main>
     <script type="module">
       // A famous race track drawn from OpenStreetMap, in 2D and in 3D: choose the view, the language and the theme, read the facts and where each comes from, and copy the code that draws what is shown. Everything is
@@ -106,7 +106,7 @@
           title: "Circuits", pageTitle: "Kyogijo Stadiums: circuits",
           pageDescription: "A famous race track drawn from OpenStreetMap: the lap as a ribbon of the track's width, the pit lane, the start and finish, each turn's number, in 2D and 3D, light and dark, English and Japanese.",
           lede: "A race track as OpenStreetMap maps it: the lap at the track's width, the pit lane and the pit building, the start and the finish, and each turn's number. Turn it in 3D, or turn on Race to watch a simulated race of made-up cars, with its clock and timing board.",
-          back: "Back to the Kyogijo Stadiums demo", docs: "The circuits page of the docs", view: "View", circuit: "Circuit", language: "Language", theme: "Theme", auto: "As the device", light: "Light", dark: "Dark",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The circuits page of the docs", city: "This circuit in its surroundings, on the district page", view: "View", circuit: "Circuit", language: "Language", theme: "Theme", auto: "As the device", light: "Light", dark: "Dark",
           code: "Code", table: "Facts", copy: "Copy the code", copied: "Copied.", race: "Race",
           feed: "What the race plays", simulation: "Simulation", feedUrl: "A feed's address", load: "Play the feed", follow: "Follow live", feedMore: "Paste a feed, or choose a file", paste: "Play what is pasted", file: "Choose a file",
           terms: "Your browser reads the address you give: nothing goes through a server of ours and nothing is kept. You are responsible for following the terms of the source you use.", feedDocs: "The race feed's format", where: "Where to find a feed",
@@ -118,7 +118,7 @@
           title: "サーキット", pageTitle: "競技場 Kyogijo Stadiums：サーキット",
           pageDescription: "OpenStreetMapのデータから描いた有名なレーストラック。コース幅で描いた周回路、ピットレーン、スタートとフィニッシュ、各コーナーの番号を、2Dと3D、ライトとダーク、英語と日本語で表示します。",
           lede: "OpenStreetMapに登録されたレーストラックを描きます。コース幅で描いた周回路、ピットレーンとピットビル、スタートとフィニッシュ、各コーナーの番号を表示し、3Dで回転させて見られます。「レース」をオンにすると、架空のマシンによるシミュレーションレースを、レース時計とタイミングボード付きで見られます。",
-          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「サーキット」ページ", view: "表示", circuit: "サーキット", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「サーキット」ページ", city: "地区のページで、このサーキットを周辺の様子とあわせて見る", view: "表示", circuit: "サーキット", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           code: "コード", table: "データ", copy: "コードをコピー", copied: "コピーしました。", race: "レース",
           feed: "レースの再生元", simulation: "シミュレーション", feedUrl: "フィードのアドレス", load: "フィードを再生", follow: "ライブで追う", feedMore: "フィードを貼り付けるか、ファイルを選ぶ", paste: "貼り付けたものを再生", file: "ファイルを選ぶ",
           terms: "入力したアドレスは、お使いのブラウザが直接読み込みます。kyogijoのサーバーは経由せず、何も保存しません。使うフィードの提供元が定める利用条件を守る責任は、利用者にあります。", feedDocs: "レースフィードの形式", where: "フィードの探し方",
@@ -159,7 +159,7 @@
         document.documentElement.lang = language;
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').content = w.pageDescription;
-        for (const key of ["title", "lede", "back", "docs", "credit"]) $(key).textContent = w[key];
+        for (const key of ["title", "lede", "back", "docs", "credit", "city"]) $(key).textContent = w[key];
         for (const key of ["view", "circuit", "language", "theme", "code", "table", "race", "feed"]) $(`l-${key}`).textContent = w[key];
         $("l-feed-url").textContent = w.feedUrl;
         $("feed-load").textContent = w.load;
@@ -200,7 +200,13 @@
         return `import { drawCircuit } from "@johnmorrisdotca/kyogijo-stadiums/circuits";\n\nconst svg = drawCircuit(${literal});\ndocument.querySelector("#lap").innerHTML = svg;`;
       }
 
+      /** The venues that stand beside each circuit on the district page (T-Mobile Arena by the Las Vegas Strip Circuit); a circuit with none is shown alone among its surroundings. */
+      const BESIDE = { "las-vegas": ["t-mobile-arena"] };
       function syncUrl() {
+        const city = new URLSearchParams({ venues: (BESIDE[$("circuit").value] ?? []).join(","), circuit: $("circuit").value, labels: "1" });
+        if ($("view").value === "3d") city.set("view", "3d");
+        if ($("language").value === "ja") city.set("lang", "ja");
+        $("city").href = `./district.html?${city}`;
         const next = new URLSearchParams();
         if ($("circuit").value !== CIRCUITS[0].id) next.set("circuit", $("circuit").value);
         if ($("view").value === "3d") {

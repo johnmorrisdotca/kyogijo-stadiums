@@ -16,8 +16,9 @@ import { BELMONT_PARK } from "./cityctx.belmont-park.data.ts";
 import { MONTREAL_DOWNTOWN } from "./cityctx.montreal-downtown.data.ts";
 import { MONTREAL_OLYMPIC } from "./cityctx.montreal-olympic.data.ts";
 import { MONTREAL_CITY } from "./cityctx.montreal-city.data.ts";
+import { LAS_VEGAS } from "./cityctx.las-vegas.data.ts";
 
-export { VANCOUVER_NATURE, SEATTLE_SODO, SEATTLE_CENTER, SEATTLE_CITY, NYC_MIDTOWN, NYC_BRONX, NYC_FLUSHING, NYC_BROOKLYN, MEADOWLANDS, BELMONT_PARK, MONTREAL_DOWNTOWN, MONTREAL_OLYMPIC, MONTREAL_CITY };
+export { VANCOUVER_NATURE, SEATTLE_SODO, SEATTLE_CENTER, SEATTLE_CITY, NYC_MIDTOWN, NYC_BRONX, NYC_FLUSHING, NYC_BROOKLYN, MEADOWLANDS, BELMONT_PARK, MONTREAL_DOWNTOWN, MONTREAL_OLYMPIC, MONTREAL_CITY, LAS_VEGAS };
 
 /** Every area, by key. */
-export const CITYCTX_AREAS: Readonly<Record<string, ContextArea>> = { "vancouver-nature": VANCOUVER_NATURE, "seattle-sodo": SEATTLE_SODO, "seattle-center": SEATTLE_CENTER, "seattle-city": SEATTLE_CITY, "nyc-midtown": NYC_MIDTOWN, "nyc-bronx": NYC_BRONX, "nyc-flushing": NYC_FLUSHING, "nyc-brooklyn": NYC_BROOKLYN, "meadowlands": MEADOWLANDS, "belmont-park": BELMONT_PARK, "montreal-downtown": MONTREAL_DOWNTOWN, "montreal-olympic": MONTREAL_OLYMPIC, "montreal-city": MONTREAL_CITY };
+export const CITYCTX_AREAS: Readonly<Record<string, ContextArea>> = { "vancouver-nature": VANCOUVER_NATURE, "seattle-sodo": SEATTLE_SODO, "seattle-center": SEATTLE_CENTER, "seattle-city": SEATTLE_CITY, "nyc-midtown": NYC_MIDTOWN, "nyc-bronx": NYC_BRONX, "nyc-flushing": NYC_FLUSHING, "nyc-brooklyn": NYC_BROOKLYN, "meadowlands": MEADOWLANDS, "belmont-park": BELMONT_PARK, "montreal-downtown": MONTREAL_DOWNTOWN, "montreal-olympic": MONTREAL_OLYMPIC, "montreal-city": MONTREAL_CITY, "las-vegas": LAS_VEGAS };

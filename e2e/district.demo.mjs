@@ -659,3 +659,42 @@ test("the facts and the choices are tabs on one screen, and the floors tab comes
   await expect(page.locator("#facts")).toBeVisible();
   await expect(page.locator("#edit")).toBeHidden();
 });
+
+test("Las Vegas: the Strip Circuit and T-Mobile Arena on one ground among the Strip, the landmarks named, kept in the address, in English and Japanese", async ({ page }) => {
+  const { errors, outside } = await open(page);
+  await page.locator('#tabs button[data-preset="lasvegas"]').click();
+  await expect(page.locator(`${STAGE} g.ky-dist-circuit[data-circuit="las-vegas"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-venue="t-mobile-arena"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-landmark="sphere"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-name="high-roller"]`)).toHaveText("High Roller");
+  await expect(page.locator('#tabs button[aria-selected="true"]')).toHaveText("Las Vegas: the Strip Circuit, T-Mobile Arena and the Sphere");
+  await expect(page.locator('[data-testid="facts"] tr[data-circuit="las-vegas"]')).toContainText("6.201 km lap, 17 turns");
+  await expect(page.locator('input[data-circuit="las-vegas"]')).toBeChecked();
+  expect(page.url()).toContain("circuit=las-vegas");
+  expect(page.url()).toContain("venues=t-mobile-arena");
+  // The address alone opens it again, and in Japanese the names are the Japanese ones.
+  await page.goto("http://kyogijo.test/district.html?venues=t-mobile-arena&circuit=las-vegas&labels=1&lang=ja");
+  await page.waitForSelector('body[data-ready="true"]');
+  await expect(page.locator(`${STAGE} [data-name="sphere"]`)).toHaveText("スフィア");
+  await expect(page.locator(`${STAGE} [data-name="circuit"]`)).toHaveText("ラスベガス・ストリップ・サーキット");
+  // A circuit alone is something to draw; taken away with no venue left, the page asks for one.
+  await page.locator('input[data-key="t-mobile-arena"]').uncheck();
+  await expect(page.locator(`${STAGE} g.ky-dist-circuit[data-circuit="las-vegas"]`)).toHaveCount(1);
+  await expect(page.locator("#error")).toBeHidden();
+  await page.locator('input[data-circuit="las-vegas"]').uncheck();
+  await expect(page.locator("#error")).toBeVisible();
+  expect(errors).toEqual([]);
+  expect(outside).toEqual([]);
+  await noSidewaysScroll(page);
+});
+
+test("Las Vegas in 3D: the Sphere a dome, the High Roller a wheel, the fountains' jets, the pit building and the turns standing", async ({ page }) => {
+  const { errors } = await open(page, "?venues=t-mobile-arena&circuit=las-vegas&labels=1&view=3d&quality=high");
+  await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+  await expect(page.locator(`${STAGE} [data-part^="lm-sphere-d"]`)).toHaveCount(96);
+  await expect(page.locator(`${STAGE} [data-part^="lm-high-roller-rim"]`)).toHaveCount(48);
+  await expect(page.locator(`${STAGE} [data-part^="lm-fountains-of-bellagio-jet"]`)).toHaveCount(18);
+  await expect(page.locator(`${STAGE} [data-part="ci-turn-17"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-part="lm-caesars-palace-name"]`)).toHaveCount(1);
+  expect(errors).toEqual([]);
+});

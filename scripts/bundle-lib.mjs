@@ -18,6 +18,7 @@ export const DISTRICT_PRESETS = {
   tokyo: "venues=tokyo-dome:mlb,korakuen-hall:boxing",
   tokyokodokan: "venues=tokyo-dome:mlb,korakuen-hall:boxing,kodokan",
   kodokan: "venues=kodokan&context=0",
+  lasvegas: "venues=t-mobile-arena&circuit=las-vegas&labels=1",
 };
 
 /** Every page the report measures: its name, and the address it is opened at (a district in 3D from the broadcast viewpoint, as a reader sees it first on a phone). */

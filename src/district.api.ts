@@ -1,9 +1,14 @@
 // A district: several real venues of one city on one plan at their real relative positions and orientations (OpenStreetMap, ODbL 1.0), in 2D and in 3D, tight round neighbours or at the real distances of a city.
-export { DISTRICT_IDS, DISTRICT_MARGIN, DISTRICT_MODES, KYOGIJO_DISTRICT_STYLE, describeDistrict, districtId, districtMember, districtRing, drawDistrict, isDistrictId, metresText, planDistrict, scaleOf, unknownVenues } from "./district.ts";
-export type { DistrictMember, DistrictMode, DistrictOptions, DistrictPart, DistrictPlaced, DistrictPlan, DistrictVenueInput, PlacedPart } from "./district.ts";
+export { DISTRICT_IDS, DISTRICT_MARGIN, DISTRICT_MODES, KYOGIJO_DISTRICT_STYLE, circuitPointIn, describeDistrict, districtId, districtMember, districtRing, drawDistrict, isDistrictId, metresText, planDistrict, scaleOf, unknownVenues } from "./district.ts";
+export type { DistrictCircuit, DistrictMember, DistrictMode, DistrictOptions, DistrictPart, DistrictPlaced, DistrictPlan, DistrictVenueInput, PlacedPart } from "./district.ts";
 export { buildDistrictTurn, districtPresets, districtTurnMarkup, mountDistrictTurn } from "./district.turn.ts";
 export type { DistrictTurnSettings } from "./district.turn.ts";
 export type { ContextArea } from "./context.ts";
+// A race circuit on the same ground (`circuit`: the district entry has every circuit, the lean district reads them with `loadCircuits`), and the famous landmarks an area of context has round it.
+export { CIRCUIT_INDEX, loadCircuits } from "./circuits.index.ts";
+export { circuitsHeld } from "./district.circuit.ts";
+export { LANDMARK_SHAPES } from "./landmarks.ts";
+export type { ContextLandmark, LandmarkShape, PlacedLandmark } from "./landmarks.ts";
 export { KODOKAN, KODOKAN_DOJO, KODOKAN_FLOOR_HEIGHT, KODOKAN_FLOOR_IDS, KODOKAN_FLOORS, KODOKAN_ROOM_HEIGHT, kodokanLevel, kodokanMember } from "./kodokan.ts";
 export type { KodokanFloor, KodokanRoom } from "./kodokan.ts";
 export { VENUE_ATTRIBUTION } from "./venues.ts";

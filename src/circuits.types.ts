@@ -98,6 +98,8 @@ export interface CircuitOptions {
   turns?: boolean;
   /** The arrows that show which way the lap runs: `true` (the default) or `false`. */
   arrows?: boolean;
+  /** `false` leaves out the drawing's frame (its ground, the north arrow, the scale bar and the credit): for a drawing laid inside another that has its own (a district). `true` when missing. */
+  frame?: boolean;
   /** The prefix of the ids inside the drawing, for a page with more than one; a hash of the options when missing. */
   id?: string;
   /** More classes on the root. */

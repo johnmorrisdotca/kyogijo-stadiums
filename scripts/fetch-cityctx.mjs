@@ -22,7 +22,7 @@ const only = process.argv[3]?.split(",");
 const out = new URL(`../data-sources/cityctx/${day}/`, import.meta.url);
 mkdirSync(out, { recursive: true });
 const USER_AGENT = "kyogijo-venues/0.1 (https://github.com/johnmorrisdotca/kyogijo-stadiums; john@johnmorris.ca)";
-const GATEWAYS = ["https://overpass-api.de/api/interpreter", "https://lambert.openstreetmap.de/api/interpreter"];
+const GATEWAYS = ["https://overpass-api.de/api/interpreter", "https://lambert.openstreetmap.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"];
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const SEATTLE_OUTLINES = "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Building_Outline_2015/FeatureServer/0/query";
 const SEATTLE_TREES = "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Combined_Tree_Point/FeatureServer/0/query";
@@ -54,10 +54,46 @@ function osmQuery(area) {
     // The city view keeps the streets (not the service lanes), the water, the big parks and woods, and only the tall buildings OpenStreetMap tags (the City's outlines carry the rest).
     // (A view several kilometres wide keeps the main streets only: the side streets would be noise from so far, and Overpass would not answer for them.)
     const streets = area.radius > 3500 ? "motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link" : "motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|motorway_link|trunk_link|primary_link|secondary_link";
-    return `[out:json][timeout:240];(way["highway"~"^(${streets})$"]${around};way["railway"="rail"]${around};way["natural"~"^(water|bay|coastline|wood)$"]${around};way["waterway"~"^(riverbank|dock)$"]${around};rel["type"="multipolygon"]["natural"="water"]${around};way["leisure"~"^(park|garden)$"]${around};rel["type"="multipolygon"]["leisure"="park"]${around};way["building"]["building:levels"~"^([6-9]|[1-9][0-9])$"]${around};way["building"]["height"~"^[0-9]{2,3}"]${around};way["building"="stadium"]${around};);out geom;`;
+    // An area with no city's outlines to lay on the map's (`buildings: "all"`, Las Vegas) asks for every building and the tall parts of buildings mapped with a height or levels (the Strip's towers are mapped as parts
+    // over their podiums), and the cut that keeps the ones that matter from far is the build's.
+    const buildings = area.buildings === "all" ? `way["building"]${around};rel["building"]${around};way["building:part"]["height"]${around};way["building:part"]["building:levels"]${around};` : `way["building"]["building:levels"~"^([6-9]|[1-9][0-9])$"]${around};way["building"]["height"~"^[0-9]{2,3}"]${around};way["building"="stadium"]${around};`;
+    return `[out:json][timeout:240];(way["highway"~"^(${streets})$"]${around};way["railway"~"^(rail|monorail)$"]${around};way["natural"~"^(water|bay|coastline|wood)$"]${around};way["waterway"~"^(riverbank|dock)$"]${around};rel["type"="multipolygon"]["natural"="water"]${around};way["leisure"~"^(park|garden)$"]${around};rel["type"="multipolygon"]["leisure"="park"]${around};${buildings}${landmarkElements(area)});out geom;`;
   }
   if (area.kind === "nature") return `[out:json][timeout:240];(node["natural"="tree"]${around};way["natural"="tree_row"]${around};);out geom;`;
   return `[out:json][timeout:240];(way["building"]${around};rel["building"]${around};way["highway"]${around};way["railway"]${around};way["natural"~"^(water|bay|coastline|wood|scrub|grassland)$"]${around};way["waterway"~"^(riverbank|dock)$"]${around};rel["type"="multipolygon"]["natural"="water"]${around};way["leisure"~"^(park|garden|playground|pitch|common)$"]${around};way["landuse"~"^(grass|forest|recreation_ground|meadow)$"]${around};way["place"="square"]${around};way["amenity"="parking"]${around};node["natural"="tree"]${around};way["natural"="tree_row"]${around};);out geom;`;
+}
+
+/** The elements an area's landmarks are drawn from, asked for by name whatever else the query keeps (the High Roller is not a building, Caesars Palace's outline is its complex's). */
+const landmarkElements = (area) => (area.landmarks ?? []).map((l) => `${l.osm.startsWith("relation/") ? "rel" : "way"}(${l.osm.split("/")[1]});`).join("");
+
+// ---- The landmarks' facts: Wikidata's labels and figures (CC0) and the English articles' lines that give their sizes (CC BY-SA 4.0, kept as evidence only). ----
+async function landmarks(area) {
+  if ((area.landmarks ?? []).length === 0) return;
+  const file = new URL(`landmarks-${area.id}.json`, out);
+  if (existsSync(file)) return;
+  const ids = area.landmarks.map((l) => l.wikidata).join("|");
+  const entities = JSON.parse(await get(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids}&props=labels|claims|sitelinks&languages=en|ja&format=json&formatversion=2`)).entities;
+  await pause(2000);
+  const titles = area.landmarks.map((l) => entities[l.wikidata]?.sitelinks?.enwiki?.title).filter((t) => t !== undefined);
+  const pages = JSON.parse(await get(`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=ids|timestamp|content&rvslots=main&titles=${encodeURIComponent(titles.join("|"))}&redirects=1&format=json&formatversion=2`)).query.pages;
+  const SIZE = /\b(?:tall|high|height|diameter|wide|width|feet|ft|metres|meters|m)\b/i;
+  const articles = {};
+  for (const page of pages) {
+    const revision = page.revisions?.[0];
+    if (revision === undefined) continue;
+    const text = revision.slots.main.content
+      .replace(/<ref[^>]*\/>/gi, "")
+      .replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, "")
+      .replace(/\{\{\s*(?:convert|cvt)\s*\|([^{}|]*)\|([^{}|]*)(?:\|[^{}]*)?\}\}/gi, "$1 $2")
+      .replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, "$1")
+      .replace(/'{2,3}/g, "");
+    const infobox = [...text.matchAll(/^\s*\|\s*(height|diameter|width|floors|architectural|roof)\s*=\s*(.*)$/gim)].map((m) => `${m[1]} = ${m[2].trim()}`);
+    const sentences = text.replace(/\{\{[^{}]*\}\}/g, "").replace(/\s+/g, " ").split(/(?<=[.!?])\s+(?=[A-Z])/).filter((x) => SIZE.test(x) && /\d/.test(x) && x.length < 400);
+    articles[page.title] = { revision: revision.revid, timestamp: revision.timestamp, infobox, sentences };
+  }
+  writeFileSync(file, `${JSON.stringify({ ...meta(area, { licence: "Wikidata entities: CC0. English Wikipedia lines: CC BY-SA 4.0, kept as evidence only; the figures used are numbers, in our own words." }), entities, articles }, null, 1)}\n`);
+  console.log(`${area.id}: landmarks, ${Object.keys(entities).length} items and ${Object.keys(articles).length} articles`);
+  await pause(2000);
 }
 
 async function osm(area) {
@@ -202,6 +238,7 @@ for (const area of config.areas) {
     await ground(area);
   } else if (area.city === "nyc") await nyc(area);
   else if (area.city === "vancouver") await vancouver(area);
+  await landmarks(area);
   await osm(area);
 }
 process.exit(0);

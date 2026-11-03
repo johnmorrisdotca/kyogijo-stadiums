@@ -5,4 +5,6 @@ import "./full.ts";
 import "./venues.all.ts";
 // The walkable ground of every district, for the crowd outside, as the district has always had it (the lean district reads one when `loadOutside` is asked to).
 import "./walk.full.ts";
+// Every circuit, as a district's `circuit` option asks for one (the lean district reads them when `loadCircuits` is asked to).
+import "./circuits.held.ts";
 export * from "./district.api.ts";

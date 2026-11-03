@@ -29,6 +29,7 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-orange{fill:var(--ky-up-orange)}
 .ky-turn .u-wood{fill:var(--ky-up-wood)}
 .ky-turn .u-leg{fill:var(--ky-up-leg)}
+.ky-turn .u-jet{fill:var(--ky-up-jet,rgba(222,240,252,.82))}
 .ky-turn .u-pad{fill:var(--ky-up-pad)}
 .ky-turn .u-table{fill:var(--ky-up-table)}
 .ky-turn .u-foot{fill:var(--ky-up-foot)}

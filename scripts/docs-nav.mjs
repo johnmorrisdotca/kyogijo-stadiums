@@ -286,6 +286,11 @@ export const SPORTS = [
 /** Places that are not a sport: real venues and what stands round them. A tile for each, with a still of the 3D view (a file under docs/pictures or docs/images) and the demo page that shows it live. */
 export const PLACES = [
   {
+    id: "las-vegas", en: "Las Vegas", ja: "ラスベガス", picture: "pictures/district-lasvegas-3d-desk", page: "district", at: "las-vegas-a-circuit-on-the-ground-and-the-strips-landmarks",
+    demo: "district.html?venues=t-mobile-arena&circuit=las-vegas&labels=1&view=3d&viewpoint=corner", demoEn: "Las Vegas in the demo",
+    blurb: "The Strip Circuit and T-Mobile Arena on one ground among the Strip, with the Sphere, the High Roller and the Fountains of Bellagio.",
+  },
+  {
     id: "new-york", en: "New York", ja: "ニューヨーク", picture: "pictures/district-midtown-3d-desk", page: "district", at: "new-york-and-montreal",
     demo: "district.html?venues=madison-square-garden&view=3d&viewpoint=main&roof=1", demoEn: "Madison Square Garden in the demo",
     blurb: "Madison Square Garden among the blocks of Midtown, Yankee Stadium, Citi Field, MetLife Stadium and Barclays Center, six venues on one plan.",
