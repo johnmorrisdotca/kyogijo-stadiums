@@ -42,6 +42,8 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html)
 | `@johnmorrisdotca/kyogijo-stadiums/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
 | `@johnmorrisdotca/kyogijo-stadiums/events` | `EVENTS`, `EVENT_IDS`, `EVENT_SOURCES`, `eventById`, `eventOptions`, `eventSources`, `eventFit`, `fitOf`, `conventionPlacement`, `KYOGIJO_SPECIAL_STYLE` and the game types: the special games, a surface set inside another |
 | `@johnmorrisdotca/kyogijo-stadiums/atlas` | `PLACES`, `placeById`, `placesBy`, `atlasFacets`, `surfaceOf` |
+| `@johnmorrisdotca/kyogijo-stadiums/catalogue` | `CATALOGUE`, `CATALOGUE_GROUPS`, `CATALOGUE_SPORTS`, `catalogueById`, `catalogueByStatus`, `catalogueBySport`, `catalogueByGroup`, `catalogueCoverage`, `catalogueWanted`: every venue drawn today, being built or wanted, data only. [The catalogue](./catalogue.md) |
+| `@johnmorrisdotca/kyogijo-stadiums/catalogue.json` | the same catalogue as a JSON file, also published at `https://johnmorrisdotca.github.io/kyogijo-stadiums/catalogue.json` |
 | `@johnmorrisdotca/kyogijo-stadiums/mount` | `mountKyogijo` (with its `replay` method), `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo-stadiums/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
 | `@johnmorrisdotca/kyogijo-stadiums/element` | `KyogijoField` (with its `timeline`, `replaySettings` and `replay`), `defineKyogijoField`, `optionsFromAttributes`, `replaySettingsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |

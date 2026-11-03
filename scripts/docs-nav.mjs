@@ -66,6 +66,7 @@ export const NAV = [
       { slug: "flythrough", ja: "フライスルー" },
       { slug: "special-games", ja: "特設会場での試合" },
       { slug: "atlas", ja: "球場とスタジアムの地図" },
+      { slug: "catalogue", ja: "会場カタログ" },
       { slug: "multi", ja: "大会向けレイアウト（複数の競技面）" },
       { slug: "judging", ja: "審判員の配置" },
       { slug: "boards", ja: "競技面に重ねるボード" },

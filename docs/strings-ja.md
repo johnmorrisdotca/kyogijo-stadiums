@@ -1503,6 +1503,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `foot` | Every dimension is from a rulebook or a published figure; the sources are in the repository. | 寸法はすべて、ルールブックまたは公表されている数値に基づいています。出典はリポジトリに載っています。 |
 | `pageApi` | API reference | APIリファレンス（英語） |
 | `pageHalls` | Tournament layouts | 大会向けレイアウト |
+| `pageCatalogue` | Every venue | 会場カタログ |
 | `hallLink` | See it as a tournament floor | 大会のフロアとして見る |
 | `pageDocs` | Docs | ドキュメント |
 | `groupSurface` | Surface | 競技場 |
@@ -2130,6 +2131,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `flythrough` | The fly-through | フライスルー |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `atlas` | The atlas | 球場とスタジアムの地図 |
+| page `catalogue` | The catalogue | 会場カタログ |
 | page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
 | page `judging` | Judging assignments | 審判員の配置 |
 | page `boards` | Boards over a surface | 競技面に重ねるボード |

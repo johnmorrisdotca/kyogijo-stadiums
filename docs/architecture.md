@@ -359,6 +359,10 @@ src/
 ├── tenants.ts          the clubs that played in a place: their types, the sport each draws as and the leagues that ask for no surface
 ├── tenants.data.ts     made by scripts/build-tenants.mjs from scripts/tenants.wikidata.json
 ├── atlas-entry.ts      the atlas' entry
+├── catalogue.ts        the catalogue: every venue drawn today, being built or wanted, and the lookups over it
+├── catalogue.types.ts  the catalogue's types, the shape of catalogue.json
+├── catalogue.data.ts   made by scripts/build-catalogue.mjs from the package's data, scripts/catalogue.data.json and data-sources/catalogue/
+├── catalogue-entry.ts  the catalogue's entry
 ├── special.ts          a special game: the host and the guest as one surface, where the guest stands and how it fits
 ├── special.style.ts    the host's colours inside a special game
 ├── events.ts           the special games, their options, their words and how each fits

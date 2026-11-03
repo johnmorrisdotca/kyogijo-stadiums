@@ -482,6 +482,17 @@ BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Korakuen Hall and Koshien Stad
 | Olympic Stadium | Q285467 | way/108505523 | Olympic Stadium (Montreal), 1382141337 |
 | Barclays Center | Q807966 | relation/8610205 | Barclays Center, 1380399342 |
 
+## The catalogue's sources
+
+The catalogue (`catalogue.json`, `src/catalogue.data.ts`, `docs/catalogue.md`) was read on 2026-11-03 (`pnpm catalogue:fetch`; the files are in `data-sources/catalogue/2026-11-03/`). Its venues' items, names in English and Japanese, coordinates, countries, capacities and places are Wikidata's (CC0). Which venues the NFL and the CFL play in this season, and which circuits the 2026 calendars of Formula One and MotoGP race at, were checked against the tables of these English Wikipedia articles (CC BY-SA 4.0), whose linked titles are kept as evidence and whose text is not copied; each new venue's English name is the title of its English article.
+
+| English article | Revision |
+| --- | --- |
+| List of current National Football League stadiums | 1382562348 |
+| List of Canadian Football League stadiums | 1383444131 |
+| 2026 Formula One World Championship | 1383447981 |
+| 2026 MotoGP World Championship | 1383460791 |
+
 ## The context's and the gates' sources
 
 Downtown Vancouver's buildings and streets (`VANCOUVER_CENTRE`, `src/osm.context.data.ts`) are OpenStreetMap's, ODbL 1.0, (c) OpenStreetMap contributors, made by `pnpm osm-context` from the same raw answer as the walkable mask (`data-sources/walk/2026-10-22/osm-vancouver.json`): each building's outline simplified to 60 centimetres with the height OpenStreetMap maps (else its levels at 3.2 metres, else 10 metres, which is ours) and each street as a line with a width; no name, id or tag is copied. It is kept in its own file, apart from every CC0 and CC BY-SA file and from the PLATEAU data of Tokyo.

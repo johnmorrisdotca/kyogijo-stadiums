@@ -2,6 +2,8 @@
 
 An arena of the NHL drawn in the building it stands in: the outline of the building as OpenStreetMap maps it, the rink lying in it, and a bowl of seats fitted inside it from what the sources say (how many seats, how many seating levels, what kind of roof). `drawKyogijo({ sport: "nhl", arena, crowd: { real: true } })` draws it, and the [3D view](./turn.md) raises it. All thirty-two arenas of the NHL have one: the Western Conference's Pacific and Central Divisions and the Eastern Conference's Atlantic and Metropolitan Divisions.
 
+Which venues are drawn in their buildings, which as a field only and which are wanted is in [the catalogue](./catalogue.md).
+
 It is a plausible bowl, never a seat map. Nothing here is read or copied from a team's, a ticket seller's or a venue's own seating chart: no section, row or seat of a real plan is drawn, and no mark of a team or a league. The bowl has the right number of seats in the right number of tiers inside the right outline, and says so where it only looks right.
 
 ![The Honda Center's hockey rink in the outline of its building seen from above: a grey building outline with a small arrow marked N at its top right, a bowl of two tiers of seats round the ice with a walk between them, and the rink's boards, lines and face-off circles in the middle](./pictures/venues-honda-desk-light.webp)

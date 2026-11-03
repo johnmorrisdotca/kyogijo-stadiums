@@ -56,6 +56,7 @@ The contents of the site, by task. On the site the same pages are also listed by
 - [League variants](./variants.md): the WNBA, FIBA, the NCAA, the IIHF, Little League and more, each from its rulebook.
 - [Surfaces through the years](./eras.md): the markings of a season, each change cited.
 - [The atlas](./atlas.md): every park, ground and arena on a map.
+- [The catalogue](./catalogue.md): every venue drawn today, being built or wanted, with every venue of five leagues' seasons, as a JSON file and a typed entry.
 
 ### Data on a surface
 
