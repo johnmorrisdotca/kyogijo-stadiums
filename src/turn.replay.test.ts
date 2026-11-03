@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { drawFrame } from "./replay.ts";
 import type { ReplayTimeline } from "./replay.types.ts";
 import { buildTurn } from "./turn.model.ts";
+import { boardKey, hungBoardPlanes, hungBoards } from "./turn.replay.board.ts";
 import { discMarkup, discSize, keepOnFloor, moveDisc, playingArea, replayTurnModel } from "./turn.replay.ts";
 
 const timeline: ReplayTimeline = {
@@ -82,5 +83,51 @@ describe("a replay on the 3D view, as data", () => {
     moveDisc(plane, 50, 7, laid.size, 0);
     expect(plane.o[0] + plane.u[0] / 2).toBeCloseTo(50, 6);
     expect(plane.o[1]).toBe(7);
+  });
+});
+
+describe("a replay on the scoreboard hung over the surface", () => {
+  const game: ReplayTimeline = { ...timeline, periods: [{ start: 0, end: 3, length: 1200 }] };
+  const arena = buildTurn({ sport: "nhl", crowd: { real: true, boards: { score: [3, 2] } } }, { venue: true });
+  const faces = (m: { planes: { id: string; svg: string }[] }): string[] => m.planes.filter((p) => /^centre-board-(south|north|east|west)$/.test(p.id)).map((p) => p.svg);
+
+  it("finds the board the venue hung, with what it was made from", () => {
+    expect(hungBoards(arena)).toHaveLength(1);
+    expect(hungBoards(model)).toHaveLength(0);
+    expect(hungBoards(buildTurn({ sport: "nhl", crowd: { real: true } }, { venue: true }))).toHaveLength(0);
+  });
+
+  it("draws the faces with the replay's score and clock instead of the options', in the same planes", () => {
+    const at0 = replayTurnModel(arena, game, 0);
+    const at3 = replayTurnModel(arena, game, 3);
+    expect(at0.board).toEqual({ score: [0, 0], period: 1, clock: "20:00" });
+    expect(at3.board).toEqual({ score: [1, 0], period: 1, clock: "0:00" });
+    expect(boardKey(at0.board!)).toBe("0-0 1 20:00");
+    // The same planes, in the same order and places: only the faces' drawings differ.
+    expect(at0.model.planes.map((p) => p.id)).toEqual(arena.planes.map((p) => p.id).concat(at0.model.planes.map((p) => p.id).slice(arena.planes.length)));
+    expect(at0.model.planes.slice(0, arena.planes.length).map((p) => p.o.join())).toEqual(arena.planes.map((p) => p.o.join()));
+    expect(faces(at0.model)).toHaveLength(4);
+    expect(faces(at0.model)).not.toEqual(faces(arena));
+    expect(faces(at0.model)).not.toEqual(faces(at3.model));
+    // A time with the same board is the same drawing.
+    expect(faces(replayTurnModel(arena, game, 0.0001).model)).toEqual(faces(at0.model));
+  });
+
+  it("does not change the model it is given, and a model with no board is as it was", () => {
+    const before = JSON.stringify(arena);
+    replayTurnModel(arena, game, 2);
+    expect(JSON.stringify(arena)).toBe(before);
+    expect(replayTurnModel(model, game, 2).board).toBeUndefined();
+    expect(replayTurnModel(arena, game, 2, { board: false }).board).toBeUndefined();
+    expect(faces(replayTurnModel(arena, game, 2, { board: false }).model)).toEqual(faces(arena));
+  });
+
+  it("writes only digits and a colon for the clock, and no text", () => {
+    const [hung] = hungBoards(arena);
+    const south = hungBoardPlanes(hung, { score: [0, 0], period: 1, clock: "<script>" }).find((p) => p.id === "centre-board-south")!;
+    expect(south.svg).not.toContain("<script");
+    const live = hungBoardPlanes(hung, { score: [10, 2], period: 3, clock: "19:20" }).find((p) => p.id === "centre-board-south")!;
+    expect(live.svg).not.toContain("<text");
+    expect(live.svg.length).toBeGreaterThan(south.svg.length);
   });
 });

@@ -252,7 +252,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   // The scoreboard hung over the middle of the surface (a ballpark has none, and a hall's own scoreboards stand in its place).
   if (boards?.scoreboard === true && v.noCentre !== true && hangsOver(String(o.sport))) {
     const planes = centreBoard("centre-board", stands.box, lift, boards);
-    items.push({ id: "centre-board", kind: "hung-board", at: centre, height: topOf(planes), planes });
+    items.push({ id: "centre-board", kind: "hung-board", at: centre, height: topOf(planes), planes, hung: { id: "centre-board", box: stands.box, lift, look: boards } });
   }
   if (wallSeats.length > 0) items.push({ id: "wall-seats", kind: "wall-seats", at: centre, height: topOf(wallSeats), planes: wallSeats });
 

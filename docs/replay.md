@@ -47,6 +47,7 @@ const timeline = {
 | `frames[].possession` | Who has the ball or puck, when the data says: an object's `id`, or `home` or `away`; `null` for nobody. It holds until a later frame says otherwise. |
 | `events[]` | `t`, `kind` (`pass`, `shot`, `goal`, `whistle`, or a word of your own), `team`, where it was (`x`, `y`, or the object `by`, else the ball's place), where it ended (`x2`, `y2`, or the object `to` at `until`), `until` and `label`. |
 | `from`, `units`, `attacking`, `surfaceSize`, `anchors` | As for a [layer](./layers.md#what-a-layer-takes): the frame, the unit and the rest that put the numbers on the surface. |
+| `periods`, `clock` | The periods of the game and which way its clock counts: what the [scoreboard over the arena](#the-scoreboard-over-the-arena-follows-the-game) shows. |
 
 An object in two neighbouring frames moves between them; one only in the earlier frame stays where it was until the next; one only in the later frame appears when its frame comes. Objects without a place are left out. A timeline is read once and kept: make a new one rather than changing one that has been used.
 
@@ -89,6 +90,7 @@ console.log(activeEvents(timeline, 2.5).map((a) => `${a.event.kind} at ${a.x}`).
 | `drawFrame`, `replayLayers`, `replaySnapshot` | The frame as a string; its data layers, to put in the `layers` of a drawing of your own; what is on the surface at a time. |
 | `replaySummary`, `replayTable` | The sentence a replay adds to the description, and an HTML table of its events for a reader who cannot see the drawing. |
 | `replayInfo`, `replayTimes`, `replayEvents`, `replayClock` | The length, the frame times, the events and `0:12` for 12 seconds. |
+| `replayBoard(timeline, t)` | The scoreboard at `t`: the score, the period and the game clock, from the goals and the periods. |
 
 ## Playing it in a page
 
@@ -174,6 +176,38 @@ The controls are the flat replay's, under the view's: play, pause, step, speed, 
 The view's Auto-turn button still turns it, and the auto-turn and the replay share one animation frame. A reader who prefers reduced motion gets steps, as on the flat replay. The element does it too: `<kyogijo-field turn>` with a `timeline` plays the replay on its 3D view.
 
 What it costs: nothing runs while the replay is paused, while the page is hidden or while the view is out of sight (no animation frame is asked for), one frame is asked for at a time while it plays, with the auto-turn on or off, and the elements of the view are the same ones after ten times round a looping game: a browser test holds each of these. `destroy` on the replay (or on the view) takes its controls, its listeners and its frame away. Where the browser cannot draw the 3D view, `view.replay` plays the flat replay instead.
+
+### The scoreboard over the arena follows the game
+
+![The arena from the broadcast camera a moment after the first goal: the scoreboard hung over centre ice reads 1-0, the first period and its clock](./pictures/hero-game-board-3d-desk-light.webp)
+
+A venue with its LED boards on (`crowd: { boards: true }`, or the demo's Boards button) has a scoreboard hung over the middle of the ice. While a replay plays on that view, the board shows the replay's own score, period and game clock, taken from the same timeline and the same clock as the controls: the **score** is the goals (`events` of kind `goal`, by `team`) at or before the time, the **period** is the one the clock is in (`timeline.periods`), and the **game clock** counts the period's time down (or up, with `clock: "up"`). With no replay, or when the replay ends (`destroy`), the board is what the options made it, as before.
+
+```ts
+import { replayBoard } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+
+const frames = [0, 60, 120].map((t) => ({ t, objects: [{ id: "puck", team: "puck" as const, x: 0, y: 0 }] }));
+const timeline = {
+  frames,
+  events: [{ t: 30, kind: "goal", team: "home" as const }],
+  periods: [{ start: 0, end: 60, length: 1200 }, { start: 60, end: 120, length: 1200 }],
+};
+const at = (t: number) => JSON.stringify(replayBoard(timeline, t));
+console.log(at(0));
+console.log(at(30));
+console.log(at(90));
+// {"score":[0,0],"period":1,"clock":"20:00"}
+// {"score":[1,0],"period":1,"clock":"10:00"}
+// {"score":[1,0],"period":2,"clock":"10:00"}
+```
+
+| Field of the timeline | What it does |
+| --- | --- |
+| `periods[]` | `start` and `end` (seconds on the timeline's clock), `number` (its place in the list when missing) and `length`. With no periods the whole replay is one period with no number on the board. |
+| `periods[].length` | How long the period is on the game clock, in seconds. A replay re-timed to minutes (the example game plays a period in about four) gives `1200` for a hockey period, and the board counts twenty minutes through it. Without it the clock runs in the timeline's own seconds. |
+| `clock` | `"down"` (the default: the time left, as hockey, basketball and football count) or `"up"` (the time gone, as soccer does). |
+
+What it costs: the board is written only when what it shows changes. A goal, a new period, a seek, a step, the period buttons and a pause set it at once; while the replay plays, the clock is written at most once a second (a period's clock may change more often than that at 4 times speed, and a write is skipped until a second has passed). Only the SVG of the board's four faces is written, never the view; nothing runs while the replay is paused, hidden or out of sight, and the elements stay the same ones. `view.replay(timeline, { board: false })` leaves the board as the options made it. A page that draws a board of its own reads `replayBoard(timeline, t)`, which is pure: a seek back finds the score as it was.
 
 The model of a frame is pure, as `drawFrame` is: `replayTurnModel(model, timeline, t, look)` lays the replay on a 3D view's model at a time (its floor, and a disc for every one tracked), so the same options and time give the same picture.
 

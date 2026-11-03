@@ -16,6 +16,25 @@ export interface Boards {
   score: [number, number];
   /** Each lit panel has a halo under it (the venue is lit as at night). */
   glow: boolean;
+  /** What a replay adds to the scoreboard's face: the period and the game clock. Missing, the face is the score alone, as it always was. */
+  live?: BoardLive;
+}
+
+/** The period and the clock a scoreboard shows while a game is replayed on it. */
+export interface BoardLive {
+  /** The period (1, 2, 3...), or `undefined` for a game with none. */
+  period?: number;
+  /** The clock as it is written, `19:20`: digits and one colon. */
+  clock: string;
+}
+
+/** The scoreboard hung over a surface, with what it is made from: a replay draws its faces again with the score and the clock of the time it is at. */
+export interface HungBoard {
+  id: string;
+  box: { x: number; y: number; w: number; h: number };
+  /** How high the surface stands, in feet. */
+  lift: number;
+  look: Boards;
 }
 
 /** The package's own colours of light: amber, blue and a white with a little blue in it. */
@@ -165,9 +184,11 @@ export const hangsOver = (sport: string | undefined): boolean => sport !== "mlb"
 /** The segments of a seven-segment digit, a to g, that are lit for each digit. */
 const SEGMENTS = ["abcdef", "bc", "abged", "abgcd", "fgbc", "afgcd", "afgedc", "abc", "abcdefg", "abcdfg"] as const;
 
-/** A number of one or two digits in seven segments, `high` feet tall, from (x, y) at its top left: the path and the width it takes. */
-function digits(value: number, x: number, y: number, high: number): { d: string; width: number } {
-  const text = String(Math.min(99, Math.max(0, Math.trunc(value))));
+/** How wide a colon is, as a share of the height of the digits beside it. */
+const COLON = 0.3;
+
+/** A text of digits and colons in seven segments, `high` feet tall, from (x, y) at its top left: the path and the width it takes. */
+function segments(text: string, x: number, y: number, high: number): { d: string; width: number } {
   const w = high * 0.56;
   const t = high * 0.13;
   const half = high / 2;
@@ -181,13 +202,47 @@ function digits(value: number, x: number, y: number, high: number): { d: string;
     g: [t * 0.6, half - t / 2, w - t * 1.2, t],
   };
   let d = "";
+  let at = x;
   [...text].forEach((ch, i) => {
-    for (const s of SEGMENTS[Number(ch)]) {
-      const [rx, ry, rw, rh] = rects[s];
-      d += `M${n(x + i * (w + t) + rx)} ${n(y + ry)}h${n(rw)}v${n(rh)}h${n(-rw)}z`;
+    if (i > 0) at += t;
+    if (ch === ":") {
+      const cw = high * COLON;
+      const dot = t * 1.1;
+      for (const cy of [high * 0.3, high * 0.7]) d += `M${n(at + (cw - dot) / 2)} ${n(y + cy - dot / 2)}h${n(dot)}v${n(dot)}h${n(-dot)}z`;
+      at += cw;
+      return;
     }
+    for (const seg of SEGMENTS[Number(ch)] ?? "") {
+      const [rx, ry, rw, rh] = rects[seg];
+      d += `M${n(at + rx)} ${n(y + ry)}h${n(rw)}v${n(rh)}h${n(-rw)}z`;
+    }
+    at += w;
   });
-  return { d, width: text.length * w + (text.length - 1) * t };
+  return { d, width: at - x };
+}
+
+/** A number of one or two digits in seven segments, `high` feet tall, from (x, y) at its top left: the path and the width it takes. */
+const digits = (value: number, x: number, y: number, high: number): { d: string; width: number } => segments(String(Math.min(99, Math.max(0, Math.trunc(value)))), x, y, high);
+
+/** A clock a scoreboard may write: one or two digits, a colon and two digits. Anything else is left off (the text goes into a drawing). */
+export const safeClock = (value: unknown): string => (typeof value === "string" && /^\d{1,2}:\d{2}$/.test(value) ? value : "");
+
+/** The row over the score while a game is replayed: the period in a small frame and the game clock beside it, in seven segments, centred on the face between its end blocks. A game with no period has the clock alone. */
+function liveRow(w: number, h: number, room: number, live: BoardLive, color: string): string {
+  const high = Math.min(h * 0.24, room / 6);
+  const y = h * 0.18;
+  const clockWidth = segments(live.clock, 0, y, high).width;
+  const period = live.period === undefined ? "" : String(Math.min(99, Math.max(0, Math.trunc(live.period))));
+  const pad = high * 0.3;
+  const frame = period === "" ? 0 : segments(period, 0, y, high).width + pad * 2;
+  const gap = period === "" ? 0 : high * 0.5;
+  const x0 = (w - (frame + gap + clockWidth)) / 2;
+  let svg = "";
+  if (period !== "") {
+    const line = high * 0.07;
+    svg += `<path class="u-led" fill="none" stroke="${color}" stroke-width="${n(line)}" d="M${n(x0)} ${n(y - pad * 0.6)}h${n(frame)}v${n(high + pad * 1.2)}h${n(-frame)}z"/><path class="u-led" fill="${color}" d="${segments(period, x0 + pad, y, high).d}"/>`;
+  }
+  return svg + `<path class="u-led" fill="${color}" d="${segments(live.clock, x0 + frame + gap, y, high).d}"/>`;
 }
 
 /** The face of the main board, `w` by `h` feet: a dark screen with a band of light along its top and bottom, a block of colour at each end, and the score between them. */
@@ -201,18 +256,20 @@ function boardFace(w: number, h: number, look: Boards): string {
   const block = Math.min(w * 0.2, h * 0.5);
   const [yb, hb] = [h * 0.28, h * 0.44];
   svg += `<path class="u-led" fill="${c0}" d="M${n(edge * 2)} ${n(yb)}h${n(block)}v${n(hb)}h${n(-block)}z"/><path class="u-led" fill="${c1}" d="M${n(w - edge * 2 - block)} ${n(yb)}h${n(block)}v${n(hb)}h${n(-block)}z"/>`;
-  // The score: two numbers and a dash, as large as the face between the blocks lets them be.
+  // The score: two numbers and a dash, as large as the face between the blocks lets them be. A replayed game also has the clock and the period over it, so the score is a little smaller and lower.
   const room = w - 2 * (block + edge * 4);
+  const live = look.live !== undefined && safeClock(look.live.clock) !== "" ? look.live : undefined;
   const digitCount = String(look.score[0]).length + String(look.score[1]).length;
   const dash = 0.4;
-  const high = Math.min(h * 0.5, room / (digitCount * 0.56 + (digitCount - 2) * 0.13 + dash + 0.5));
+  const high = Math.min(h * (live === undefined ? 0.5 : 0.33), room / (digitCount * 0.56 + (digitCount - 2) * 0.13 + dash + 0.5));
   const [home, away] = [digits(look.score[0], 0, 0, high), digits(look.score[1], 0, 0, high)];
   const gap = high * 0.3;
   const total = home.width + gap + high * dash + gap + away.width;
   const x0 = (w - total) / 2;
-  const y0 = (h - high) / 2;
+  const y0 = live === undefined ? (h - high) / 2 : h * 0.46;
   const [h0, a0] = [digits(look.score[0], x0, y0, high), digits(look.score[1], x0 + home.width + gap * 2 + high * dash, y0, high)];
   svg += `<path class="u-led" fill="${c2}" d="${h0.d}${a0.d}M${n(x0 + home.width + gap)} ${n(y0 + high / 2 - high * 0.065)}h${n(high * dash)}v${n(high * 0.13)}h${n(-high * dash)}z"/>`;
+  if (live !== undefined) svg += liveRow(w, h, room, live, c2);
   return svg;
 }
 

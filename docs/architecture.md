@@ -202,6 +202,7 @@ src/
 ├── charts.types.ts     the charts' types
 ├── charts-entry.ts     the charts' entry
 ├── replay.ts           a replay's frame and its pure functions: interpolate, trails, possession, events, drawFrame
+├── replay.board.ts     a replay's scoreboard at a time, pure: the score from the goals, the period and the game clock from the periods
 ├── replay.control.ts   the replay's clock as a state machine: play, seek, step, speed, loop, reduced motion
 ├── replay.dom.ts       the replay's painter (it moves only the marks that move), its driver (the clock on animation frames, the controls, the keys, the live region) and the flat replay made of them
 ├── replay.types.ts     the replay's types
@@ -395,6 +396,7 @@ src/
 ├── turn.style.ts       the 3D view's colours, light and dark, and its rules
 ├── turn.dom.ts         the 3D view in a page: the pointer, the touch, the wheel, the keys, the glide, the live region, and the flat fallback
 ├── turn.replay.ts      a replay on the 3D view, as data: the floor at a time and the players standing up as discs that face the eye
+├── turn.replay.board.ts the scoreboard hung over a 3D view following a replay: its faces drawn again with the score and the clock, written when they change
 ├── turn.replay.dom.ts  a replay on the 3D view in a page: its controls under the view's, the floor's marks and the discs moved each frame
 ├── quality.ts          how much a 3D view draws: the three tiers and what each leaves out, the pixel ratio a layer is made at, and the governor that steps a tier down and up by the frames the view makes
 ├── turn-entry.ts       the 3D view's entry

@@ -211,8 +211,8 @@ export function replayPainter(source: PainterSource): ReplayPainter {
 
 /** What a driver is given: how to paint a time, where its keys are heard, and what it labels. */
 export interface DriverSource {
-  /** Move the drawing to a time. Called on every change of the clock. */
-  paint(t: number): void;
+  /** Move the drawing to a time. Called on every change of the clock, with the change (what moved it, and the state after). */
+  paint(t: number, change?: ReplayChange): void;
   language: Language;
   /** The element whose keys play, step and seek (its descendants too): the stage and the bar in a flat replay, the bar alone over a 3D view. */
   keysOn: HTMLElement;
@@ -366,7 +366,7 @@ export function replayDriver(doc: Document, timeline: ReplayTimeline, settings: 
   }
   const stop = controller.subscribe((change) => {
     sync(change);
-    source.paint(change.state.t);
+    source.paint(change.state.t, change);
     if (settings.announce !== false && change.crossed.length > 0 && (change.reason === "tick" || change.reason === "step")) {
       live.textContent = change.crossed.map((e) => describeEvent(e, language, info.start)).join(". ");
     }

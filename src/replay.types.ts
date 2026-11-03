@@ -58,6 +58,17 @@ export interface ReplayEvent {
   label?: string;
 }
 
+/** A period of the game (or a half, a quarter, an inning) on the timeline's clock: what a scoreboard on the surface shows as the period and counts its clock in. */
+export interface ReplayPeriod {
+  /** The period's number as the board writes it. Its place in the list (1 for the first) when missing. */
+  number?: number;
+  /** Where it begins and ends, in seconds on the timeline's clock. */
+  start: number;
+  end: number;
+  /** How long the period is on the game clock, in seconds, when the replay is re-timed (a made-up game played in minutes: 1200 for a hockey period). The board's clock runs through it from start to end. Else the clock runs in the timeline's own seconds. */
+  length?: number;
+}
+
 /** Tracking data over time on a surface. Do not change a timeline after it has been used: make a new one. */
 export interface ReplayTimeline {
   /** The positions, from the first moment to the last. */
@@ -74,6 +85,10 @@ export interface ReplayTimeline {
   surfaceSize?: SurfaceSize;
   /** Landmarks of your own for an axis of the frame. */
   anchors?: { x?: readonly Landmark[]; y?: readonly Landmark[] };
+  /** The periods of the game, in order. A scoreboard hung over a 3D view shows the one the clock is in. */
+  periods?: readonly ReplayPeriod[];
+  /** Whether a scoreboard's game clock counts the time left in the period (`down`, the default: hockey, basketball, football) or the time gone (`up`: soccer). */
+  clock?: "down" | "up";
 }
 
 /** How a frame is drawn. */

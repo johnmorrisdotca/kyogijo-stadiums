@@ -57,7 +57,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Shirt numbers"));
 // true true
 ```
 
-The score at a time is the goals at or before it (`timeline.events`, `kind: "goal"`, by `team`); the names in a language are the roster's (`name.en`, `name.ja`), which a page can put on the frames' objects as their `label` for the tooltip. The demo does both: [A game on the ice, in 3D](https://johnmorrisdotca.github.io/kyogijo-stadiums/#game), and the arena at the top of the page plays it in front of its crowd with **Play a game**.
+The score at a time is the goals at or before it (`timeline.events`, `kind: "goal"`, by `team`); the names in a language are the roster's (`name.en`, `name.ja`), which a page can put on the frames' objects as their `label` for the tooltip. A scoreboard hung over a real arena's ice follows the game too, with its period and clock, when the timeline is given its periods: `view.replay({ ...game.timeline, periods: game.periods.map((p) => ({ ...p, length: 1200 })) })` (a period of twenty minutes on the board's clock; [the scoreboard over the arena](./replay.md#the-scoreboard-over-the-arena-follows-the-game)). The demo does that and both of the above: [A game on the ice, in 3D](https://johnmorrisdotca.github.io/kyogijo-stadiums/#game), and the arena at the top of the page plays it in front of its crowd with **Play a game**.
 
 ## How it is made
 

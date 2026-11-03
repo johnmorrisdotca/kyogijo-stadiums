@@ -5,6 +5,8 @@ import "./full.ts";
 import "./venues.all.ts";
 export { activeEvents, describeEvent, drawFrame, eventsBetween, interpolate, possession, replayClock, replayEvents, replayInfo, replayLayers, replaySnapshot, replaySummary, replayTable, replayTimes, trails } from "./replay.ts";
 export type { ReplaySnapshot } from "./replay.ts";
+export { boardClock, replayBoard, replayPeriods } from "./replay.board.ts";
+export type { ReplayBoardState } from "./replay.board.ts";
 export { alongPool, distanceAt, progressOf, raceTimeline } from "./pool.replay.ts";
 export type { Progress, RaceReplayOptions } from "./pool.replay.ts";
 export { formatTime, parseTime } from "./pool.race.ts";
@@ -19,6 +21,7 @@ export type {
   ReplayFrame,
   ReplayLook,
   ReplayObject,
+  ReplayPeriod,
   ReplayReason,
   ReplaySettings,
   ReplayState,

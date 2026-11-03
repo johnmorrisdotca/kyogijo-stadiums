@@ -2,11 +2,13 @@
 // disc that faces the eye (a circle for the home side, a square for the away side, a triangle for an official, each with its number), the marks of the flat replay stood up. Pure:
 // the same model, timeline, time and look give the same model. `turn.replay.dom.ts` moves it in a page.
 import { esc, num } from "./format.ts";
+import { replayBoard, type ReplayBoardState } from "./replay.board.ts";
 import { drawFrameOf, replayCast, replayPlacer, replaySnapshot, type ReplayGroup } from "./replay.ts";
 import type { ReplayLook, ReplayObject, ReplayTeam, ReplayTimeline } from "./replay.types.ts";
 import { n, type Plane } from "./turn.kit.ts";
 import type { TurnModel } from "./turn.model.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
+import { hungBoardPlanes, hungBoards } from "./turn.replay.board.ts";
 
 /** Who stands up on a 3D view: the players and the officials. The ball and the puck stay on the floor. */
 export const STANDING: readonly ReplayTeam[] = ["home", "away", "official"];
@@ -20,6 +22,8 @@ export const keepOnFloor = (group: Pick<ReplayGroup, "id">): boolean => !STOOD.h
 /** The settings a 3D replay takes beyond the flat replay's look: `stand: false` keeps the players flat on the floor, as the flat replay draws them. */
 export interface TurnReplayLook extends ReplayLook {
   stand?: boolean;
+  /** `false` leaves a scoreboard hung over the surface as the options made it; by default it shows the replay's score, period and clock (`replayBoard`). */
+  board?: boolean;
 }
 
 /**
@@ -77,6 +81,8 @@ export interface TurnReplayModel {
   size: number;
   /** The options the floor was drawn with, its `id` among them. */
   floorOptions: SurfaceOptions | ScoreOptions;
+  /** What the hung scoreboard shows at the time, when the model has one and the look lets the replay drive it. */
+  board?: ReplayBoardState;
 }
 
 /** The floor's options for a replay: the model's own, and an id of its own, so that the replay's groups are found in it. */
@@ -89,10 +95,17 @@ export const replayFloorOptions = (model: Pick<TurnModel, "id" | "options">): Su
 export function replayTurnModel(model: TurnModel, timeline: ReplayTimeline, t: number, look: TurnReplayLook = {}): TurnReplayModel {
   const stand = look.stand !== false;
   const floorOptions = replayFloorOptions(model);
+  // A scoreboard hung over the surface follows the game: its faces are drawn again with the score, the period and the clock at the time.
+  const hung = look.board === false ? [] : hungBoards(model);
+  const state = hung.length === 0 ? undefined : replayBoard(timeline, t);
+  const drawn = new Map<string, Plane>();
+  if (state !== undefined) for (const h of hung) for (const plane of hungBoardPlanes(h, state)) drawn.set(plane.id, plane);
+  const base: TurnModel = drawn.size === 0 ? model : { ...model, planes: model.planes.map((p) => drawn.get(p.id) ?? p) };
+  const board = state === undefined ? {} : { board: state };
   const floor = drawFrameOf(floorOptions, timeline, t, look, stand ? keepOnFloor : () => true);
   const size = discSize(playingArea(model), look);
   const discs = new Map<string, { plane: Plane; on: boolean }>();
-  if (!stand) return { model: { ...model, floor }, discs, size, floorOptions };
+  if (!stand) return { model: { ...base, floor }, discs, size, floorOptions, ...board };
   const sport = String((model.options as SurfaceOptions).sport ?? "");
   const theme = (model.options as SurfaceOptions).theme;
   const vars = floorVars(floor);
@@ -105,7 +118,7 @@ export function replayTurnModel(model: TurnModel, timeline: ReplayTimeline, t: n
     const at = here.get(o.id);
     discs.set(o.id, { plane: discPlane(o, at?.[0] ?? 0, at?.[1] ?? 0, size, lift, discMarkup(o, size, sport, theme, vars)), on: at !== undefined });
   }
-  return { model: { ...model, floor, planes: [...model.planes, ...[...discs.values()].map((disc) => disc.plane)] }, discs, size, floorOptions };
+  return { model: { ...base, floor, planes: [...base.planes, ...[...discs.values()].map((disc) => disc.plane)] }, discs, size, floorOptions, ...board };
 }
 
 /** A number for a test or a page that wants to know where a disc stands: its middle on the floor, in feet. */

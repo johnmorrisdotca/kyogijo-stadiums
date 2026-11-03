@@ -14,6 +14,9 @@ export function loadGame() {
   return loading;
 }
 
+/** How long a period is on the game clock, in seconds: the replay plays it in a few minutes, and the scoreboard over the arena's ice counts a real period's twenty. */
+export const PERIOD_SECONDS = 1200;
+
 const labelled = new WeakMap();
 /**
  * The game's timeline in a language: each player's name and number as the label a reader hovers, and each goal's scorer. Made once a language, from the same frames.
@@ -28,7 +31,8 @@ export function gameTimeline(game, lang, goalWords) {
   const names = new Map([...game.rosters.home, ...game.rosters.away].map((p) => [p.id, p.name[lang] ?? p.name.en]));
   const frames = game.timeline.frames.map((frame) => ({ t: frame.t, objects: frame.objects.map((o) => (names.has(o.id) ? { ...o, label: names.get(o.id) } : o)) }));
   const events = game.timeline.events.map((e) => (e.kind === "goal" ? { ...e, label: goalWords({ team: game.teams[e.team].name[lang], name: names.get(e.by) ?? "" }) } : e));
-  made[lang] = { ...game.timeline, frames, events };
+  // The periods are the timeline's: the scoreboard hung over the hero's arena shows the period the clock is in and counts its game clock down through them.
+  made[lang] = { ...game.timeline, frames, events, periods: game.periods.map((p) => ({ number: p.number, start: p.start, end: p.end, length: PERIOD_SECONDS })) };
   return made[lang];
 }
 

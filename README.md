@@ -159,7 +159,7 @@ Real buildings drawn in the outline OpenStreetMap maps for them, each with a pla
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-game-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-game-3d-desk-light.webp" alt="The same game on the ice of a real arena, in front of its crowd: the players standing as discs on the rink inside two tiers of seats." width="250">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-game-3d-desk-light.webp" alt="The same game on the ice of a real arena, in front of its crowd: the players standing as discs on the rink inside two tiers of seats, and the scoreboard hung over centre ice showing the score, the period and the game clock." width="250">
 </picture>
 <br><em>The same game in an arena, in front of the crowd</em>
 </td>
@@ -172,6 +172,8 @@ Real buildings drawn in the outline OpenStreetMap maps for them, each with a pla
 </td>
 </tr>
 </table>
+
+The scoreboard hung over an arena's ice follows the replay: its score, period and game clock come from the same timeline and clock as the controls ([the scoreboard over the arena](./docs/replay.md#the-scoreboard-over-the-arena-follows-the-game)).
 
 **Surfaces** ([the surfaces](./docs/surfaces.md), [score and layout](./docs/score.md))
 

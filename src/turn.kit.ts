@@ -5,6 +5,8 @@
 // The frame is the drawing's own: x along the surface and y across it, both in feet, as the SVG has them (y grows downwards on the page), and z the height
 // above the surface, in feet, growing towards the eye of someone looking straight down.
 
+import type { HungBoard } from "./venue.boards.ts";
+
 /** A point or a direction: x, y, z in feet. */
 export type V3 = readonly [number, number, number];
 
@@ -86,6 +88,8 @@ export interface Upright {
   /** A second height worth saying (a net's height at the centre, a post's crossbar), in feet. */
   low?: number;
   planes: Plane[];
+  /** What a scoreboard hung over the surface was made from, so that a replay can draw its faces again with the score and the clock of a time (`replayTurnModel`). */
+  hung?: HungBoard;
 }
 
 /** The four numbers a plane's SVG needs: its length along `u` and along `v`, in feet. */

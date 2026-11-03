@@ -263,12 +263,35 @@ await takePictures({
       ready: READY,
       target: "#feature-stage .ky-turn-view",
       prepare: async (page) => {
+        // The LED boards on (0.53.0): the scoreboard hung over centre ice shows the game, with its period and clock.
+        await page.locator('#feature-bar [data-testid="part-boards"]').click();
         await page.locator('[data-testid="feature-game"]').click();
         await page.waitForSelector("#feature-stage .ky-turn-replay");
         await seekTo(page, "#feature-stage", 271);
         await page.locator("#feature-stage .ky-turn-view").focus();
         for (let i = 0; i < 3; i += 1) await page.keyboard.press("+");
         await page.waitForTimeout(400);
+        await page.locator("#feature-stage .ky-turn-view").blur();
+        await page.mouse.move(0, 0);
+        await settle(page);
+      },
+    },
+    // The scoreboard over the arena's ice following the game (0.53.0): from the broadcast camera, a moment after the first goal: 1-0, the first period and its clock.
+    {
+      subject: "hero-game-board-3d",
+      views: ["desk", "phone"],
+      url: address("fviewpoint=broadcast"),
+      height: 1100,
+      ready: READY,
+      target: "#feature-stage .ky-turn-view",
+      prepare: async (page) => {
+        await page.locator('#feature-bar [data-testid="part-boards"]').click();
+        await page.locator('[data-testid="feature-game"]').click();
+        await page.waitForSelector("#feature-stage .ky-turn-replay");
+        await seekTo(page, "#feature-stage", 100);
+        await page.locator("#feature-stage .ky-turn-view").focus();
+        for (let i = 0; i < 5; i += 1) await page.keyboard.press("+");
+        await page.waitForTimeout(900);
         await page.locator("#feature-stage .ky-turn-view").blur();
         await page.mouse.move(0, 0);
         await settle(page);
@@ -319,7 +342,7 @@ await takePictures({
 
 // The pictures that only a page of docs/ shows are taken with the rest and then moved to docs/pictures: docs/images holds the README's pictures (the family's lint counts every file there against the README's 2 MB, and wants each one used in the README),
 // and a page of docs/ names its own pictures in `./pictures/`.
-const DOCS_ONLY = new Set(["tall-phone", "badges-desk", "boards-judo-3d-desk", "boards-medals-desk", "boards-swimming-desk", "judo-kata-desk", "judo-kata-tapes-desk", "mma-cage-3d-desk", "tabletennis-area-desk", "tabletennis-area-3d-desk", "turn-court-desk", "turn-rink-desk", "turn-volleyball-desk", "stadiums-metlife-3d-desk", "stadiums-yankee-3d-desk", "stadiums-citi-3d-desk", "stadiums-olympic-3d-desk", "stadiums-barclays-3d-desk", "district-midtown-3d-desk", "district-bronx-3d-desk", "district-brooklyn-3d-desk", "district-montreal-olympic-3d-desk", "district-newyork-plan-desk", "district-montreal-city-plan-desk", "mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "district-tokyo-context-3d-desk", "district-seattle-context-3d-desk", "quality-high-3d-desk", "quality-medium-3d-desk", "quality-low-3d-desk", "district-kodokan-3d-desk", "district-kodokan-floor6-3d-desk", "district-kodokan-side-3d-desk", "outside-plan-25-desk", "outside-plan-desk", "outside-3d-desk", "vancouver-rogers-3d-desk", "vancouver-roof-open-3d-desk", "vancouver-masts-3d-desk", "vancouver-3d-desk", "vancouver-plan-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk", "night-td-3d-desk", "night-td-plan-desk", "night-lumen-3d-desk", "lights-down-td-3d-desk", "lights-down-td-blue-3d-desk", "lights-down-td-plan-desk", "presets-intro-3d-desk", "presets-concert-3d-desk", "presets-game-3d-desk"]);
+const DOCS_ONLY = new Set(["hero-game-board-3d-desk", "hero-game-board-3d-phone", "tall-phone", "badges-desk", "boards-judo-3d-desk", "boards-medals-desk", "boards-swimming-desk", "judo-kata-desk", "judo-kata-tapes-desk", "mma-cage-3d-desk", "tabletennis-area-desk", "tabletennis-area-3d-desk", "turn-court-desk", "turn-rink-desk", "turn-volleyball-desk", "stadiums-metlife-3d-desk", "stadiums-yankee-3d-desk", "stadiums-citi-3d-desk", "stadiums-olympic-3d-desk", "stadiums-barclays-3d-desk", "district-midtown-3d-desk", "district-bronx-3d-desk", "district-brooklyn-3d-desk", "district-montreal-olympic-3d-desk", "district-newyork-plan-desk", "district-montreal-city-plan-desk", "mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "district-tokyo-context-3d-desk", "district-seattle-context-3d-desk", "quality-high-3d-desk", "quality-medium-3d-desk", "quality-low-3d-desk", "district-kodokan-3d-desk", "district-kodokan-floor6-3d-desk", "district-kodokan-side-3d-desk", "outside-plan-25-desk", "outside-plan-desk", "outside-3d-desk", "vancouver-rogers-3d-desk", "vancouver-roof-open-3d-desk", "vancouver-masts-3d-desk", "vancouver-3d-desk", "vancouver-plan-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk", "night-td-3d-desk", "night-td-plan-desk", "night-lumen-3d-desk", "lights-down-td-3d-desk", "lights-down-td-blue-3d-desk", "lights-down-td-plan-desk", "presets-intro-3d-desk", "presets-concert-3d-desk", "presets-game-3d-desk"]);
 const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "docs");
 mkdirSync(join(docs, "pictures"), { recursive: true });
 for (const file of readdirSync(join(docs, "images"))) {

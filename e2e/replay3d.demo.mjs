@@ -411,4 +411,79 @@ test.describe("the demo's game", () => {
     await expect(page.locator("#feature-stage .ky-turn-replay")).toHaveCount(0);
     await expect(page.locator(at("feature-game-note"))).toBeHidden();
   });
+  test("the scoreboard hung over the hero's arena shows the game: seek past a goal and the score changes, seek back and it reverts; the clock is written once a second, not every frame", async ({ page }) => {
+    await page.addInitScript(COUNTERS);
+    const errors = await open(page, "?lang=en&help=off");
+    await page.locator('#feature-bar [data-testid="part-boards"]').click();
+    const face = page.locator('#feature-stage [data-part="centre-board-south"]');
+    await expect(face).toHaveCount(1);
+    // With no game, the board keeps today's look: the demo's plain 3 - 2, no clock, nothing written to it.
+    expect(await face.getAttribute("data-score")).toBeNull();
+    const plain = await face.innerHTML();
+    await page.locator(at("feature-game")).click();
+    await expect(page.locator("#feature-stage .ky-turn-replay")).toBeVisible();
+    const seek = (seconds) => page.locator("#feature-stage .ky-position").evaluate((el, value) => {
+      el.value = String(value);
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    }, seconds);
+    const shows = async () => [await face.getAttribute("data-score"), await face.getAttribute("data-period"), await face.getAttribute("data-clock")];
+    // At 0:07 of the game: 0-0, the first period, and a clock that has started.
+    await seek(7);
+    expect(await shows()).toEqual(["0-0", "1", "19:21"]);
+    const early = await face.innerHTML();
+    expect(early).not.toBe(plain);
+    // Past the first goal (home, 1:25) and past the second (away, 1:51): the score follows at once.
+    await seek(90);
+    expect((await shows())[0]).toBe("1-0");
+    const after = await face.innerHTML();
+    expect(after).not.toBe(early);
+    await seek(120);
+    expect((await shows())[0]).toBe("1-1");
+    // The second period, and the clock begins again; the third at its start.
+    await seek(300);
+    expect((await shows()).slice(1)).toEqual(["2", expect.any(String)]);
+    await seek(470);
+    expect((await shows())[1]).toBe("3");
+    // Back before the goals: the score is what it was, and the drawing is the very one from before.
+    await seek(7);
+    expect(await shows()).toEqual(["0-0", "1", "19:21"]);
+    expect(await face.innerHTML()).toBe(early);
+    await seek(90);
+    expect(await face.innerHTML()).toBe(after);
+    // Stepping to the next moment and pausing set it at once too: a step across the goal at 84.76.
+    await seek(84.5);
+    expect((await shows())[0]).toBe("0-0");
+    for (let i = 0; i < 8 && (await shows())[0] === "0-0"; i += 1) await page.locator("#feature-stage").getByRole("button", { name: "Next frame" }).click();
+    expect((await shows())[0]).toBe("1-0");
+    // Playing at four times speed from 7 s: the clock is written about once a second (the period's clock runs several times faster than the replay's), a frame is not.
+    await seek(7);
+    await page.locator("#feature-stage .ky-turn-replay .ky-speed").selectOption("4");
+    await page.evaluate(() => {
+      const svg = document.querySelector('#feature-stage [data-part="centre-board-south"] > svg');
+      window.__boardWrites = 0;
+      new MutationObserver((list) => { window.__boardWrites += list.length; }).observe(svg, { childList: true });
+    });
+    await page.locator("#feature-stage .ky-turn-replay").getByRole("button", { name: "Play" }).click();
+    await page.mouse.move(0, 0);
+    const before = (await shows())[2];
+    const per = await framesOver(page, 3000);
+    const writes = await page.evaluate(() => window.__boardWrites);
+    expect(per.most).toBe(1);
+    expect(per.asked).toBeGreaterThan(20);
+    expect(writes).toBeGreaterThanOrEqual(2);
+    expect(writes).toBeLessThanOrEqual(5);
+    expect((await shows())[2]).not.toBe(before);
+    // Paused, nothing is written.
+    await page.locator("#feature-stage .ky-turn-replay").getByRole("button", { name: "Pause" }).click();
+    await page.waitForTimeout(100);
+    const held = await page.evaluate(() => window.__boardWrites);
+    await page.waitForTimeout(1500);
+    expect(await page.evaluate(() => window.__boardWrites)).toBe(held);
+    // Taking the game away gives back the board it had, and the replay leaves nothing on the face.
+    await page.locator(at("feature-game")).click();
+    await expect(page.locator("#feature-stage .ky-turn-replay")).toHaveCount(0);
+    expect(await face.innerHTML()).toBe(plain);
+    expect(await face.getAttribute("data-score")).toBeNull();
+    expect(errors).toEqual([]);
+  });
 });

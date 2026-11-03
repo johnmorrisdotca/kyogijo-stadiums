@@ -7,6 +7,7 @@ import { useTurnReplay } from "./turn.dom.ts";
 import { drawFrameOf, replayPlacer, replaySnapshot } from "./replay.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { TurnModel } from "./turn.model.ts";
+import { boardFollower } from "./turn.replay.board.ts";
 import { keepOnFloor, moveDisc, replayTurnModel, type TurnReplayLook, type TurnReplayModel } from "./turn.replay.ts";
 import type { Language } from "./types.ts";
 
@@ -39,6 +40,8 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
   /** The element of each disc, and whether it was last shown. */
   let discs = new Map<string, { el: HTMLElement | null; shown: boolean }>();
   let placedAt = Number.NaN;
+  /** The scoreboard hung over the surface, which follows the game. */
+  const board = boardFollower(timeline, () => doc.defaultView?.performance.now() ?? 0);
 
   const painter = replayPainter({
     doc,
@@ -83,9 +86,10 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
   const wrap = doc.createElement("div");
   wrap.className = "ky-replay ky-turn-replay";
   const driver = replayDriver(doc, timeline, settings, {
-    paint: (t) => {
+    paint: (t, change) => {
       painter.paint(t);
       place(t);
+      if (look.board !== false) board.follow(t, view.model(), change);
       view.repaint();
     },
     language,
@@ -131,6 +135,8 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
     const t = driver.controller.state().t;
     placedAt = t;
     painter.bind(t);
+    // The scoreboard was drawn by the model at this time: its elements are found again.
+    board.bind(root, view.model(), laid?.board);
   };
   view.setDecorate((model) => {
     laid = replayTurnModel(model, timeline, driver.controller.state().t, look);
@@ -151,6 +157,7 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
       wrap.remove();
       laid = undefined;
       discs = new Map();
+      board.clear();
       floorSvg = null;
       view.setDecorate(undefined);
     },
