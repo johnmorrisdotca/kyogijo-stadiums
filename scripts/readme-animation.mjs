@@ -49,6 +49,34 @@ const SHOTS = [
         el.dispatchEvent(new Event("input", { bubbles: true }));
       }, 255 + i / 3),
   },
+  // The camera following the play (docs/replay.md, "Following the play"): the game section with `follow=action` in the address, the auto-turn and the game playing together on the page's own clock, which
+  // the script holds and moves on by 200 milliseconds of the page's time for each frame (`clock`), so that the camera eases as a reader sees it, at the picture's own speed. No key is pressed: a key would hold
+  // the camera. For docs/replay.md only.
+  {
+    subject: "following-game-desk",
+    docs: true,
+    url: "/?help=off&follow=action",
+    zoomOut: 0,
+    keys: false,
+    ready: '[data-testid="stage"][data-ready="true"]',
+    target: "#game-stage .ky-turn-view",
+    motion: "no-preference",
+    prepare: async (page) => {
+      await page.locator("#game").scrollIntoViewIfNeeded();
+      await page.waitForSelector("#game-stage .ky-turn-replay");
+      await page.mouse.move(0, 0);
+      await page.locator("#game-stage .ky-position").evaluate((el) => {
+        el.value = "12";
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      await page.clock.install();
+      await page.locator('#game-stage [data-act="play"]').click();
+      await page.locator("#game-stage .ky-turn-replay .ky-play").click();
+      await page.mouse.move(0, 0);
+      await page.clock.runFor(400);
+    },
+    each: (page) => page.clock.runFor(200),
+  },
 ];
 const BUDGET = 1.5 * 1024 * 1024;
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".md": "text/markdown" };
@@ -58,9 +86,10 @@ if (steps * STEP_DEGREES !== 360) throw new Error(`${steps} steps of ${STEP_DEGR
 if (!existsSync(join(root, "site", "index.html"))) throw new Error("site/ is not built: run `pnpm screenshots:animation`");
 const out = join(root, "docs", "images");
 mkdirSync(out, { recursive: true });
-const browser = await chromium.launch();
+// Headless, drawing in software (SwiftShader), as every picture of the family is taken: the same pixels on any machine, and no graphics card asked.
+const browser = await chromium.launch({ args: ["--headless=new", "--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--disable-gpu-compositing"] });
 try {
-  for (const { subject, url, zoomOut, ready, target: where, motion, prepare, each, docs } of SHOTS) for (const scheme of ["light", "dark"]) {
+  for (const { subject, url, zoomOut, ready, target: where, motion, prepare, each, docs, keys } of SHOTS) for (const scheme of ["light", "dark"]) {
     if ((process.env.ONLY !== undefined && process.env.ONLY !== subject) || (process.env.SCHEME !== undefined && process.env.SCHEME !== scheme)) continue;
     const context = await browser.newContext({ viewport: { width: width + 50, height: 900 }, deviceScaleFactor: 1, reducedMotion: motion ?? "reduce", colorScheme: scheme });
     const page = await context.newPage();
@@ -80,6 +109,7 @@ try {
     for (let i = 0; i < steps; i += 1) {
       if (each !== undefined) await each(page, i);
       png.push(await target.screenshot({ animations: "disabled" }));
+      if (keys === false) continue;
       await page.keyboard.press("ArrowLeft");
       // A view that glides (motion not reduced) has taken the step when its glide is over.
       if (motion !== undefined) await page.waitForTimeout(160);

@@ -1,5 +1,7 @@
 # Replay
 
+[日本語](replay.ja.md) · English
+
 A replay plays tracking data on a surface: where each player, the ball and the officials were, second by second, with the passes, the shots and the goals marked as they happen. The data is yours and nothing is fetched. `@johnmorrisdotca/kyogijo-stadiums/replay` has the frame as a string (`drawFrame`) and the pure functions behind it; `mountKyogijo(...).replay(...)` and `<kyogijo-field>` play it in a page.
 
 It is built on the [data layers](./layers.md) and the [coordinate frames](./frames.md): the positions are in a provider's frame (`from: "nhl-api"`, `from: "opta"`) or the surface's own feet, and every mark is an element of the drawing in the surface's own frame, cut to nothing and turned back upright when the surface lies tall.
@@ -232,6 +234,63 @@ console.log(JSON.stringify(laid.model) === JSON.stringify(replayTurnModel(model,
 ```
 
 The demo plays [a whole made-up game](./example-games.md) this way, and **Play a game** plays it wherever the rink is shown: the arena at the top of the page in front of its crowd, the Try it surface, flat or in 3D, and the real arenas in 3D.
+
+## Following the play
+
+![The made-up game on the 3D rink with the auto-turn running and the camera following the action: it closes in where the players gather round the puck and pulls back as they spread](./pictures/following-game-desk-light.webp)
+
+A replay can be watched with a camera that follows the play: when all the action is at one end of the ice it closes in on it, and when the players spread out again it pulls back, or it moves with the puck. It is off until the reader asks for it. The replay's bar has two buttons for it, **Action** and **Puck** (**Ball** for a game played with a ball): each presses in and out, one at a time, and pressing the one that is in turns the camera off. The setting `follow` (`"action"`, `"puck"` or `"off"`) starts with one, the controller's `setFollow(mode)` changes it and says so to its listeners (the reason is `follow`), and `<kyogijo-field follow="action">` does it on the element. The demo keeps the choice in its address (`follow=action`, `follow=puck`) for every game it plays.
+
+| Mode | What the camera frames |
+| --- | --- |
+| `action` | The puck or the ball and the five players nearest it, with room round them (6 per cent of the surface's length on each side), never closer than two and a half times the whole surface, so that the play still reads. When they bunch at one end it closes in there; as they spread it zooms out, as far as the whole surface. |
+| `puck` | The puck or the ball in the middle, at twice the whole surface. |
+| a stoppage | From a whistle or a goal until the next `faceoff` event that has a place (`x`, `y`), the faceoff dot, as close as the limits allow. A timeline with no `faceoff` events is followed through its stoppages as at any other time. |
+
+How it moves:
+
+- **It eases.** The middle of the frame and its zoom follow the shot with a critically damped spring, which never overshoots and settles in about a second and a half; the zoom eases as its logarithm, so that closing in and pulling back take the same time.
+- **Small moves do not move it.** A shot that moved less than 8 per cent of the frame, or a zoom that changed by less than 8 per cent, is not a new goal: the frame does not swim with every stride.
+- **It never leaves the surface.** The frame is always on the playing surface (it cannot look past the boards), never closer than the limit, and always holds the puck: a puck that runs ahead of the easing carries the frame with it, without a jump.
+- **When the play is still, it is still.** At rest the camera is exactly at its shot, and nothing more is written.
+
+Flat, the camera shows a part of the drawing by its `viewBox`, one attribute, from the whole frame to the action and back. In 3D it is a point of the floor to look at and a zoom on top of the view's own: the auto-turn goes on turning round the play while the camera follows, and every viewpoint (Overhead, Broadcast, End-on, Low corner) keeps its angle. A drag, a pinch, the wheel, the arrow keys or the view's turn and zoom buttons hold the camera where the reader left it, and a **Resume** button shows in the replay's bar until it is pressed; a viewpoint, Reset or a double click holds it too, and the view glides to that viewpoint with the whole surface in it. A reader who prefers reduced motion gets steps: each step of the replay puts the camera where it should be at once.
+
+The shot is pure arithmetic, so a page that draws a replay of its own, or a server, can use it:
+
+```ts
+import { followCamera, followShot } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+
+const box = { x: 0, y: 0, w: 200, h: 85 };   // the surface, in the drawing's feet
+// The puck in the far corner, five players round it and one back at the other end.
+const objects = [
+  { team: "puck" as const, x: 182, y: 20 },
+  { team: "home" as const, x: 176, y: 12 },
+  { team: "away" as const, x: 188, y: 26 },
+  { team: "home" as const, x: 170, y: 30 },
+  { team: "away" as const, x: 185, y: 8 },
+  { team: "home" as const, x: 160, y: 22 },
+  { team: "away" as const, x: 20, y: 42 },
+];
+const round = (s: { x: number; y: number; zoom: number }) => `${Math.round(s.x)} ${Math.round(s.y)} ${s.zoom.toFixed(2)}`;
+console.log(round(followShot("action", { objects, box })), round(followShot("puck", { objects, box })));
+// The camera starts from the whole surface and eases there over a second and a half.
+const camera = followCamera();
+const shots = Array.from({ length: 180 }, () => round(camera.update("action", { objects, box }, 1 / 60)));
+console.log(shots[0], "|", shots[29], "|", shots[179]);
+// 146 23 1.85 150 21 2.00
+// 100 42 1.00 | 122 33 1.34 | 146 23 1.85
+```
+
+| Function | What it gives |
+| --- | --- |
+| `followShot(mode, { objects, box, stop? }, limits?)` | The shot the play asks for: `{ x, y, zoom }`, the middle of the frame in the drawing's feet and the magnification of the surface (the frame is the surface's size over `zoom`). |
+| `followCamera(limits?)` | The camera that eases to it: `update(mode, input, dt)` moves it by `dt` seconds of the spring (at once without `dt`) and gives where it is. |
+| `followStop(timeline, t)` | The faceoff dot while the play is stopped at `t`, or `undefined`. |
+| `followWindow(shot, box, viewBox, map?)` | The part of a flat drawing to show for a shot, in its `viewBox` units. |
+| `clampShot`, `frameOf`, `springStep`, `zoomFor`, `FOLLOW_LIMITS` | A shot held to the surface and the limits, the frame a shot shows, one step of the spring, the zoom of a view with room round the surface, and the limits (`maxZoom` 2.5, `puckZoom` 2, `near` 5, `pad` 0.06, `dead` 0.08, `omega` 3.2, `leash` 0.06). |
+
+What it costs: nothing of its own. The camera moves inside the replay's own animation frame (on a 3D view, the one frame the view and the replay share), from the replay's frame at that time; nothing runs while the replay is paused, while the page is hidden or while the view is out of sight, and off and at rest it does nothing at all. A browser test holds that it eases (no jump between two frames), that the reader's drag holds it until Resume, that it asks for no frame while paused, hidden or out of sight and one a frame with the auto-turn running, that the elements and listeners are the same after ten times round a looping game with it on, and that `destroy` gives the view back as it was.
 
 ## A swimming race
 

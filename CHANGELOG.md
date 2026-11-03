@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **The camera follows the play (KYOGIJO-STADIUMS-46)** ([following the play](./docs/replay.md#following-the-play)): a replay can be watched with a camera that closes in where the action is and pulls back as the players spread, or moves with the puck. Off by default; the replay's bar has **Action** and **Puck** (**Ball** for a ball game) toggles, the setting `follow` (`"action"`, `"puck"`, `"off"`), the controller's `setFollow` and `holdFollow`, and the element's `follow` attribute. Action frames the puck and the five players nearest it, padded, never closer than 2.5 times the surface; Puck centres the puck at twice; from a whistle or a goal to the next `faceoff` event with a place, it goes to that faceoff dot. It eases with a critically damped spring, holds still for small moves (a dead zone), never leaves the surface, always holds the puck, and at rest writes nothing. Flat, it writes the drawing's `viewBox`; in 3D it looks at a point of the floor with a zoom over the view's, so the auto-turn and every viewpoint go on while it follows; the reader's drag, zoom, arrows or a viewpoint hold it until **Resume**. Reduced motion steps. It moves inside the replay's own animation frame, asks for none of its own, and runs nothing while paused, hidden or out of sight. The pure parts are in `/replay`: `followShot`, `followCamera`, `followStop`, `followWindow`, `clampShot`, `frameOf`, `springStep`, `zoomFor`, `FOLLOW_LIMITS`. The demo keeps the choice in its address (`follow=action`, `follow=puck`) for the hero's game, the Try it surface, the game section and the arenas page. `docs/replay.ja.md` is new: the camera in Japanese.
+
 ## [0.59.0] - 2026-11-03
 
 ### Fixed

@@ -180,6 +180,8 @@ Real buildings drawn in the outline OpenStreetMap maps for them, each with a pla
 </tr>
 </table>
 
+A camera can follow the play, flat or in 3D: it closes in where the action is and pulls back as the players spread, or moves with the puck, while the view goes on turning ([following the play](./docs/replay.md#following-the-play)).
+
 The scoreboard hung over an arena's ice follows the replay: its score, period and game clock come from the same timeline and clock as the controls ([the scoreboard over the arena](./docs/replay.md#the-scoreboard-over-the-arena-follows-the-game)).
 
 **Surfaces** ([the surfaces](./docs/surfaces.md), [score and layout](./docs/score.md))
