@@ -6,7 +6,7 @@
   },
   "venues": {
     "totalKB": 3165,
-    "totalGzipKB": 905,
+    "totalGzipKB": 907,
     "dataKB": 610
   },
   "district:pair": {
@@ -55,18 +55,18 @@
     "dataKB": 70
   },
   "stadiums": {
-    "totalKB": 3155,
-    "totalGzipKB": 900,
+    "totalKB": 3157,
+    "totalGzipKB": 905,
     "dataKB": 610
   },
   "halls": {
     "totalKB": 3255,
-    "totalGzipKB": 930,
+    "totalGzipKB": 933,
     "dataKB": 645
   },
   "boards": {
     "totalKB": 3265,
-    "totalGzipKB": 920,
+    "totalGzipKB": 923,
     "dataKB": 725
   },
   "flythrough": {
@@ -75,8 +75,8 @@
     "dataKB": 610
   },
   "judging": {
-    "totalKB": 3155,
-    "totalGzipKB": 905,
+    "totalKB": 3158,
+    "totalGzipKB": 908,
     "dataKB": 610
   },
   "circuits": {
