@@ -2,6 +2,7 @@
 // is played on are the index's (`game.js`): the button shows only while the surface on show has a game there and the view on show can play it, and is hidden, not greyed, otherwise. Off until
 // pressed; the game is loaded the first time it is pressed (once for the whole page: `loadGame` keeps it), and pressing again takes it away. Nothing runs here on a timer: the replay is the
 // package's own (`view.replay`, `mount.replay`), which asks for frames only while it plays in sight, and this only follows its clock for the score.
+import { followOfAddress, keepFollow } from "./follow.js";
 import { gameTimeline, gamesFor, loadGame, loadGames, periodAt, scoreAt } from "./game.js";
 
 /**
@@ -32,6 +33,8 @@ export function playGame({ button, note, host, lang, say, on = false, onChange =
   let game;
   let handle;
   let unfollow;
+  /** Stops keeping the camera's choice in the address. */
+  let unkeep;
   /** Where the game was, while the view it played on is made again. */
   let held;
   let score = "";
@@ -66,6 +69,8 @@ export function playGame({ button, note, host, lang, say, on = false, onChange =
     held = keep && handle !== undefined ? handle.state() : undefined;
     unfollow?.();
     unfollow = undefined;
+    unkeep?.();
+    unkeep = undefined;
     handle?.destroy();
     handle = undefined;
   }
@@ -80,8 +85,10 @@ export function playGame({ button, note, host, lang, say, on = false, onChange =
     score = "";
     // The sides first, so that the view the replay goes on already has the game's names and colours.
     follow(at?.t ?? game.timeline.frames[0]?.t ?? 0);
-    handle = view.replay(gameTimeline(game, lang(), goalWords), at === undefined ? { autoplay: true } : { start: at.t - at.start, speed: at.speed, loop: at.loop, autoplay: at.playing });
+    // The camera follows the play when the address says so (`follow=action` or `follow=puck`), and a press of Action or Puck is kept there.
+    handle = view.replay(gameTimeline(game, lang(), goalWords), { ...(at === undefined ? { autoplay: true } : { start: at.t - at.start, speed: at.speed, loop: at.loop, autoplay: at.playing }), follow: followOfAddress() });
     unfollow = handle.subscribe((change) => follow(change.state.t));
+    unkeep = keepFollow(handle);
     paint();
   }
 

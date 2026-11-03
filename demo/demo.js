@@ -20,6 +20,7 @@ import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZo
 import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-data.js";
 import { replayPlay } from "./replay-data.js";
 import { playGame } from "./play-game.js";
+import { followOfAddress, keepFollow } from "./follow.js";
 import { gameOptions, gameTimeline, loadGame as loadExampleGame, periodAt, scoreAt } from "./game.js";
 import { poolRace, shortRace } from "./pool-data.js";
 import { raceTimeline } from "./dist/replay-entry.js";
@@ -981,7 +982,8 @@ function drawGame() {
   gameView.period = 0;
   const score = scoreAt(game, at?.t ?? 0);
   const options = gameOptions(game, language.lang, score, periodAt(game, at?.t ?? 0));
-  const settings = at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop };
+  // The camera follows the play when the address says so, and Action or Puck in the bar writes it there.
+  const settings = { ...(at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop }), follow: followOfAddress() };
   const timeline = gameTimeline(game, language.lang, goalWords);
   if (gameView.view === "3d") {
     const view = mountKyogijoTurn(stage, options, { preset: "broadcast", ...wayOf() });
@@ -992,7 +994,12 @@ function drawGame() {
     gameView.holder = { update: (next) => mount.update({ ...next, orientation: "landscape" }), destroy: () => mount.destroy() };
     gameView.handle = mount.replay(timeline, settings);
   }
-  gameView.stop = gameView.handle.subscribe((change) => gameFollow(change.state.t));
+  const unscore = gameView.handle.subscribe((change) => gameFollow(change.state.t));
+  const unkeep = keepFollow(gameView.handle);
+  gameView.stop = () => {
+    unscore();
+    unkeep();
+  };
   gameFollow(gameView.handle.state().t);
   for (const button of $("game-views").children) button.setAttribute("aria-pressed", String(button.dataset.gameView === gameView.view));
   $("game-periods").replaceChildren(
