@@ -7,6 +7,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.60.1] - 2026-11-03
+
+### Fixed
+
+- **The home-screen icon loads under a strict content policy (MODULES-256)**: the demo pages' `apple-touch-icon` link is now relative to the page, so a page that allows images from its own site only (`img-src 'self'`) loads it, and a copy of the site served under another address finds it. The sharing pictures (`og:image`, `twitter:image`) stay absolute. The family's thumbnail file is version 2026-11-03.2.
+
 ## [0.60.0] - 2026-11-03
 
 ### Added

@@ -7,7 +7,7 @@ export const CATALOGUE_DATA: CatalogueData = {
  "generatedAt": "2026-11-03",
  "package": {
   "name": "@johnmorrisdotca/kyogijo-stadiums",
-  "version": "0.60.0"
+  "version": "0.60.1"
  },
  "address": "https://johnmorrisdotca.github.io/kyogijo-stadiums/catalogue.json",
  "site": "https://johnmorrisdotca.github.io/kyogijo-stadiums/",
