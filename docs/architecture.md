@@ -133,6 +133,16 @@ src/
 ├── multi.turn.ts       a layout in 3D: each surface as it stands on its own page, moved to its cell, with the table tops, the surrounds, the chairs and score tables, the scoreboards and the stands of the stadium, as a `TurnModel` for the 3D view; `mountMultiTurn`
 ├── multi.style.ts      the layout's rules, light and dark: the floors' colours, the barriers, the boards, the empty places and the colour of a layout that does not fit
 ├── multi.words.ts      the words of a layout in English and Japanese
+├── circuits-entry.ts   the circuits entry (`@johnmorrisdotca/kyogijo-stadiums/circuits`): `drawCircuit`, `circuitTable`, `mountCircuitTurn`, `circuitTurnMarkup`, `CIRCUITS`, `circuitById`, the words and the types
+├── circuits.types.ts   what a circuit is: its facts with their bases, what OpenStreetMap maps of it, and the options of a drawing
+├── circuits.data.ts    the circuits' facts (length, turns, direction, opening day, widths), each with its source and basis, made by `pnpm circuits`
+├── circuits.osm.data.ts the circuits' lap, pit lane, ground, pit building, turns, start and finish from OpenStreetMap (ODbL 1.0, apart), made by `pnpm circuits`
+├── circuits.geo.ts     the plain geometry of a lap: its length, a line made simpler, the way it runs and bends at a point, the place nearest a point
+├── circuits.ts         `CIRCUITS`, `circuitById` and the plan: the lap laid flat and turned to lie along the page, in feet, with its turns, start and finish placed on it
+├── circuits.draw.ts    a circuit drawn: the lap as a ribbon of the track's width, the pit lane, the start and finish, the arrows, the turns' numbers, the north arrow, the scale and the credit; `circuitTable`
+├── circuits.style.ts   a circuit's colours and rules, light and dark, for the drawing and the markers of its 3D view
+├── circuits.words.ts   the words of a circuit's drawing and 3D view in English and Japanese
+├── circuits.turn.ts    a circuit in 3D: its drawing as the floor, the pit building standing, each turn's number on a post, as a `TurnModel`; `mountCircuitTurn`
 ├── judging-entry.ts    the judging assignments entry (`@johnmorrisdotca/kyogijo-stadiums/judging`): `drawJudging`, `judgingChart`, `judgingTable`, `judgingBoard`, `mountJudgingTurn`, `mountJudgingBroadcast`, `judgingPrint`, the seats and the words
 ├── judging.types.ts    what an assignment, a mat, an official and a seat are
 ├── judging.data.ts     the seats of each style (a kata area's five judges, the central one in the middle) and the sources they are read from

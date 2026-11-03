@@ -287,6 +287,11 @@
       "import": "./dist/turn-entry.js",
       "default": "./dist/turn-entry.js"
     },
+    "./circuits": {
+      "types": "./dist/circuits-entry.d.ts",
+      "import": "./dist/circuits-entry.js",
+      "default": "./dist/circuits-entry.js"
+    },
     "./flythrough": {
       "types": "./dist/flythrough-entry.d.ts",
       "import": "./dist/flythrough-entry.js",
@@ -346,6 +351,8 @@
     "stadiums": "node scripts/build-stadiums.mjs",
     "stadiums:fetch": "node scripts/fetch-stadiums.mjs",
     "walk": "node scripts/build-walk.mjs",
+    "circuits": "node scripts/build-circuits.mjs",
+    "circuits:fetch": "node scripts/fetch-circuits.mjs",
     "osm-context": "node scripts/build-osm-context.mjs",
     "cityctx": "node scripts/build-cityctx.mjs",
     "cityctx:fetch": "node scripts/fetch-cityctx.mjs",

@@ -9,7 +9,7 @@ beforeEach(() => vi.resetModules());
 const KINDS = {
   "arenas-entry.ts": ["arena"], "parks-entry.ts": ["park"], "grounds-entry.ts": ["ground"],
   "areas-entry.ts": [], "cityctx-entry.ts": [], "osm-entry.ts": [], "plateau-entry.ts": [], "eras-entry.ts": [], "frames-entry.ts": [], "geometry-entry.ts": [], "leagues-entry.ts": [],
-  "district-lean-entry.ts": [], "venue-data-entry.ts": [],
+  "district-lean-entry.ts": [], "venue-data-entry.ts": [], "circuits-entry.ts": [],
 };
 /** The entries that have always had the real venues of the NHL's arenas (the others never did, and the lean district has none until it reads them). */
 const VENUE_ENTRIES = ["index.ts", "mount-entry.ts", "react-entry.ts", "element-entry.ts", "venues-entry.ts", "stadiums-entry.ts", "district-entry.ts", "athletics-entry.ts", "skating-entry.ts", "budo-entry.ts", "judging-entry.ts", "charts-entry.ts", "layouts-entry.ts", "multi-entry.ts", "replay-entry.ts", "scene-entry.ts", "canvas-entry.ts", "d3-entry.ts", "plot-entry.ts", "geojson-entry.ts", "png-entry.ts", "turn-entry.ts", "flythrough-entry.ts"];
