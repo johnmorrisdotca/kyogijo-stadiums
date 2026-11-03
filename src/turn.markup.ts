@@ -85,7 +85,12 @@ interface Prepared {
   base: (number[] | undefined)[];
   /** The place of each plane's depth, in pixels from the middle of the scene: x, y, z of the middle, and the lowest and highest z of its corners (for a wall that gives way by its side). Undefined for a billboard or a plane that goes by its corners. */
   mid: (readonly [number, number, number, number, number] | undefined)[];
+  /** Whether each plane is the venue's bowl (its stands, roof and boards), which stands on the floor's ground round the surface. */
+  bowl: boolean[];
 }
+
+/** The things of a venue's bowl: they stand on the ground round the surface, never under a raised floor. */
+const BOWL: ReadonlySet<string> = new Set(["stands", "wall-seats", "gallery", "roof", "ribbon-boards", "hung-board"]);
 
 const prepared = new WeakMap<readonly Plane[], Prepared>();
 
@@ -110,7 +115,8 @@ function prepare(model: TurnModel): Prepared {
     const zs = [p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]];
     mid.push([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, (p.o[2] + (p.u[2] + p.v[2]) / 2) * s, Math.min(...zs) * s, Math.max(...zs) * s]);
   }
-  const made: Prepared = { planes: model.planes, scale: s, centre, base, mid };
+  const ofBowl = new Set(model.uprights.items.filter((item) => BOWL.has(item.kind)).flatMap((item) => item.planes));
+  const made: Prepared = { planes: model.planes, scale: s, centre, base, mid, bowl: model.planes.map((p) => ofBowl.has(p)) };
   prepared.set(model.planes, made);
   return made;
 }
@@ -181,6 +187,13 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   const own = order.filter((one) => one.group !== APART).sort((a, b) => (rank === undefined || a.group === undefined || b.group === undefined ? 0 : rank[a.group] - rank[b.group]) || a.depth - b.depth);
   order.length = 0;
   for (let i = 0, j = 0; i < own.length || j < apart.length; ) order.push(j >= apart.length || (i < own.length && own[i].depth <= apart[j].depth) ? own[i++] : apart[j++]);
+  // A raised floor (a table's top) carries the ground the bowl stands on, so it is sorted by its middle among the surface's own things only: the parts of the bowl that are farther than its middle
+  // come after it, still in their own order, or the floor would be drawn over the far stands.
+  if (raised) {
+    const at = order.findIndex((one) => one.i === 0);
+    const far = order.slice(0, at).filter((one) => known.bowl[one.i - 1]);
+    if (far.length > 0) order.splice(0, at + 1, ...order.slice(0, at).filter((one) => !known.bowl[one.i - 1]), order[at], ...far);
+  }
   const stack = new Array<number>(count + 1).fill(0);
   stack[0] = 1;
   order.forEach((one, rank) => {
