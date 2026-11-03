@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.53.0] - 2026-11-03
+
 - **The arena's scoreboard shows the game being played (KYOGIJO-STADIUMS-35)** ([the scoreboard over the arena](./docs/replay.md#the-scoreboard-over-the-arena-follows-the-game)): while a replay plays on a 3D view whose venue has its LED boards on, the scoreboard hung over centre ice shows the replay's score, period and game clock instead of the fixed score of its options. `replayBoard(timeline, t)` (pure, from `replay`) works the board out from the timeline's goals and its new optional `periods` (`start`, `end`, `number`, `length`) and `clock` (`down` or `up`). The board is written when it changes: at once for a goal, a period, a seek, a step or a pause; the clock at most once a second while playing; nothing runs while paused, hidden or out of sight. Without a replay, or after `destroy`, the board is as before, and `view.replay(timeline, { board: false })` leaves it so. The demo's hero passes the example game's periods (a period is twenty minutes on the board's clock). About 4 kB more source for the 3D replay (its budget in `replay.budget.test.js` is 24 kB now).
 
 - Tests and docs, no change to the package: `e2e/centre.demo.mjs` holds that a drag cannot take the 3D view's stadium out of sight (it has no pan, so no Centre button) and that Reset and Home bring it back, and `docs/turn.md` says so.
