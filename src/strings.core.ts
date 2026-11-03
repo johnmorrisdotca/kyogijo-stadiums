@@ -772,6 +772,7 @@ export interface KyogijoWords {
     shot: string;
     goal: string;
     whistle: string;
+    faceoff: string;
     /** What is said when an event goes by: {what}, {team} and {time}. */
     announce: string;
     announceTeam: string;

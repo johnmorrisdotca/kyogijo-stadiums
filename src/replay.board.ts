@@ -1,8 +1,9 @@
 // What a scoreboard shows of a replayed game at a time: the score, the period and the game clock, worked out from the same timeline the replay plays (its goals and its periods). Pure: a timeline and a time
 // give the same board every time, so a seek, a step and a period's button all land on the right figures at once, and a replay that goes back finds the score as it was. The 3D view draws it on the scoreboard
 // hung over the surface (`turn.replay.ts`); a page that draws its own board reads it the same way.
+import { deadSeconds, stoppageAt } from "./replay.deadtime.ts";
 import { replayEvents, replayInfo } from "./replay.ts";
-import type { ReplayPeriod, ReplayTimeline } from "./replay.types.ts";
+import type { ReplayPeriod, ReplayStoppage, ReplayTimeline } from "./replay.types.ts";
 
 /** The board at a time. */
 export interface ReplayBoardState {
@@ -33,9 +34,54 @@ export function replayPeriods(timeline: ReplayTimeline): readonly (ReplayPeriod 
   return [...given].sort((a, b) => a.start - b.start).map((p, i) => ({ ...p, number: isNum(p.number) ? p.number : i + 1 }));
 }
 
+/** The game clock at a time on the replay's clock. */
+export interface ReplayGameClock {
+  /** The period's number, or `undefined` when the timeline has no periods. */
+  period?: number;
+  /** Seconds of the period played on the game clock, and seconds left of it. */
+  played: number;
+  left: number;
+  /** `false` in a stoppage (and before a period has begun or after it has ended): the game clock is standing still. */
+  running: boolean;
+  /** The stoppage the time is in, when it is in one. */
+  stoppage?: ReplayStoppage;
+}
+
 /**
- * The scoreboard of a replay at a time `t`, in seconds on the timeline's clock. The score is the goals at or before it; the period is the last one that has begun (the first, before any has);
- * the clock runs through the period from its full length to nothing, or from nothing up when the timeline counts `up`. A period with a `length` of its own runs its clock through that many
+ * The game clock at a time `t` on the replay's clock: the period it is in (the last that has begun; the first, before any has) and how much of it has been played. The game clock runs only while play is
+ * on: it stands still in each of the timeline's `stoppages`, while the replay's clock moves on through it. A period's `length` is spread over the seconds of it that are not in a stoppage, so a game
+ * re-timed to minutes reads like the real one. Pure.
+ * @example
+ * ```ts
+ * import { replayGameClock } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+ * const timeline = {
+ *   frames: [{ t: 0, objects: [] }, { t: 70, objects: [] }],
+ *   periods: [{ start: 0, end: 70, length: 1200 }],
+ *   stoppages: [{ start: 30, end: 40, reason: "goal" }],
+ * };
+ * const at = (t: number) => { const c = replayGameClock(timeline, t); return `${c.played} ${c.running}`; };
+ * console.log(at(15), at(30), at(35), at(40), at(55));
+ * // 300 true 600 false 600 false 600 true 900 true
+ * ```
+ */
+export function replayGameClock(timeline: ReplayTimeline, t: number): ReplayGameClock {
+  const periods = replayPeriods(timeline);
+  let at = periods[0];
+  for (const p of periods) if (p.start <= t) at = p;
+  const live = at.end - at.start - deadSeconds(timeline, at.start, at.end);
+  const into = Math.min(at.end, Math.max(at.start, t));
+  const gone = into - at.start - deadSeconds(timeline, at.start, into);
+  const share = live > 0 ? Math.min(1, Math.max(0, gone / live)) : 0;
+  const length = isNum(at.length) && at.length > 0 ? at.length : live;
+  const stoppage = stoppageAt(timeline, t);
+  const played = share * length;
+  const running = stoppage === undefined && t >= at.start && t < at.end;
+  return { ...(at.number === undefined ? {} : { period: at.number }), played, left: length - played, running, ...(stoppage === undefined ? {} : { stoppage }) };
+}
+
+/**
+ * The scoreboard of a replay at a time `t`, in seconds on the timeline's clock. The score is the goals at or before it; the period and the clock are the game clock's (`replayGameClock`): the clock runs
+ * through the period from its full length to nothing, or from nothing up when the timeline counts `up`, and stands still in a stoppage. A period with a `length` of its own runs its clock through that many
  * seconds however long it lasts on the timeline, so a game re-timed to minutes can read like the real one.
  * @example
  * ```ts
@@ -61,13 +107,8 @@ export function replayBoard(timeline: ReplayTimeline, t: number): ReplayBoardSta
     if (e.t > t) break;
     if (e.kind === "goal" && (e.team === "home" || e.team === "away")) score[e.team === "home" ? 0 : 1] += 1;
   }
-  const periods = replayPeriods(timeline);
-  let at = periods[0];
-  for (const p of periods) if (p.start <= t) at = p;
-  const span = at.end - at.start;
-  const share = span > 0 ? Math.min(1, Math.max(0, (t - at.start) / span)) : 0;
-  const length = isNum(at.length) && at.length > 0 ? at.length : span;
+  const game = replayGameClock(timeline, t);
   // Down: the time left, rounded up, so that the full length shows until the period has moved and nothing shows only at its end. Up: the whole seconds gone.
-  const clock = timeline.clock === "up" ? boardClock(share * length) : boardClock(Math.ceil((1 - share) * length - 1e-9));
-  return at.number === undefined ? { score, clock } : { score, period: at.number, clock };
+  const clock = timeline.clock === "up" ? boardClock(game.played) : boardClock(Math.ceil(game.left - 1e-9));
+  return game.period === undefined ? { score, clock } : { score, period: game.period, clock };
 }

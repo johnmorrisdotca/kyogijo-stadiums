@@ -253,7 +253,7 @@ export function interpolate(timeline: ReplayTimeline, t: number, options: { smoo
 
 /**
  * The path each object took over the last `seconds` before `t`, oldest place first and ending at its place at `t`: the frames in between, and the places at the two ends.
- * Only objects that are there at `t` have a trail. `teams` and `ids` choose whose; all by default.
+ * Only objects that are there at `t` have a trail, and it begins after the last frame the object was not in (a dead puck out of sight). `teams` and `ids` choose whose; all by default.
  * @example
  * ```ts
  * import { trails } from "@johnmorrisdotca/kyogijo-stadiums/replay";
@@ -278,13 +278,15 @@ export function trails(timeline: ReplayTimeline, t: number, seconds: number, opt
     if (options.ids !== undefined && !options.ids.includes(id)) continue;
     const end = positionAt(p, id, now, smooth);
     if (end === undefined) continue;
-    const points: P[] = [];
+    let points: P[] = [];
     const start = positionAt(p, id, from, smooth);
     if (start !== undefined) points.push(start);
     for (let k = firstFrame; k <= lastFrame; k += 1) {
       if (p.times[k] <= from || p.times[k] >= now) continue;
       const o = mapOf(p, k)?.get(id);
-      if (o !== undefined) points.push([o.x, o.y]);
+      // Out of sight in a frame (a dead puck between the whistle and the drop): the trail begins again after it, and never joins where it went out to where it came back.
+      if (o === undefined) points = [];
+      else points.push([o.x, o.y]);
     }
     const last = points[points.length - 1];
     if (last === undefined || last[0] !== end[0] || last[1] !== end[1]) points.push(end);
@@ -368,7 +370,7 @@ export function eventsBetween(timeline: ReplayTimeline, from: number, to: number
 
 const wordsOf = (language: Language | undefined): KyogijoWords["replay"] => KYOGIJO_STRINGS[language === "ja" ? "ja" : "en"].replay;
 
-const KINDS = ["pass", "shot", "goal", "whistle"] as const;
+const KINDS = ["pass", "shot", "goal", "whistle", "faceoff"] as const;
 const kindWord = (w: KyogijoWords["replay"], kind: string): string => ((KINDS as readonly string[]).includes(kind) ? w[kind as (typeof KINDS)[number]] : kind);
 
 /**
@@ -476,7 +478,8 @@ export function replayGroups(timeline: ReplayTimeline, snap: ReplaySnapshot, loo
     const e = a.event;
     const title = describeEvent(e, language, start);
     const team = e.team === "home" || e.team === "away" ? e.team : undefined;
-    if (!isNum(a.x) || !isNum(a.y)) continue;
+    // A face-off is the puck on the dot: it is said, and the puck itself marks it.
+    if (!isNum(a.x) || !isNum(a.y) || e.kind === "faceoff") continue;
     const ended = isNum(a.x2) && isNum(a.y2) && (a.x2 !== a.x || a.y2 !== a.y);
     if (ended && (e.kind === "pass" || e.kind === "shot" || e.kind === "goal")) {
       lines.push({ x: a.x, y: a.y, x2: a.x2 as number, y2: a.y2 as number, team, outcome: e.kind === "pass" ? "complete" : e.kind === "shot" ? "shot" : "goal", title });
@@ -530,7 +533,9 @@ export function replayGroups(timeline: ReplayTimeline, snap: ReplaySnapshot, loo
     });
   }
   const balls = pick(["ball", "puck"]);
-  if (balls.length > 0) {
+  // The ball's layer is there whenever the timeline tracks a ball or a puck, empty while it is dead and out of sight (between a whistle and the drop), so that it comes back in its own place and
+  // nothing else of the drawing is written again.
+  if (balls.length > 0 || replayCast(timeline).some((o) => o.team === "ball" || o.team === "puck")) {
     out.push({
       id: "replay-ball",
       kind: "points",

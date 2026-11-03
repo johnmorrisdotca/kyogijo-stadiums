@@ -69,6 +69,24 @@ export interface ReplayPeriod {
   length?: number;
 }
 
+/**
+ * A stoppage: play is dead from `start` to `end` (the drop of the puck, a throw-in, a snap), in seconds on the timeline's clock. The game clock stands still in it while the replay's own clock (the
+ * slider) moves on: the players skate to their places for the restart, and the ball or the puck is dead.
+ */
+export interface ReplayStoppage {
+  /** When play stopped. */
+  start: number;
+  /** When play starts again: the game clock runs from here. */
+  end: number;
+  /** Why: a word of the sport's rule set (in hockey `goal`, `save`, `frozen`, `icing`, `offside`, `penalty`, `whistle`, `period-start`, `period-end`), or one of your own. */
+  reason?: string;
+  /** Where play starts again (the face-off dot), in the timeline's frame. */
+  x?: number;
+  y?: number;
+  /** The side the stoppage was called against (the side that iced the puck, went offside or took the penalty), when there is one. */
+  team?: "home" | "away";
+}
+
 /** Tracking data over time on a surface. Do not change a timeline after it has been used: make a new one. */
 export interface ReplayTimeline {
   /** The positions, from the first moment to the last. */
@@ -89,6 +107,8 @@ export interface ReplayTimeline {
   periods?: readonly ReplayPeriod[];
   /** Whether a scoreboard's game clock counts the time left in the period (`down`, the default: hockey, basketball, football) or the time gone (`up`: soccer). */
   clock?: "down" | "up";
+  /** The stoppages, in order. The game clock stands still in each, from its `start` to its `end`, and the board shows the same time all through it. */
+  stoppages?: readonly ReplayStoppage[];
 }
 
 /** How a frame is drawn. */

@@ -1256,6 +1256,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `replay.shot` | Shot | シュート |
 | `replay.goal` | Goal | ゴール |
 | `replay.whistle` | Whistle | ホイッスル |
+| `replay.faceoff` | Face-off | フェイスオフ |
 | `replay.announce` | {what}, {time} | {what}、{time} |
 | `replay.announceTeam` | {what}, {team}, {time} | {team}の{what}、{time} |
 | `replay.group` | Replay controls | リプレイの操作 |
