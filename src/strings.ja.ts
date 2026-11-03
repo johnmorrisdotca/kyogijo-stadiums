@@ -474,7 +474,7 @@ export const WORDS_JA: KyogijoWords = {
     keysTurn: "3Dビューでのプレーのリプレイです。スペースキーで再生と一時停止、カンマキーで1コマ戻り、ピリオドキーで1コマ進みます。Shiftキーを押しながらカンマキーかピリオドキーで5秒ずつ移動し、Endキーで最後に移動します。矢印キーではこれまでどおりビューを回せます。リプレイの操作ボタンにフォーカスがあるときは、左右の矢印キーで1コマずつ前後に移動し、Homeキーで最初、Endキーで最後に移動します。",
     keysTurnStep: "3Dビューでのプレーのリプレイです。コマ送りで表示しています。スペースキーまたはピリオドキーで進み、カンマキーで戻り、Endキーで最後に移動します。矢印キーではこれまでどおりビューを回せます。リプレイの操作ボタンにフォーカスがあるときは、右矢印キーで進み、左矢印キーで戻ります。",
     region: "リプレイ",
-    follow: "プレーを追う", followAction: "プレー", followActionLabel: "プレーを追う：パックやボールの近くの選手に寄って映す", followPuck: "パック", followPuckLabel: "パックを追う", followBall: "ボール", followBallLabel: "ボールを追う", followResume: "追う", followResumeLabel: "プレーをまた追う",
+    follow: "プレーを追う", followAction: "プレー", followActionLabel: "プレーを追う：パックやボールと、その近くの選手に寄って映す", followPuck: "パック", followPuckLabel: "パックを追う", followBall: "ボール", followBallLabel: "ボールを追う", followResume: "再び追う", followResumeLabel: "もう一度プレーを追う",
   },
   turn: {
     region: "3D表示", group: "視点",
