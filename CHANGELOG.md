@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.63.0] - 2026-11-03
+
 ### Added
 
 - **Drop feed files on the demo, kept in the browser (KYOGIJO-STADIUMS-52)** ([feeds](./docs/feeds.md#in-the-demo)): drop one or more feed files (an NHL play-by-play file as the public answer has it, or a kyogijo timeline) on the game section's feed panel or its view, or choose several; the first good one plays, a file that is not a feed is refused by name, and every feed is kept in this browser (localStorage up to about 4 MB in all, IndexedDB past that), listed with its game, file, sport, date and size, with Play, Remove, Remove all and the space used, and still there after a reload. A whole folder can be dropped: files are read one at a time with progress, up to 200 at once and 200 MB kept in all; more is refused in words. Written only on a drop, a choice or a removal; nothing leaves the browser, and a browser that keeps nothing still plays the feed. The adapter is tested on an invented answer in the raw play-by-play shape (`src/feeds.nhl.stub.json`).
