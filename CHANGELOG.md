@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.62.0] - 2026-11-03
+
 ### Added
 
 - **Penalties, power plays and the penalty box (KYOGIJO-STADIUMS-48)** ([penalties](./docs/replay.md#penalties-and-the-power-play)): a penalty in a replay is a stoppage with the face-off in the offending side's end; the penalized player skates to his side's penalty box, across the ice from the benches, and sits there for the penalty's time on the game clock while his side plays a skater short (two for overlapping penalties, never below three skaters), then comes back into the play. A timeline has `penalties` now; the board over the arena shows each side's strength and each penalty's clock (the time left in the short side's block of colour, PP in the other's), and `replayBoard` gives `strength` and `penalties`. One rule set, in `/replay`: `hockeyPenaltyEnds` (a minor 2 minutes, a double minor 4, a major 5, a misconduct 10 with a substitute; a power-play goal ends a minor but not a major; coincidental penalties keep the strength even; a third penalty waits), `hockeyPenaltyKind` (the NHL play-by-play's kinds), `hockeyPenaltyBox` (a stand-in for the rink's own boxes), `penaltiesAt` and `replayGameTime`. The example game has its seven penalties (`examples/games/canada-japan.json`, 1.1 MB). Players on the bench are not drawn.
