@@ -118,7 +118,14 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
  * Mount any 3D model (`mountKyogijoTurn` is this with the model of one surface; `mountMultiTurn` with a tournament layout's): `build` makes the model from what `update` is given, and the rest, the controls, the pointer, the keys
  * and the auto-turn, is the same.
  */
-export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettings, build: (options: O, settings: TurnSettings) => TurnModel, replayable = false): KyogijoTurn<O> {
+export function mountTurn<O>(
+  host: HTMLElement,
+  options: O,
+  settings: TurnSettings,
+  build: (options: O, settings: TurnSettings) => TurnModel,
+  replayable = false,
+  lend?: (internals: TurnInternals) => void,
+): KyogijoTurn<O> {
   const doc = host.ownerDocument;
   const win = doc.defaultView;
   /** The venue's settings as they are now: the mounted ones, altered by `update`. */
@@ -745,7 +752,28 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   // Nothing moves until the reader asks, unless the page did: `autoPlay` starts it, but not for a reader who prefers reduced motion (`"force"` does).
   if (settings.autoPlay === "force" || (settings.autoPlay === true && !calm())) setPlaying(true, true);
 
-  return {
+  /** What the view lends a replay, or another moving layer of the package's own (a race on a circuit): its elements, its model, a way to lay planes on it, and its frames. */
+  const internalsOf = (): TurnInternals => ({
+    doc,
+    root,
+    stage,
+    model: () => model,
+    setDecorate(next, after) {
+      decorate = next;
+      rendered = after;
+      // (A view that is going away is not drawn again.)
+      if (!alive) return;
+      renderWorld();
+      paint(shown);
+    },
+    repaint: () => {
+      if (alive) paint(shown);
+    },
+    requestFrame,
+    cancelFrame,
+  });
+
+  const mounted: KyogijoTurn<O> = {
     mode: "3d",
     view: () => ({ ...view }),
     set(next, glide = true) {
@@ -842,26 +870,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       if (!alive) throw new Error("this view was destroyed");
       if (!replayable) throw new Error("a replay plays on one surface, not on a layout");
       replaying?.destroy();
-      const internals: TurnInternals = {
-        doc,
-        root,
-        stage,
-        model: () => model,
-        setDecorate(next, after) {
-          decorate = next;
-          rendered = after;
-          // (A view that is going away is not drawn again.)
-          if (!alive) return;
-          renderWorld();
-          paint(shown);
-        },
-        repaint: () => {
-          if (alive) paint(shown);
-        },
-        requestFrame,
-        cancelFrame,
-      };
-      const mine = kitOf().attach(internals, timeline, replaySettings);
+      const mine = kitOf().attach(internalsOf(), timeline, replaySettings);
       replaying = mine;
       return {
         ...mine,
@@ -889,4 +898,6 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       host.replaceChildren();
     },
   };
+  lend?.(internalsOf());
+  return mounted;
 }

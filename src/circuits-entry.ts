@@ -11,3 +11,18 @@ export { CIRCUIT_WORDS } from "./circuits.words.ts";
 export type { CircuitWords } from "./circuits.words.ts";
 export { lineLength } from "./circuits.geo.ts";
 export type { Circuit, CircuitBasis, CircuitData, CircuitFact, CircuitOptions, CircuitOsm, CircuitOsmPoint } from "./circuits.types.ts";
+// A simulated race on any circuit: made-up cars from the grid to the flag, its moments, its drawing and board, and its view in a page.
+export { RACE_PACE, cornerSpeed, paceProfile, speedAt } from "./circuits.pace.ts";
+export type { PaceProfile } from "./circuits.pace.ts";
+export { RACE_DISTANCE, raceLaps, simulateRace } from "./circuits.race.ts";
+export type { CircuitRace, RaceCar, RaceOptions, RaceStop } from "./circuits.race.ts";
+export { carAt, raceAt, racePoint } from "./circuits.race.moment.ts";
+export type { RaceMoment, RaceStanding, RaceStatus } from "./circuits.race.moment.ts";
+export { RACE_STYLE, drawRace, gapText, lapTime, raceBoard, raceClock, raceDrawing, raceStage } from "./circuits.race.draw.ts";
+export type { RaceDrawOptions, RaceDrawing } from "./circuits.race.draw.ts";
+export { RACE_SPEEDS, mountCircuitRace } from "./circuits.race.dom.ts";
+export type { KyogijoRace, RaceState, RaceViewOptions, RaceViewSettings } from "./circuits.race.dom.ts";
+export { RACE_CARS_MAX, RACE_DRIVERS, RACE_TEAMS } from "./circuits.race.field.ts";
+export type { RaceDriver, RaceTeam } from "./circuits.race.field.ts";
+export { RACE_WORDS } from "./circuits.race.words.ts";
+export type { RaceWords } from "./circuits.race.words.ts";

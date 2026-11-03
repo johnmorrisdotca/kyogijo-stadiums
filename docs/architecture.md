@@ -133,7 +133,7 @@ src/
 ├── multi.turn.ts       a layout in 3D: each surface as it stands on its own page, moved to its cell, with the table tops, the surrounds, the chairs and score tables, the scoreboards and the stands of the stadium, as a `TurnModel` for the 3D view; `mountMultiTurn`
 ├── multi.style.ts      the layout's rules, light and dark: the floors' colours, the barriers, the boards, the empty places and the colour of a layout that does not fit
 ├── multi.words.ts      the words of a layout in English and Japanese
-├── circuits-entry.ts   the circuits entry (`@johnmorrisdotca/kyogijo-stadiums/circuits`): `drawCircuit`, `circuitTable`, `mountCircuitTurn`, `circuitTurnMarkup`, `CIRCUITS`, `circuitById`, the words and the types
+├── circuits-entry.ts   the circuits entry (`@johnmorrisdotca/kyogijo-stadiums/circuits`): `drawCircuit`, `circuitTable`, `mountCircuitTurn`, `circuitTurnMarkup`, `CIRCUITS`, `circuitById`, the simulated race (`simulateRace`, `raceAt`, `drawRace`, `raceBoard`, `mountCircuitRace`), the words and the types
 ├── circuits.types.ts   what a circuit is: its facts with their bases, what OpenStreetMap maps of it, and the options of a drawing
 ├── circuits.data.ts    the circuits' facts (length, turns, direction, opening day, widths), each with its source and basis, made by `pnpm circuits`
 ├── circuits.osm.data.ts the circuits' lap, pit lane, ground, pit building, turns, start and finish from OpenStreetMap (ODbL 1.0, apart), made by `pnpm circuits`
@@ -143,6 +143,13 @@ src/
 ├── circuits.style.ts   a circuit's colours and rules, light and dark, for the drawing and the markers of its 3D view
 ├── circuits.words.ts   the words of a circuit's drawing and 3D view in English and Japanese
 ├── circuits.turn.ts    a circuit in 3D: its drawing as the floor, the pit building standing, each turn's number on a post, as a `TurnModel`; `mountCircuitTurn`
+├── circuits.pace.ts    how fast a racing car can go round a lap: a speed every few metres from the bends' radii, held to the engine and the brakes (`paceProfile`, `RACE_PACE`)
+├── circuits.race.field.ts the made-up field of a simulated race: ten invented teams and twenty invented drivers, with their colours
+├── circuits.race.ts    a simulated race worked out from a seed: the grid, the laps, the gaps, the passes, the pit stops and the flag (`simulateRace`)
+├── circuits.race.moment.ts a moment of a race: where each car is on the drawing, the order, the gaps, the laps and the stops (`raceAt`)
+├── circuits.race.draw.ts a race drawn: the dots on the circuit, the clock's words and the timing board as a table (`drawRace`, `raceBoard`)
+├── circuits.race.words.ts the words of a race in English and Japanese
+├── circuits.race.dom.ts a race in a page: the circuit flat or in 3D with its dots, the clock, play, the speeds, the slider and the board, moving together (`mountCircuitRace`)
 ├── judging-entry.ts    the judging assignments entry (`@johnmorrisdotca/kyogijo-stadiums/judging`): `drawJudging`, `judgingChart`, `judgingTable`, `judgingBoard`, `mountJudgingTurn`, `mountJudgingBroadcast`, `judgingPrint`, the seats and the words
 ├── judging.types.ts    what an assignment, a mat, an official and a seat are
 ├── judging.data.ts     the seats of each style (a kata area's five judges, the central one in the middle) and the sources they are read from
