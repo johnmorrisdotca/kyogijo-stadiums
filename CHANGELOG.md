@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.61.0] - 2026-11-03
+
 ### Added
 
 - **Sound: the crowd of each kind of venue, at a level (KYOGIJO-STADIUMS-36)** ([sound](./docs/sound.md)): `@johnmorrisdotca/kyogijo-stadiums/sound` has `createKyogijoSound`, a surface's crowd made in the browser with Web Audio (the building's air, people talking, applause and the crowd's voice, and the pool's water), at five levels from quiet to a roar, heard in the room its venue makes (its roof and its seats: an arena rings, an open stadium does not), as large as the crowd in it and drier from above in 2D. An index of sound sets (`SOUND_BEDS`, `SOUND_SETS`, `SOUND_OF_SPORT`) gives every surface a bed for its kind of venue (arena, open stadium, ballpark, court hall, pool, dojo, ring, track) and the levels it offers (a kyudo hall only two); a surface with none has no sound. Off until turned on: nothing is fetched, made or decoded before, one audio context serves the page, and nothing plays or decodes while it is off, muted, hidden or out of sight. `soundRoom`, `soundMix` and `levelFor` are the rules, pure.
