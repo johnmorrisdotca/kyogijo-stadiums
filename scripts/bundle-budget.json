@@ -1,11 +1,11 @@
 {
   "home": {
-    "totalKB": 5475,
-    "totalGzipKB": 1675,
+    "totalKB": 5490,
+    "totalGzipKB": 1685,
     "dataKB": 1200
   },
   "venues": {
-    "totalKB": 3260,
+    "totalKB": 3265,
     "totalGzipKB": 940,
     "dataKB": 610
   },
@@ -40,12 +40,12 @@
     "dataKB": 300
   },
   "district:tokyo": {
-    "totalKB": 2370,
+    "totalKB": 2375,
     "totalGzipKB": 750,
     "dataKB": 130
   },
   "district:tokyokodokan": {
-    "totalKB": 2370,
+    "totalKB": 2375,
     "totalGzipKB": 750,
     "dataKB": 130
   },
