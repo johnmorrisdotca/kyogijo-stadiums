@@ -14,7 +14,7 @@ export const BAR_STYLE = `
 .ky-controls .ky-speeds{display:inline-flex;gap:.25rem}
 .ky-controls .ky-speeds button{padding:0 .5rem;font-variant-numeric:tabular-nums}
 .ky-controls .ky-slot{display:inline-flex;flex-wrap:wrap;align-items:center;gap:.5rem}
-.ky-controls .ky-slot:empty{display:none}
+.ky-controls .ky-slot:not(:has(> :not([hidden]))){display:none}
 .ky-controls input[type=range]{flex:1 1 140px;min-width:120px;min-height:44px;margin:0;accent-color:currentColor}
 .ky-controls .ky-readout{display:inline-flex;flex-direction:column;align-items:flex-end;min-width:6.5ch;font-variant-numeric:tabular-nums}
 .ky-controls .ky-readout output{min-width:6.5ch;text-align:end;font-weight:700}

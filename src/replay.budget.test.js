@@ -29,9 +29,9 @@ describe("the replay on the 3D view's code", () => {
     }
   });
 
-  // (24 kB since the scoreboard hung over the surface follows the game: the board's file is about 4 kB of it; 25 kB since the follow camera and the stoppages share it.)
-  it("is small: under 25 kB of source", () => {
-    expect(files.reduce((sum, [, text]) => sum + text.length, 0)).toBeLessThan(25_000);
+  // (24 kB since the scoreboard hung over the surface follows the game: the board's file is about 4 kB of it; 25 kB since the follow camera and the stoppages share it; 26 kB since the Auto-follow toggle beside Auto-turn.)
+  it("is small: under 26 kB of source", () => {
+    expect(files.reduce((sum, [, text]) => sum + text.length, 0)).toBeLessThan(26_000);
   });
 });
 
@@ -45,7 +45,8 @@ describe("the follow camera's code", () => {
     }
   });
 
-  it("is small: under 32 kB of source, comments and all", () => {
-    expect(files.reduce((sum, [, text]) => sum + text.length, 0)).toBeLessThan(32_000);
+  // (32 kB for the camera; 33 kB since the Auto-follow toggle beside Auto-turn, which a race's camera uses too.)
+  it("is small: under 33 kB of source, comments and all", () => {
+    expect(files.reduce((sum, [, text]) => sum + text.length, 0)).toBeLessThan(33_000);
   });
 });

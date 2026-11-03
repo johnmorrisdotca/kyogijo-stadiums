@@ -5,7 +5,12 @@ import { CIRCUIT_MARKER, buildCircuitTurn } from "./circuits.turn.ts";
 import { RACE_STYLE, carMarkup, carRadius, chequerSquares, lapTime, raceBoard, raceClock, raceDrawing, raceStage, standingGap } from "./circuits.race.draw.ts";
 import { raceAt, raceLapStep, raceLeaderMark, type RaceMoment } from "./circuits.race.moment.ts";
 import { TOWER_W, TOWER_ROWS, bindTower, podiumData, towerData, towerFrame, towerHeight, towerMarkup, writeTower, type TowerView } from "./circuits.race.tower.ts";
+import { RACE_FOLLOW_LIMITS, flatRaceShow, followModeOf, planBox, raceFollowInput, raceFollowMode, type RaceFollowMode } from "./circuits.race.follow.ts";
 import { createReplayBar, replayKey, type ReplayBarSlots } from "./replay.bar.ts";
+import { followRunner, type FollowBox, type FollowInput, type FollowRunner } from "./replay.follow.ts";
+import type { ReplayChange } from "./replay.types.ts";
+import { aimOf, autoFollowButton } from "./turn.follow.ts";
+import { CIRCUIT_ATTRIBUTION } from "./circuits.ts";
 import { simulateRace, type CircuitRace, type RaceOptions } from "./circuits.race.ts";
 import { RACE_WORDS } from "./circuits.race.words.ts";
 import type { CircuitOptions } from "./circuits.types.ts";
@@ -42,6 +47,8 @@ export interface RaceViewSettings {
   tower?: boolean;
   /** The broadcast-style tower over the left of the view: off by default; `setOverlay` changes it. */
   overlay?: boolean;
+  /** What the camera follows: `off` (the whole circuit, the default), `leader` (it zooms slowly into the leader, moves with them and always keeps them in view) or `pack` (the leading group, pulling back as it spreads). `setFollow` changes it. */
+  follow?: RaceFollowMode;
   /** Go round again from the start when the race ends, as a game's replay does: off by default. */
   loop?: boolean;
   /** Seconds from the start to begin at: 0 (the grid) by default. */
@@ -70,6 +77,9 @@ export interface RaceState {
   labels: boolean;
   tower: boolean;
   overlay: boolean;
+  /** What the camera follows, and whether the reader's own turn or zoom of a 3D view holds it until it is resumed. */
+  follow: RaceFollowMode;
+  followHeld: boolean;
   motion: "smooth" | "step";
 }
 
@@ -132,6 +142,10 @@ export interface KyogijoRace<O = RaceViewOptions, V = CircuitOptions> {
   setOverlay(overlay: boolean): void;
   /** Show or hide the podium card (it comes by itself at the chequered flag; closing it keeps it away until the race is taken back before the flag). */
   setPodium(shown: boolean): void;
+  /** What the camera follows. Pressing the same again lets it go: the camera eases back out to the whole circuit. */
+  setFollow(mode: RaceFollowMode): void;
+  /** Hold the camera where it is (the reader turned or zoomed the 3D view), or let it follow again (`false`). */
+  holdFollow(held: boolean): void;
   setSpeed(speed: number): void;
   /** Draw again with new options (the language, the theme): the clock and the race stay where they are. A new circuit, seed, laps or cars is a new race: mount it again. */
   update(options: O): void;
@@ -171,7 +185,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const media = typeof matchMedia === "function" ? matchMedia("(prefers-reduced-motion: reduce)") : undefined;
   const motionNow = (): "smooth" | "step" => (settings.motion === "smooth" ? "smooth" : settings.motion === "step" ? "step" : media?.matches === true ? "step" : "smooth");
   const clampSpeed = (n: number): number => Math.min(600, Math.max(1, n));
-  const state: RaceState = { t: Math.min(Math.max(settings.start ?? 0, 0), race.duration), duration: race.duration, playing: false, ended: false, speed: clampSpeed(Number.isFinite(settings.speed) ? (settings.speed as number) : 1), loop: settings.loop === true, markers: settings.markers === true, labels: settings.labels !== false, tower: settings.tower !== false, overlay: settings.overlay === true, motion: motionNow() };
+  const state: RaceState = { t: Math.min(Math.max(settings.start ?? 0, 0), race.duration), duration: race.duration, playing: false, ended: false, speed: clampSpeed(Number.isFinite(settings.speed) ? (settings.speed as number) : 1), loop: settings.loop === true, markers: settings.markers === true, labels: settings.labels !== false, tower: settings.tower !== false, overlay: settings.overlay === true, follow: raceFollowMode(settings.follow), followHeld: false, motion: motionNow() };
   const tell = (): void => settings.onChange?.({ ...state });
 
   // ---- The parts: the stage, the clock, the controls, the note, the live region and the board. ----
@@ -193,7 +207,12 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   podium.className = "ky-race-podium";
   podium.setAttribute("role", "group");
   podium.hidden = true;
-  view.append(stage, overlay, podium);
+  /** The map's credit as text outside the drawing: the drawing's own scrolls out of the frame while the camera is close in, and the credit must stay in sight. */
+  const credit = doc.createElement("p");
+  credit.className = "ky-race-credit";
+  credit.textContent = CIRCUIT_ATTRIBUTION;
+  credit.hidden = true;
+  view.append(stage, overlay, podium, credit);
   const hint = doc.createElement("p");
   hint.className = "ky-race-hint";
   hint.id = `ky-race-keys-${++counter}`;
@@ -227,6 +246,10 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   let leadTag: Element | null = null;
   let podiumDismissed = false;
   let podiumKey = "";
+  /** Whether the camera moved the 3D view since it was last painted, and the toggle beside the view's Auto-turn. */
+  let aimed = false;
+  let autoFollow: ReturnType<typeof autoFollowButton>;
+  let lastMode: RaceFollowMode = state.follow === "pack" ? "pack" : "leader";
   let disc = 0;
   // The leader's mark in 3D, in the disc's own size: a ring round it (1.4 discs across, its lower edge a little under the floor) and a tag of 1.0 by 0.5 discs over the ring.
   const ringSize = (): number => 1.4 * disc;
@@ -288,6 +311,8 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const drawFlat = (): void => {
     stage.innerHTML = scene.flat({ ...shown(), tower: state.tower }, state.t, fromFeed ? race : undefined);
     bindFlat();
+    // (A drawing written again is shown at the camera's shot.)
+    flatShow.again();
   };
   /** The model of the 3D view with a disc for each car at the clock's time. */
   const withCars = (model: TurnModel): TurnModel => {
@@ -333,6 +358,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       const el = inner.root.querySelector(`.ky-up[data-part="car-${line.car.id}"]`);
       cars.set(line.car.id, { el, text: el?.querySelector("text") ?? null, r: (disc / 2) * 0.9, at: "", position: line.position, status: line.status });
     }
+    autoFollow?.again();
     leadTag = inner.root.querySelector('.ky-up[data-part="lead-tag"]');
     const tower = inner.root.querySelector('.ky-up[data-part="tower"] svg');
     turnTower = tower === null ? undefined : bindTower(tower);
@@ -346,6 +372,11 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       });
       if (inner !== undefined) {
         inner.setDecorate(withCars, bindTurn);
+        // What lies over the view (the tower, the podium, the credit) is placed over the view itself, not over its buttons under it.
+        const picture = doc.createElement("div");
+        picture.className = "ky-race-vp";
+        inner.stage.before(picture);
+        picture.append(inner.stage, overlay, podium, credit);
         return;
       }
       // Where the browser cannot draw the 3D view, the race is drawn flat.
@@ -409,7 +440,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   let boardAt = -Infinity;
   let leader = moment.standings[0]?.car.id;
   let flagSaid = moment.flag;
-  const paint = (now: number | undefined, crossed: boolean): void => {
+  const paint = (now: number | undefined, crossed: boolean, reason?: ReplayChange["reason"]): void => {
     moment = raceAt(race, state.t);
     const w = RACE_WORDS[language];
     let moved = false;
@@ -468,6 +499,12 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
         }
       }
     }
+    // The camera, inside this frame: it moves toward the leader by the seconds that went by, or goes to where it should be at once after a seek.
+    if (reason !== undefined) {
+      runner.paint({ state: { t: state.t, playing: state.playing, follow: followModeOf(state.follow), followHeld: state.followHeld } as ReplayChange["state"], reason, crossed: [] });
+      if (aimed) moved = true;
+      aimed = false;
+    }
     if (moved) inner?.repaint();
     // At the flag the leader's tag turns into the chequered flag, the podium card comes (unless it was closed), and its button is there.
     const flag = String(moment.flag);
@@ -488,6 +525,80 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       boardAt = now ?? -Infinity;
       writeBoard();
     }
+  };
+
+  // ---- The camera: it zooms slowly into the leader (or the leading group), moves with them, pans out, and keeps them in view. ----
+  // The camera works in the scene's frame: the cars where the scene puts them, and the circuit's box as the box round its corners there (the circuit's own box on its own drawing).
+  const followBox = (): FollowBox => {
+    const b = planBox(race.plan);
+    const corners = [place([b.x, b.y]), place([b.x + b.w, b.y]), place([b.x + b.w, b.y + b.h]), place([b.x, b.y + b.h])];
+    const xs = corners.map((p) => p[0]);
+    const ys = corners.map((p) => p[1]);
+    return { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) };
+  };
+  const followInput = (): FollowInput => {
+    const input = raceFollowInput(race.plan, moment);
+    return {
+      box: followBox(),
+      objects: input.objects.map((o) => {
+        const [x, y] = place([o.x, o.y]);
+        return { ...o, x, y };
+      }),
+    };
+  };
+  const flatShow = flatRaceShow(() => stage.querySelector<SVGSVGElement>("svg.kyogijo"), followBox, RACE_FOLLOW_LIMITS.maxZoom ?? 6);
+  const runner: FollowRunner = followRunner({
+    timeline: { frames: [{ t: 0, objects: [] }], events: [] },
+    now: () => performance.now(),
+    at: followInput,
+    show: (shot) => {
+      credit.hidden = shot === undefined;
+      if (inner !== undefined) {
+        const box = followBox();
+        inner.aim(shot === undefined ? undefined : aimOf(shot, inner.model(), box, RACE_FOLLOW_LIMITS.maxZoom ?? 6));
+        aimed = true;
+      } else flatShow.show(shot);
+    },
+    limits: RACE_FOLLOW_LIMITS,
+  });
+  /** The buttons in the bar's follow slot: Leader and Pack press in and out, one at a time (pressing the one that is in lets the camera go), and Resume shows only while the reader's own turn or zoom holds it. */
+  let followParts: { leader: HTMLButtonElement; pack: HTMLButtonElement; resume: HTMLButtonElement; group: HTMLElement } | undefined;
+  const buildFollow = (): void => {
+    const w = RACE_WORDS[language].follow;
+    const group = doc.createElement("span");
+    group.className = "ky-follow";
+    group.setAttribute("role", "group");
+    group.setAttribute("aria-label", w.group);
+    const button = (name: string, word: string, label: string, onClick: () => void): HTMLButtonElement => {
+      const b = doc.createElement("button");
+      b.type = "button";
+      b.className = `ky-follow-${name}`;
+      b.setAttribute("aria-label", label);
+      b.title = label;
+      b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${name === "resume" ? "M4 12a8 8 0 1 0 2.3-5.7M4 4v5h5" : name === "pack" ? "M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5M9 12h6M12 9v6" : "M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 1 0 0.01 0"}"/></svg><span>${word}</span>`;
+      b.addEventListener("click", onClick);
+      return b;
+    };
+    const press = (mode: "leader" | "pack") => () => api.setFollow(state.follow === mode ? "off" : mode);
+    const leader = button("leader", w.leader, w.leaderLabel, press("leader"));
+    const pack = button("pack", w.pack, w.packLabel, press("pack"));
+    const resume = button("resume", w.resume, w.resumeLabel, () => api.holdFollow(false));
+    group.append(leader, pack, resume);
+    barBox.slots.follow.replaceChildren(group);
+    followParts = { leader, pack, resume, group };
+    if (autoFollow !== undefined) {
+      autoFollow.button.textContent = w.auto;
+      autoFollow.button.title = w.autoLabel;
+    }
+  };
+  const syncFollow = (): void => {
+    if (state.follow !== "off") lastMode = state.follow;
+    autoFollow?.set(state.follow !== "off");
+    if (followParts === undefined) return;
+    followParts.leader.setAttribute("aria-pressed", String(state.follow === "leader"));
+    followParts.pack.setAttribute("aria-pressed", String(state.follow === "pack"));
+    followParts.resume.hidden = !state.followHeld;
+    followParts.group.dataset.follow = state.followHeld ? "held" : state.follow;
   };
 
   // ---- The tower over the view and the podium card: made once (and again for a new language or field), and only written into after. ----
@@ -547,6 +658,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   // ---- The bar and the note: made again when the words or the motion change, and shown the state as it moves. ----
   const label = (): void => {
     barBox.sync();
+    syncFollow();
     setText(note, fromFeed ? RACE_WORDS[language].feedNote : RACE_WORDS[language].simulated);
     root.dataset.state = state.ended ? "ended" : state.playing ? "playing" : "paused";
     root.dataset.motion = state.motion;
@@ -556,6 +668,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     hint.textContent = inner !== undefined ? RACE_WORDS[language].keysTurn : RACE_WORDS[language].keys;
     buildOverlay();
     buildPodium();
+    buildFollow();
     label();
   };
 
@@ -582,9 +695,9 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     const next = state.t + dt * state.speed;
     state.t = Math.min(race.duration, next);
     if (next >= race.duration && state.loop && race.duration > 0) {
-      // Past the flag with Loop on: what is left of the frame goes round from the grid.
+      // Past the flag with Loop on: what is left of the frame goes round from the grid, and the camera goes with it at once.
       state.t = next % race.duration;
-      paint(now, true);
+      paint(now, true, "seek");
       tell();
       frameId = request(frame);
       return;
@@ -592,12 +705,12 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     if (state.t >= race.duration) {
       state.playing = false;
       state.ended = true;
-      paint(undefined, true);
+      paint(undefined, true, "tick");
       label();
       tell();
       return;
     }
-    paint(now, true);
+    paint(now, true, "tick");
     frameId = request(frame);
   }
 
@@ -637,7 +750,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       if (!Number.isFinite(t)) return;
       state.t = Math.min(Math.max(t, 0), race.duration);
       state.ended = state.t >= race.duration;
-      paint(undefined, false);
+      paint(undefined, false, "seek");
       label();
       tell();
     },
@@ -691,6 +804,22 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       if (on) writeBoard();
       tell();
     },
+    setFollow(mode) {
+      const next = raceFollowMode(mode);
+      if (next === state.follow && !state.followHeld) return;
+      state.follow = next;
+      state.followHeld = false;
+      paint(undefined, false, "follow");
+      label();
+      tell();
+    },
+    holdFollow(held) {
+      if (state.followHeld === held || (held && state.follow === "off")) return;
+      state.followHeld = held;
+      paint(undefined, false, "follow");
+      label();
+      tell();
+    },
     setPodium(on) {
       podiumDismissed = !on;
       showPodium(on && moment.flag);
@@ -739,6 +868,8 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       doc.removeEventListener("visibilitychange", hidden);
       if (typeof media?.removeEventListener === "function") media.removeEventListener("change", motionChanged);
       bar.removeEventListener("keydown", onBarKey);
+      stopUser?.();
+      autoFollow?.destroy();
       inner?.root.removeEventListener("keydown", onStageKey, true);
       turn?.destroy();
       turn = undefined;
@@ -785,9 +916,23 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   mountView();
   // Over a 3D view the arrow keys turn the view, so the race's keys there are the stage keys (the view's own Space is the auto-turn's, and this goes first).
   inner?.root.addEventListener("keydown", onStageKey, true);
+  // The camera in 3D: the reader's own turn, tip or zoom holds it until Resume; a viewpoint or Reset also takes it back to the whole circuit, in a glide. Auto-follow stands beside the view's Auto-turn.
+  const stopUser = inner?.onUser((kind) => {
+    if (state.follow === "off") return;
+    api.holdFollow(true);
+    if (kind === "preset") {
+      runner.reset();
+      inner?.aim(undefined, true);
+    }
+  });
+  if (inner !== undefined) {
+    const w = RACE_WORDS[language].follow;
+    autoFollow = autoFollowButton(inner, w.auto, w.autoLabel, () => api.setFollow(state.follow === "off" ? lastMode : "off"));
+  }
   buildBoard();
   words();
-  paint(undefined, false);
+  // (A race that starts following begins at the shot.)
+  paint(undefined, false, "seek");
   if (settings.autoplay === true && state.motion === "smooth" && doc.visibilityState !== "hidden") api.play();
   return api;
 }

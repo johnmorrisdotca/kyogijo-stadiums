@@ -362,11 +362,133 @@ test.describe("the racing scoreboard", () => {
   });
 });
 
+/** The viewBox of the flat race's drawing, as numbers, and where the leader's mark is in it. */
+const viewBoxOf = (page) => page.locator(`${STAGE} svg.kyogijo`).first().evaluate((el) => el.getAttribute("viewBox").split(/\s+/).map(Number));
+const leaderIn = (page) =>
+  page.evaluate((stage) => {
+    const svg = document.querySelector(`${stage} svg.kyogijo`);
+    const [x, y, w, h] = svg.getAttribute("viewBox").split(/\s+/).map(Number);
+    const m = /translate\(([-\d.]+) ([-\d.]+)\)/.exec(svg.querySelector(".ky-ci-lead").getAttribute("transform"));
+    const [px, py] = [Number(m[1]), Number(m[2])];
+    return { inside: px >= x && px <= x + w && py >= y && py <= y + h, w };
+  }, STAGE);
+
+test.describe("the race's camera", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("follows the leader: close in on them with the credit in sight, the leader in the frame, and the whole circuit again when it is let go", async ({ page }, testInfo) => {
+    await open(page, "circuits.html?race=1&t=900");
+    const whole = await viewBoxOf(page);
+    await expect(page.locator(`${STAGE} .ky-race-credit`)).toBeHidden();
+    await open(page, "circuits.html?race=1&t=900&follow=leader");
+    await expect(page.locator(`${STAGE} .ky-race .ky-follow-leader`)).toHaveAttribute("aria-pressed", "true");
+    const close = await viewBoxOf(page);
+    expect(close[2]).toBeLessThan(whole[2] / 3);
+    expect(close[2] / close[3]).toBeCloseTo(whole[2] / whole[3], 1);
+    expect((await leaderIn(page)).inside).toBe(true);
+    // The map's credit is text outside the drawing while the drawing's own is out of the frame.
+    await expect(page.locator(`${STAGE} .ky-race-credit`)).toBeVisible();
+    await expect(page.locator(`${STAGE} .ky-race-credit`)).toContainText("OpenStreetMap contributors");
+    // The pack: a wider frame than the leader alone.
+    await press(page, page.locator(`${STAGE} .ky-race .ky-follow-pack`), testInfo);
+    await expect(page.locator(`${STAGE} .ky-race .ky-follow-pack`)).toHaveAttribute("aria-pressed", "true");
+    await expect.poll(() => new URL(page.url()).searchParams.get("follow")).toBe("pack");
+    const pack = await viewBoxOf(page);
+    expect(pack[2]).toBeGreaterThanOrEqual(close[2] - 1e-6);
+    expect(pack[2]).toBeLessThan(whole[2]);
+    // Pressed again, it lets go: the whole circuit, the credit back in the drawing, and nothing in the address.
+    await press(page, page.locator(`${STAGE} .ky-race .ky-follow-pack`), testInfo);
+    await expect.poll(() => viewBoxOf(page)).toEqual(whole);
+    await expect(page.locator(`${STAGE} .ky-race-credit`)).toBeHidden();
+    await expect.poll(() => new URL(page.url()).searchParams.get("follow")).toBeNull();
+  });
+
+  test("zooms in slowly while the race plays, and keeps the leader in view through it at 60 times", async ({ page }, testInfo) => {
+    await open(page, "circuits.html?race=1&t=300&speed=60");
+    const whole = await viewBoxOf(page);
+    await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
+    await press(page, page.locator(`${STAGE} .ky-race .ky-follow-leader`), testInfo);
+    const widths = [];
+    for (let i = 0; i < 10; i += 1) {
+      await page.waitForTimeout(450);
+      const seen = await leaderIn(page);
+      expect(seen.inside, `the leader in view at sample ${i}`).toBe(true);
+      widths.push(seen.w);
+    }
+    // Slowly: not the whole circuit and not the close shot at the first sample, and always closer.
+    expect(widths[0]).toBeLessThan(whole[2]);
+    expect(widths[0]).toBeGreaterThan(widths[widths.length - 1]);
+    expect(widths[widths.length - 1]).toBeLessThan(whole[2] / 2);
+    for (let i = 1; i < widths.length; i += 1) expect(widths[i]).toBeLessThanOrEqual(widths[i - 1] * 1.02);
+  });
+
+  test("in 3D Auto-follow stands right after Auto-turn in the view's buttons, looks the same, and both can be on at once", async ({ page }, testInfo) => {
+    await open(page, "circuits.html?race=1&view=3d&t=900&speed=10");
+    await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+    const next = page.locator(`${STAGE} .ky-turn-controls [data-act="play"] + [data-act="follow"]`);
+    await expect(next).toHaveCount(1);
+    await expect(next).toHaveText("Auto-follow");
+    await expect(next).toHaveAttribute("aria-pressed", "false");
+    // The same pill: the same height, radius and font as Auto-turn.
+    const look = (loc) => loc.evaluate((el) => { const c = getComputedStyle(el); return [c.height, c.borderRadius, c.fontSize, c.fontWeight, c.paddingLeft]; });
+    expect(await look(next)).toEqual(await look(page.locator(`${STAGE} .ky-turn-controls [data-act="play"]`)));
+    await press(page, next, testInfo);
+    await expect(next).toHaveAttribute("aria-pressed", "true");
+    await expect.poll(() => new URL(page.url()).searchParams.get("follow")).toBe("leader");
+    await expect(page.locator(`${STAGE} .ky-race .ky-follow-leader`)).toHaveAttribute("aria-pressed", "true");
+    // Auto-turn on as well: both pressed, the view turning and the camera on the leader (the leader's ring stays inside the view).
+    await press(page, page.locator(`${STAGE} .ky-turn-controls [data-act="play"]`), testInfo);
+    await expect(page.locator(`${STAGE} .ky-turn-controls [data-act="play"]`)).toHaveAttribute("aria-pressed", "true");
+    await expect(next).toHaveAttribute("aria-pressed", "true");
+    await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
+    const yaw = () => page.locator(`${STAGE} .ky-up[data-part="lead-ring"]`).evaluate((el) => el.style.transform);
+    const before = await yaw();
+    for (let i = 0; i < 5; i += 1) {
+      await page.waitForTimeout(400);
+      const inView = await page.evaluate((stage) => {
+        const ring = document.querySelector(`${stage} .ky-up[data-part="lead-ring"]`).getBoundingClientRect();
+        const view = document.querySelector(`${stage} .ky-turn-view`).getBoundingClientRect();
+        return ring.left >= view.left - 1 && ring.right <= view.right + 1 && ring.top >= view.top - 1 && ring.bottom <= view.bottom + 1;
+      }, STAGE);
+      expect(inView, `the leader in the 3D view at sample ${i}`).toBe(true);
+    }
+    expect(await yaw()).not.toBe(before);
+    // Pressed again, it lets go, and the address says nothing.
+    await press(page, next, testInfo);
+    await expect(next).toHaveAttribute("aria-pressed", "false");
+    await expect.poll(() => new URL(page.url()).searchParams.get("follow")).toBeNull();
+  });
+
+  test("in 3D the reader's own turn holds the camera until Resume, and a viewpoint takes it back to the whole circuit", async ({ page }, testInfo) => {
+    await open(page, "circuits.html?race=1&view=3d&t=900&follow=leader");
+    await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+    const resume = page.locator(`${STAGE} .ky-race .ky-follow-resume`);
+    await expect(resume).toBeHidden();
+    await press(page, page.locator(`${STAGE} .ky-turn-controls [data-act="turn-left"]`), testInfo);
+    await expect(resume).toBeVisible();
+    await press(page, resume, testInfo);
+    await expect(resume).toBeHidden();
+    await press(page, page.locator(`${STAGE} .ky-turn-controls [data-preset="overhead"]`), testInfo);
+    await expect(resume).toBeVisible();
+  });
+
+  test("with reduced motion the camera steps: it goes to the leader at once at each step and nothing glides", async ({ page }, testInfo) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await open(page, "circuits.html?race=1&t=900&follow=leader");
+    const frames = await page.evaluate(() => window.__frames);
+    expect((await leaderIn(page)).inside).toBe(true);
+    await press(page, page.locator(`${STAGE} .ky-race .ky-forward`), testInfo);
+    expect((await leaderIn(page)).inside).toBe(true);
+    await page.waitForTimeout(400);
+    expect((await page.evaluate(() => window.__frames)) - frames).toBe(0);
+  });
+});
+
 test.describe("the race's freeze and leak rules", () => {
-  for (const view of ["flat", "3d"]) {
-    test(`${view}: asks for no frame while paused, hidden or out of sight, makes nothing as it plays, and leaves nothing when it goes`, async ({ page }, testInfo) => {
+  for (const [view, follow] of [["flat", "off"], ["3d", "off"], ["flat", "leader"], ["3d", "leader"]]) {
+    test(`${view}, camera ${follow}: asks for no frame while paused, hidden or out of sight, makes nothing as it plays, and leaves nothing when it goes`, async ({ page }, testInfo) => {
       await page.emulateMedia({ reducedMotion: "no-preference" });
-      await open(page, `circuits.html?race=1&speed=60${view === "3d" ? "&view=3d" : ""}`);
+      await open(page, `circuits.html?race=1&speed=60${view === "3d" ? "&view=3d" : ""}${follow === "off" ? "" : `&follow=${follow}`}`);
       if (view === "3d") await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
       await page.mouse.move(0, 0);
       const count = () => page.evaluate((stage) => document.querySelector(stage).querySelectorAll("*").length, STAGE);
@@ -531,9 +653,9 @@ async function bare(page, ground = "circuit") {
 test.describe("the race on a bare page: its budgets", () => {
   test.use({ reducedMotion: "no-preference" });
 
-  for (const [ground, view] of [["circuit", "flat"], ["circuit", "3d"], ["district", "flat"], ["district", "3d"]]) {
+  for (const [ground, view, follow] of [["circuit", "flat", "off"], ["circuit", "3d", "off"], ["circuit", "flat", "leader"], ["circuit", "3d", "leader"], ["circuit", "3d", "pack"], ["district", "flat", "off"], ["district", "3d", "off"], ["district", "flat", "leader"], ["district", "3d", "leader"]]) {
     const on = ground === "district" ? "on a district's ground, " : "";
-    test(`${on}${view}: grows nothing over ten races, the same elements and the same listeners`, async ({ page, browserName }) => {
+    test(`${on}${view}, camera ${follow}: grows nothing over ten races, the same elements and the same listeners`, async ({ page, browserName }) => {
       test.setTimeout(120_000);
       await bare(page, ground);
       const cdp = browserName === "chromium" ? await page.context().newCDPSession(page) : undefined;
@@ -542,7 +664,7 @@ test.describe("the race on a bare page: its budgets", () => {
         await cdp.send("HeapProfiler.collectGarbage");
         return (await cdp.send("Runtime.getHeapUsage")).usedSize;
       };
-      await page.evaluate((v) => window.__mount({ view: v }), view);
+      await page.evaluate(([v, f]) => window.__mount({ view: v, follow: f }), [view, follow]);
       if (view === "3d") await page.waitForSelector('#race .ky-turn[data-mode="3d"]');
       const once = () =>
         page.evaluate(
@@ -564,9 +686,9 @@ test.describe("the race on a bare page: its budgets", () => {
       if (cdp !== undefined) expect(after).toBeLessThan(before * 1.15 + 2_000_000);
     });
 
-    test(`${on}${view}: asks for one frame a frame while it plays, with the 3D view's auto-turn too, and none once it is paused`, async ({ page }) => {
+    test(`${on}${view}, camera ${follow}: asks for one frame a frame while it plays, with the 3D view's auto-turn too, and none once it is paused`, async ({ page }) => {
       await bare(page, ground);
-      await page.evaluate((v) => window.__mount({ view: v, speed: 1 }), view);
+      await page.evaluate(([v, f]) => window.__mount({ view: v, speed: f === "off" ? 1 : 60, follow: f }), [view, follow]);
       if (view === "3d") await page.waitForSelector('#race .ky-turn[data-mode="3d"]');
       await page.waitForTimeout(1200);
       await page.evaluate(() => {
@@ -586,12 +708,12 @@ test.describe("the race on a bare page: its budgets", () => {
       expect((await page.evaluate(() => window.__counts.asked)) - asked).toBe(0);
     });
 
-    test(`${on}${view}: destroy takes everything away, playing or not`, async ({ page }) => {
+    test(`${on}${view}, camera ${follow}: destroy takes everything away, playing or not`, async ({ page }) => {
       await bare(page, ground);
       // (The test's own tool listens on the window once it first waits for an element: it does so before the count is taken.)
       await page.waitForSelector("#race", { state: "attached" });
       const empty = await page.evaluate(() => window.__listening());
-      await page.evaluate((v) => window.__mount({ view: v, speed: 60 }), view);
+      await page.evaluate(([v, f]) => window.__mount({ view: v, speed: 60, follow: f }), [view, follow]);
       if (view === "3d") await page.waitForSelector('#race .ky-turn[data-mode="3d"]');
       await page.evaluate(() => {
         window.__race.play();

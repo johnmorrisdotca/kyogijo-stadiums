@@ -294,6 +294,42 @@ test.describe("the demo keeps the follow camera in its address", () => {
     await expect(page.locator("#game-stage .ky-replay .ky-follow-puck")).toHaveAttribute("aria-pressed", "true");
   });
 
+  test("the game section's Auto-follow stands right after Auto-turn, looks like it, turns the camera on and off, and both can be on at once", async ({ page }) => {
+    const errors = await open(page, "?lang=en&help=off");
+    await page.locator("#game").scrollIntoViewIfNeeded();
+    await expect(page.locator("#game-stage .ky-turn-replay")).toBeVisible();
+    const row = "#game-stage .ky-turn-controls";
+    const next = page.locator(`${row} [data-act="play"] + [data-act="follow"]`);
+    await expect(next).toHaveCount(1);
+    await expect(next).toHaveText("Auto-follow");
+    await expect(next).toHaveAttribute("aria-pressed", "false");
+    const look = (loc) => loc.evaluate((el) => { const c = getComputedStyle(el); return [c.height, c.borderRadius, c.fontSize, c.fontWeight, c.paddingLeft]; });
+    expect(await look(next)).toEqual(await look(page.locator(`${row} [data-act="play"]`)));
+    await next.click();
+    await expect(next).toHaveAttribute("aria-pressed", "true");
+    // The bar's Action is the mode it chose, and the address says so.
+    await expect(page.locator("#game-stage .ky-turn-replay .ky-follow-action")).toHaveAttribute("aria-pressed", "true");
+    await expect.poll(() => new URL(page.url()).searchParams.get("follow")).toBe("action");
+    // The view's own Auto-turn goes on beside it: both pressed, and the camera was not held by pressing Auto-follow or Auto-turn.
+    await page.locator(`${row} [data-act="play"]`).click();
+    await expect(page.locator(`${row} [data-act="play"]`)).toHaveAttribute("aria-pressed", "true");
+    await expect(next).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#game-stage .ky-turn-replay .ky-follow-resume")).toBeHidden();
+    // The bar's Puck changes the mode and the toggle stays pressed; pressing the toggle lets go, and pressing it again takes up the mode last chosen.
+    await page.locator("#game-stage .ky-turn-replay .ky-follow-puck").click();
+    await expect(next).toHaveAttribute("aria-pressed", "true");
+    await next.click();
+    await expect(next).toHaveAttribute("aria-pressed", "false");
+    await expect.poll(() => new URL(page.url()).searchParams.get("follow")).toBeNull();
+    await next.click();
+    await expect.poll(() => new URL(page.url()).searchParams.get("follow")).toBe("puck");
+    expect(errors).toEqual([]);
+    // In Japanese the toggle says its words.
+    await open(page, "?lang=ja&help=off");
+    await page.locator("#game").scrollIntoViewIfNeeded();
+    await expect(page.locator(`${row} [data-act="follow"]`)).toHaveText("自動で追う");
+  });
+
   test("the hero's Play a game starts following when the address says so", async ({ page }) => {
     const errors = await open(page, "?lang=en&help=off&follow=action");
     await page.locator(at("feature-game")).click();

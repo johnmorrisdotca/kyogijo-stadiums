@@ -159,7 +159,12 @@ ${TOWER_STYLE}
 .ky-race{position:relative;display:block;color:inherit}
 ${BAR_STYLE}
 .ky-race .ky-race-hint,.ky-race .ky-race-live{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.ky-race .ky-race-frame{position:relative}
+.ky-race .ky-race-frame,.ky-race .ky-race-vp{position:relative}
+.ky-race .ky-race-credit{position:absolute;right:6px;bottom:6px;margin:0;padding:2px 6px;border-radius:4px;background:#12161bcc;color:#f1f3f5;font-size:.7rem;z-index:2;pointer-events:none}
+.ky-race .ky-race-credit[hidden]{display:none}
+.ky-race .ky-follow{display:inline-flex;flex-wrap:wrap;gap:.5rem}
+.ky-race .ky-follow button{gap:.35rem}
+.ky-race .ky-follow svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ky-race .ky-race-overlay{position:absolute;left:8px;top:8px;width:clamp(120px,22%,190px);pointer-events:none;z-index:2}
 .ky-race .ky-race-overlay[hidden],.ky-race .ky-race-podium[hidden],.ky-race .ky-podium-list li[hidden]{display:none}
 .ky-race .ky-race-overlay svg{display:block;width:100%;height:auto}

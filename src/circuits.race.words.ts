@@ -26,6 +26,8 @@ export interface RaceWords {
   /** The timing tower in the scene and over the view, and the podium card at the flag. */
   tower: { caption: string; fastest: string; fastShort: string; lapShort: string; pit: string };
   podium: { title: string; label: string; close: string; show: string; fastest: string; pending: string; final: string };
+  /** The camera that follows the race: the buttons for the leader and for the leading group, the one that lets it follow again after the reader turned the view, and the toggle beside the view's Auto-turn. */
+  follow: { group: string; leader: string; leaderLabel: string; pack: string; packLabel: string; resume: string; resumeLabel: string; auto: string; autoLabel: string };
   /** The keys, flat and over the 3D view (whose arrow keys turn the view). */
   keys: string;
   keysTurn: string;
@@ -60,6 +62,17 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
     nextLap: "Next lap",
     tower: { caption: "Timing tower", fastest: "Fastest lap", fastShort: "FL", lapShort: "L{lap}", pit: "PIT" },
     podium: { title: "Chequered flag", label: "The podium", close: "Close the podium", show: "Podium", fastest: "Fastest lap: {code} {name}, {time}, lap {lap}", pending: "still racing", final: "Final classification" },
+    follow: {
+      group: "Camera",
+      leader: "Leader",
+      leaderLabel: "Follow the leader: the camera zooms in on the leader and moves with them",
+      pack: "Pack",
+      packLabel: "Follow the leading group, zooming out as it spreads",
+      resume: "Resume",
+      resumeLabel: "Let the camera follow again",
+      auto: "Auto-follow",
+      autoLabel: "Follow the leader: the camera moves with them, and pans out when pressed again",
+    },
     start: "Back to the start",
     prevLap: "Previous lap",
     loop: "Loop the race",
@@ -90,6 +103,17 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
     nextLap: "次の周へ",
     tower: { caption: "タイミングタワー", fastest: "ファステストラップ", fastShort: "FL", lapShort: "{lap}周", pit: "ピット" },
     podium: { title: "チェッカーフラッグ", label: "表彰台", close: "表彰台を閉じる", show: "表彰台", fastest: "ファステストラップ：{code} {name}、{time}（{lap}周目）", pending: "走行中", final: "最終順位" },
+    follow: {
+      group: "カメラ",
+      leader: "トップ",
+      leaderLabel: "トップを追う：カメラがトップに寄り、トップに合わせて動きます",
+      pack: "先頭集団",
+      packLabel: "先頭集団を追う：集団が広がると引きます",
+      resume: "再び追う",
+      resumeLabel: "カメラでもう一度追う",
+      auto: "自動で追う",
+      autoLabel: "トップを追う：カメラがトップに合わせて動き、もう一度押すと全体に戻ります",
+    },
     start: "最初に戻る",
     prevLap: "前の周へ",
     loop: "繰り返し",

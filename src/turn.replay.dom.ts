@@ -8,7 +8,8 @@ import { drawFrameOf, replayPlacer, replaySnapshot } from "./replay.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { TurnModel } from "./turn.model.ts";
 import { boardFollower } from "./turn.replay.board.ts";
-import { turnFollow } from "./turn.follow.ts";
+import { KYOGIJO_STRINGS } from "./strings.core.ts";
+import { autoFollowButton, turnFollow } from "./turn.follow.ts";
 import { keepOnFloor, moveDisc, replayTurnModel, type TurnReplayLook, type TurnReplayModel } from "./turn.replay.ts";
 import type { Language } from "./types.ts";
 
@@ -88,7 +89,10 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
     }
   };
 
-  // The camera that follows the play.
+  // The camera that follows the play, and its toggle beside the view's Auto-turn (it follows what the bar last chose, the action to begin with).
+  let lastMode: "action" | "puck" = settings.follow === "puck" ? "puck" : "action";
+  // (Made once the driver is: held in a box, since the driver's paint reads it.)
+  const box: { autoFollow?: ReturnType<typeof autoFollowButton> } = {};
   const camera = turnFollow(view, () => driver.controller, timeline, look, () => laid?.floorOptions);
   const wrap = doc.createElement("div");
   wrap.className = "ky-replay ky-turn-replay";
@@ -97,7 +101,11 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
       painter.paint(t);
       place(t);
       if (look.board !== false) board.follow(t, view.model(), change);
-      if (change !== undefined) camera.paint(change);
+      if (change !== undefined) {
+        camera.paint(change);
+        box.autoFollow?.set(change.state.follow !== "off");
+        if (change.state.follow !== "off") lastMode = change.state.follow;
+      }
       view.repaint();
     },
     language,
@@ -109,6 +117,9 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
   });
   const { style, hint, bar, live } = driver.parts;
   wrap.append(style, hint, bar, live);
+  const followWords = (): (typeof KYOGIJO_STRINGS)["en"]["replay"] => KYOGIJO_STRINGS[language].replay;
+  box.autoFollow = autoFollowButton(view, followWords().autoFollow, followWords().autoFollowLabel, () => driver.controller.setFollow(driver.controller.state().follow === "off" ? lastMode : "off"));
+  box.autoFollow?.set(driver.controller.state().follow !== "off");
   const controls = root.querySelector(".ky-turn-controls");
   if (controls !== null) controls.after(wrap);
   else root.append(wrap);
@@ -130,6 +141,11 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
   const after = (): void => {
     language = view.model().language;
     driver.setLanguage(language);
+    if (box.autoFollow !== undefined) {
+      box.autoFollow.again();
+      box.autoFollow.button.textContent = followWords().autoFollow;
+      box.autoFollow.button.title = followWords().autoFollowLabel;
+    }
     floorSvg = root.querySelector<SVGSVGElement>(".ky-turn-floor > svg.kyogijo");
     discs = new Map();
     if (laid !== undefined) {
@@ -160,6 +176,7 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
     destroy() {
       driver.destroy();
       camera.destroy();
+      box.autoFollow?.destroy();
       root.removeEventListener("keydown", onStageKey, true);
       if (described === null) stage.removeAttribute("aria-describedby");
       else stage.setAttribute("aria-describedby", described);

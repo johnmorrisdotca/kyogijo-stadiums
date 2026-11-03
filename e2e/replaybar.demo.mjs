@@ -61,17 +61,23 @@ test("every replay and the race have the same bar: the same buttons in the same 
   expect((await shape(HOSTS.race)).speeds).toEqual(["1", "10", "60"]);
   expect((await shape(HOSTS.race)).pressed).toEqual(["10"]);
   // The slots show only while they hold something.
-  for (const host of Object.values(HOSTS)) await expect(page.locator(`${bar(host)} .ky-slot`).first()).toBeHidden();
+  for (const host of Object.values(HOSTS)) {
+    await expect(page.locator(`${bar(host)} .ky-slot-sound`)).toBeHidden();
+    await expect(page.locator(`${bar(host)} .ky-slot-extra`)).toBeHidden();
+  }
+  // The follow slot holds the follow camera's buttons: a game's Action and Puck, a race's Leader and Pack.
+  for (const host of [HOSTS.flat, HOSTS.game3d]) await expect(page.locator(`${bar(host)} .ky-slot-follow .ky-follow-action`)).toBeVisible();
+  for (const host of [HOSTS.race, HOSTS.race3d]) await expect(page.locator(`${bar(host)} .ky-slot-follow .ky-follow-leader`)).toBeVisible();
   await page.evaluate(() => {
     const b = document.createElement("button");
     b.className = "mine";
     b.textContent = "Mine";
-    window.__race.slots.follow.append(b);
+    window.__race.slots.sound.append(b);
   });
-  await expect(page.locator("#race .ky-slot-follow .mine")).toBeVisible();
+  await expect(page.locator("#race .ky-slot-sound .mine")).toBeVisible();
   // Another language makes the buttons again, and what is in a slot stays.
   await page.evaluate(() => window.__race.update({ circuit: "las-vegas", language: "ja" }));
-  await expect(page.locator("#race .ky-slot-follow .mine")).toBeVisible();
+  await expect(page.locator("#race .ky-slot-sound .mine")).toBeVisible();
   await expect(page.locator("#race .ky-start")).toHaveAttribute("aria-label", "最初に戻る");
 });
 

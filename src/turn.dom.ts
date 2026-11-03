@@ -614,7 +614,7 @@ export function mountTurn<O>(
     const act = target.dataset.act ?? "";
     if (name !== undefined || act === "reset") took("preset");
     // (The replay's own buttons are in the view too: only the view's turn it.)
-    else if (act !== "" && act !== "play" && act !== "reverse") took("turn");
+    else if (act !== "" && act !== "play" && act !== "reverse" && act !== "follow") took("turn");
     if (name !== undefined) return toPreset(name);
     const big = (event as MouseEvent).shiftKey === true;
     switch (target.dataset.act) {

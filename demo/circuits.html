@@ -146,6 +146,8 @@
       let carLabels = params.get("labels") !== "0";
       // The tower over the view: off unless the address says (`overlay=1`).
       let overlayOn = params.get("overlay") === "1";
+      // The camera that follows the race: off unless the address says (`follow=leader` or `follow=pack`); pressing Leader, Pack or Auto-follow writes it there.
+      let raceFollow = ["leader", "pack"].includes(params.get("follow")) ? params.get("follow") : "off";
       const markersOn = () => (markersParam === null ? !$("race").checked : markersParam === "1");
       let raceTime = Number.isFinite(Number(params.get("t"))) ? Math.max(0, Number(params.get("t"))) : 0;
       let race;
@@ -205,7 +207,8 @@
           const markers = markersOn() ? ["markers: true"] : [];
           const labels = carLabels ? [] : ["labels: false"];
           const overlay = overlayOn ? ["overlay: true"] : [];
-          const rest = [...view, ...speed, ...loop, ...markers, ...labels, ...overlay];
+          const follow = raceFollow === "off" ? [] : [`follow: ${JSON.stringify(raceFollow)}`];
+          const rest = [...view, ...speed, ...loop, ...markers, ...labels, ...overlay, ...follow];
           return `import { mountCircuitRace } from "@johnmorrisdotca/kyogijo-stadiums/circuits";\n\nconst race = mountCircuitRace(document.querySelector("#race"), ${literal}${rest.length === 0 ? "" : `, { ${rest.join(", ")} }`});\nrace.play();`;
         }
         if ($("view").value === "3d") {
@@ -241,6 +244,7 @@
           if (raceLoop) next.set("loop", "1");
           if (!carLabels) next.set("labels", "0");
           if (overlayOn) next.set("overlay", "1");
+          if (raceFollow !== "off") next.set("follow", raceFollow);
           if (Math.round(raceTime) > 0) next.set("t", String(Math.round(raceTime)));
           if (feedRace !== undefined && feedAddressNow !== "" && feedAddressNow !== "pasted") next.set("feed", feedAddressNow);
         }
@@ -420,11 +424,13 @@
                 markers: markersOn(),
                 labels: carLabels,
                 overlay: overlayOn,
+                follow: raceFollow,
                 start: raceTime,
                 ...(feedRace === undefined ? {} : { race: feedRace }),
                 onChange: (state) => {
                   raceSpeed = state.speed;
                   raceLoop = state.loop;
+                  raceFollow = state.follow;
                   if (!state.playing) raceTime = state.t;
                   syncUrl();
                   $("code").textContent = code(options());

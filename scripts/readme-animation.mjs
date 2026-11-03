@@ -77,6 +77,28 @@ const SHOTS = [
     },
     each: (page) => page.clock.runFor(200),
   },
+  // The race with the camera on the leader and the view turning slowly, both on at once, which is the showcase (docs/circuits.md, "The camera follows the leader"): the circuits page with `follow=leader`, Auto-turn
+  // pressed and the race playing on the page's own clock, which the script holds and moves on by 200 milliseconds of the page's time for each frame. No key is pressed: a key would hold the camera. Docs only.
+  {
+    subject: "following-race-desk",
+    docs: true,
+    url: "/circuits.html?race=1&view=3d&follow=leader&speed=5&t=180",
+    zoomOut: 0,
+    keys: false,
+    ready: '[data-testid="stage"] .ky-turn[data-mode="3d"]',
+    target: '[data-testid="stage"] .ky-turn-view',
+    motion: "no-preference",
+    prepare: async (page) => {
+      await page.waitForSelector('[data-testid="stage"] .ky-race');
+      await page.mouse.move(0, 0);
+      await page.clock.install();
+      await page.locator('[data-testid="stage"] [data-act="play"]').click();
+      await page.locator('[data-testid="stage"] .ky-race .ky-play').click();
+      await page.mouse.move(0, 0);
+      await page.clock.runFor(400);
+    },
+    each: (page) => page.clock.runFor(200),
+  },
 ];
 const BUDGET = 1.5 * 1024 * 1024;
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".md": "text/markdown" };

@@ -1291,6 +1291,8 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `replay.followBallLabel` | Follow the ball | ボールを追う |
 | `replay.followResume` | Resume | 再び追う |
 | `replay.followResumeLabel` | Follow the action again | もう一度プレーを追う |
+| `replay.autoFollow` | Auto-follow | 自動で追う |
+| `replay.autoFollowLabel` | Follow the play: the camera moves with it, and pans out when pressed again | プレーを追う：カメラがプレーに合わせて動き、もう一度押すと全体に戻ります |
 | `turn.region` | 3D view | 3D表示 |
 | `turn.group` | Viewpoint | 視点 |
 | `turn.keys` | A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back; Space starts and stops the auto-turn. Pinch, or hold Ctrl and scroll, to zoom. | 回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻し、スペースキーで自動回転を始めたり止めたりします。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。 |

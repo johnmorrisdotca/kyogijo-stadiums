@@ -819,6 +819,9 @@ export interface KyogijoWords {
     followBallLabel: string;
     followResume: string;
     followResumeLabel: string;
+    /** The toggle beside the view's Auto-turn that turns the follow camera on and off: its word and what it does. */
+    autoFollow: string;
+    autoFollowLabel: string;
   };
   /** The words of the 3D view: its name, the keys, the viewpoints, the controls, what is announced, and the names of what stands on the surface. */
   turn: {

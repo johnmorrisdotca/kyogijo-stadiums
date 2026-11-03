@@ -24,6 +24,8 @@ export { RACE_SPEEDS, mountCircuitRace } from "./circuits.race.dom.ts";
 export type { KyogijoRace, RaceState, RaceViewOptions, RaceViewSettings } from "./circuits.race.dom.ts";
 export { RACE_CARS_MAX, RACE_DRIVERS, RACE_TEAMS } from "./circuits.race.field.ts";
 export type { RaceDriver, RaceTeam } from "./circuits.race.field.ts";
+export { RACE_FOLLOW_LIMITS, flatRaceShow, followModeOf, planBox, raceFollowInput, raceFollowMode } from "./circuits.race.follow.ts";
+export type { RaceFollowMode } from "./circuits.race.follow.ts";
 export { TOWER_ROWS, TOWER_STYLE, TOWER_W, bindTower, podiumData, raceTimeText, towerData, towerFrame, towerHeight, towerMarkup, towerPlace, writeTower } from "./circuits.race.tower.ts";
 export type { PodiumData, PodiumLine, TowerData, TowerRow, TowerView } from "./circuits.race.tower.ts";
 export { RACE_WORDS } from "./circuits.race.words.ts";
