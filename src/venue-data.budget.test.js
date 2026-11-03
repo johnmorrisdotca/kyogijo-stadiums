@@ -10,7 +10,11 @@ const KINDS = {
   "arenas-entry.ts": ["arena"], "parks-entry.ts": ["park"], "grounds-entry.ts": ["ground"],
   "areas-entry.ts": [], "cityctx-entry.ts": [], "osm-entry.ts": [], "plateau-entry.ts": [], "eras-entry.ts": [], "frames-entry.ts": [], "geometry-entry.ts": [], "leagues-entry.ts": [],
   "district-lean-entry.ts": [], "venue-data-entry.ts": [], "circuits-entry.ts": [],
+  // The catalogue is data only: it draws nothing, so it never held a venue's record or the words.
+  "catalogue-entry.ts": [],
 };
+/** The entries that never held the package's words: the three that load them, and the catalogue, which draws nothing. */
+const WORDLESS = ["district-lean-entry.ts", "venue-data-entry.ts", "areas-entry.ts", "catalogue-entry.ts"];
 /** The entries that have always had the real venues of the NHL's arenas (the others never did, and the lean district has none until it reads them). */
 const VENUE_ENTRIES = ["index.ts", "mount-entry.ts", "react-entry.ts", "element-entry.ts", "venues-entry.ts", "stadiums-entry.ts", "district-entry.ts", "athletics-entry.ts", "skating-entry.ts", "budo-entry.ts", "judging-entry.ts", "charts-entry.ts", "layouts-entry.ts", "multi-entry.ts", "replay-entry.ts", "scene-entry.ts", "canvas-entry.ts", "d3-entry.ts", "plot-entry.ts", "geojson-entry.ts", "png-entry.ts", "turn-entry.ts", "flythrough-entry.ts"];
 const entries = [...new Set(readFileSync("package.json", "utf8").match(/"\.\/dist\/[a-z0-9.-]+-entry\.js"/g).map((file) => `${file.replace(/"\.\/dist\/|\.js"/g, "")}.ts`))];
@@ -79,13 +83,13 @@ describe("the entries that have the venues", () => {
     expect(lacking).toEqual([]);
   }, 120_000);
 
-  it("hold the words in both languages, as they always did, in every entry but the three that load: the lean district, the venue data and the areas", async () => {
+  it("hold the words in both languages, as they always did, in every entry but the three that load (the lean district, the venue data and the areas) and the catalogue, which draws nothing", async () => {
     const lacking = [];
     for (const entry of ["index.ts", ...entries]) {
       vi.resetModules();
       await import(/* @vite-ignore */ `./${entry}`);
       const { hasStrings } = await import("./strings.core.ts");
-      const wanted = !["district-lean-entry.ts", "venue-data-entry.ts", "areas-entry.ts"].includes(entry);
+      const wanted = !WORDLESS.includes(entry);
       for (const language of ["en", "ja"]) if (hasStrings(language) !== wanted) lacking.push(`${entry}: ${language} ${hasStrings(language) ? "held" : "not held"}`);
     }
     expect(lacking).toEqual([]);
@@ -93,7 +97,7 @@ describe("the entries that have the venues", () => {
 
   it("name the words in their source, so that a bundler keeps them: every entry that holds them imports strings.ts, or full.ts, which does", () => {
     for (const entry of ["index.ts", ...entries]) {
-      if (["district-lean-entry.ts", "venue-data-entry.ts", "areas-entry.ts"].includes(entry)) continue;
+      if (WORDLESS.includes(entry)) continue;
       expect(reaches(entry, "strings.ts"), entry).toBe(true);
     }
   });

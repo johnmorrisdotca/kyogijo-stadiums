@@ -1,0 +1,4 @@
+// The catalogue: every venue the package draws today, those being built and those wanted, with their ids, names in English and Japanese, places, sports and Wikidata items. Data only: it draws
+// nothing and imports none of the drawing, so it is small. The same data is the static file `catalogue.json` (`./catalogue.json` of the package, and `CATALOGUE_ADDRESS` on the web).
+export { CATALOGUE, CATALOGUE_ABOUT, CATALOGUE_ADDRESS, CATALOGUE_COUNTRIES, CATALOGUE_GROUPS, CATALOGUE_SITE, CATALOGUE_SPORTS, catalogueByGroup, catalogueById, catalogueBySport, catalogueByStatus, catalogueCoverage, catalogueWanted } from "./catalogue.ts";
+export type { CatalogueCoverage, CatalogueData, CatalogueDraw, CatalogueDrawn, CatalogueEntry, CatalogueGroup, CatalogueLeague, CatalogueNeed, CatalogueSport, CatalogueStatus, CatalogueTeam, CatalogueWant } from "./catalogue.types.ts";

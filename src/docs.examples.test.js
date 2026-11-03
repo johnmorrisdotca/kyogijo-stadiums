@@ -17,7 +17,8 @@ afterAll(() => rmSync(work, { recursive: true, force: true }));
 
 /** The package's names for its entry points, and the source file each is made from in this checkout. */
 const sources = Object.fromEntries(
-  Object.entries(pkg.exports).map(([key, entry]) => [key === "." ? pkg.name : `${pkg.name}/${key.slice(2)}`, resolve(entry.default.replace("./dist/", "src/").replace(/\.js$/, ".ts"))]),
+  // A file the package exports as it is (the catalogue's JSON) has no source to map to.
+  Object.entries(pkg.exports).filter(([, entry]) => typeof entry === "object").map(([key, entry]) => [key === "." ? pkg.name : `${pkg.name}/${key.slice(2)}`, resolve(entry.default.replace("./dist/", "src/").replace(/\.js$/, ".ts"))]),
 );
 
 const files = ["README.md", ...readdirSync("docs").filter((file) => file.endsWith(".md")).map((file) => `docs/${file}`)];

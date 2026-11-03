@@ -77,10 +77,13 @@ const expected = local.drawKyogijo(game);
 const expectedPortrait = local.drawKyogijo({ ...game, sport: "mlb", park: "fenway-park", orientation: "portrait" });
 
 // 4. Every entry in `exports`, by ESM and by require.
-const entries = Object.keys(pkg.exports).map((key) => (key === "." ? pkg.name : `${pkg.name}/${key.slice(2)}`));
+// A JSON file the package exports (the catalogue) is imported as JSON, apart from the modules.
+const jsonEntries = Object.keys(pkg.exports).filter((key) => key.endsWith(".json")).map((key) => `${pkg.name}/${key.slice(2)}`);
+const entries = Object.keys(pkg.exports).filter((key) => !key.endsWith(".json")).map((key) => (key === "." ? pkg.name : `${pkg.name}/${key.slice(2)}`));
 writeFileSync(
   join(project, "esm.mjs"),
   `${entries.map((entry, i) => `import * as m${i} from ${JSON.stringify(entry)};`).join("\n")}
+${jsonEntries.map((entry, i) => `import j${i} from ${JSON.stringify(entry)} with { type: "json" };`).join("\n")}
 const all = [${entries.map((_, i) => `m${i}`).join(", ")}];
 const names = ${JSON.stringify(entries)};
 all.forEach((m, i) => { if (Object.keys(m).length === 0) throw new Error(names[i] + " exports nothing"); });
@@ -102,6 +105,8 @@ const district = all[names.indexOf(${JSON.stringify(`${pkg.name}/district`)})];
 if (district.planDistrict({ venues: ["bc-place", "rogers-arena"] }).members.length !== 2 || district.planDistrict({ venues: ["t-mobile-park", "lumen-field"] }).members.length !== 2 || !district.drawDistrict({ venues: ["bc-place", "rogers-arena"] }).includes("ky-district")) throw new Error("the district is wrong");
 const atlas = all[names.indexOf(${JSON.stringify(`${pkg.name}/atlas`)})];
 if (atlas.PLACES.length !== 330 || atlas.placesBy({ sport: "baseball", country: "JP" }).length !== 20 || atlas.placeById("fenway-park").lat !== 42.34639) throw new Error("the atlas is wrong");
+const catalogue = all[names.indexOf(${JSON.stringify(`${pkg.name}/catalogue`)})];
+if (catalogue.catalogueCoverage("nhl").outline !== 32 || catalogue.catalogueById("fenway-park")?.status !== "supported" || catalogue.CATALOGUE.length !== j0.venues.length || j0.schemaVersion !== 1 || j0.package.version !== ${JSON.stringify(pkg.version)}) throw new Error("the catalogue is wrong");
 const flythrough = all[names.indexOf(${JSON.stringify(`${pkg.name}/flythrough`)})];
 const trip = flythrough.flightPlan({ north: 0, siteSpan: 400 });
 if (flythrough.stagesOf(trip).join() !== "map,city,arena,bowl,rink,game" || flythrough.cameraAt(trip, 0).map !== 1 || typeof flythrough.mountFlythrough !== "function") throw new Error("the fly-through is wrong");
@@ -143,6 +148,7 @@ writeFileSync(
   join(project, "cjs.cjs"),
   `const names = ${JSON.stringify(entries)};
 for (const name of names) { const m = require(name); if (Object.keys(m).length === 0) throw new Error(name + " exports nothing"); }
+for (const name of ${JSON.stringify(jsonEntries)}) { if (require(name).schemaVersion !== 1) throw new Error(name + " is not the catalogue"); }
 const { drawKyogijo } = require(${JSON.stringify(pkg.name)});
 if (drawKyogijo(${JSON.stringify(game)}) !== ${JSON.stringify(expected)}) throw new Error("require draws another drawing");
 console.log(names.join(" "));

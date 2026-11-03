@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/kyogijo-stadiums",
-  "version": "0.50.0",
+  "version": "0.51.0",
   "description": "Kyogijo Stadiums 競技場, 40 sports' surfaces as SVG, drawn to scale from the rulebooks: NFL, CFL and IFAF football fields, an NHL rink, an NBA court, MLB ballparks, soccer pitches, curling sheets, athletics stadiums, speed skating, short track and figure skating rinks, swimming pools, water polo fields, diving wells, artistic swimming areas, and the courts and fields of tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet, netball, lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, and the budo of judo, karate, kendo, sumo and kyudo with a dojo of tatami laid as real units, the MMA cage, with each team's name and logo on its side and the score in the middle, stands and a crowd, a pageant of flags, and a 3D view. Light and dark, accessible, a compact badge for lists, a helper for React and a custom element. Zero dependencies.",
   "keywords": [
     "sports",
@@ -297,6 +297,12 @@
       "import": "./dist/flythrough-entry.js",
       "default": "./dist/flythrough-entry.js"
     },
+    "./catalogue": {
+      "types": "./dist/catalogue-entry.d.ts",
+      "import": "./dist/catalogue-entry.js",
+      "default": "./dist/catalogue-entry.js"
+    },
+    "./catalogue.json": "./catalogue.json",
     "./element/define": {
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",
@@ -308,7 +314,8 @@
     "README.md",
     "LICENSE",
     "NOTICE.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "catalogue.json"
   ],
   "engines": {
     "node": ">=22"
@@ -350,6 +357,8 @@
     "venues:rink": "node scripts/fetch-rink-evidence.mjs",
     "stadiums": "node scripts/build-stadiums.mjs",
     "stadiums:fetch": "node scripts/fetch-stadiums.mjs",
+    "catalogue": "node scripts/build-catalogue.mjs",
+    "catalogue:fetch": "node scripts/fetch-catalogue.mjs",
     "walk": "node scripts/build-walk.mjs",
     "circuits": "node scripts/build-circuits.mjs",
     "circuits:fetch": "node scripts/fetch-circuits.mjs",
