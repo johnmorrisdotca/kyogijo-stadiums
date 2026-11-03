@@ -144,7 +144,7 @@ describe("the game's excitement", () => {
 });
 
 describe("the cues of a replay's moves", () => {
-  const state = { t: 10, start: 0, end: 300, playing: true, ended: false, speed: 1, loop: false, motion: "smooth" as const };
+  const state = { t: 10, start: 0, end: 300, playing: true, ended: false, speed: 1, loop: false, motion: "smooth" as const, follow: "off" as const, followHeld: false };
   const change = (reason: ReplayChange["reason"], t: number, crossed: ReplayChange["crossed"] = []): ReplayChange => ({ state: { ...state, t }, reason, crossed });
   const periods = [
     { start: 0, end: 100 },
