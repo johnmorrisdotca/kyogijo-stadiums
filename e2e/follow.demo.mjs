@@ -94,11 +94,14 @@ test.describe("the follow camera", () => {
     await expect(bar.getByRole("button", { name: "Follow the action: close in on the puck or ball and those nearest it" })).toHaveAttribute("aria-pressed", "true");
     await expect(bar.locator(".ky-follow-resume")).toBeHidden();
     await page.waitForTimeout(1500);
+    // Grabbed as turn.demo.mjs's drags are: the view scrolled into sight, a third of the way down (clear of the replay bar on a phone).
     const stage = page.locator("#rink .ky-turn-view");
+    await stage.scrollIntoViewIfNeeded();
     const box = await stage.boundingBox();
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    const [x, y] = [box.x + box.width / 2, box.y + box.height / 3];
+    await page.mouse.move(x, y);
     await page.mouse.down();
-    await page.mouse.move(box.x + box.width / 2 + 60, box.y + box.height / 2, { steps: 4 });
+    await page.mouse.move(x + 60, y, { steps: 8 });
     await page.mouse.up();
     expect(await page.evaluate(() => [window.__replay.state().follow, window.__replay.state().followHeld])).toEqual(["action", true]);
     await expect(bar.locator(".ky-follow-resume")).toBeVisible();
