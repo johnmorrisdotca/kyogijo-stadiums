@@ -656,10 +656,22 @@ const page = `<!doctype html>
           <div class="game-row" id="game-sound" data-testid="game-sound"></div>
         </div>
         <div class="game-stage" id="game-stage" data-testid="game-stage"><p class="game-wait" data-say="gameLoading"></p></div>
-        <p class="game-note" data-testid="game-note" data-say="gameNote"></p>
+        <p class="game-note" id="game-note" data-testid="game-note" data-say="gameNote"></p>
         <div class="game-code">
           <pre><code id="game-code" data-testid="game-code" tabindex="0" data-say-label="gameCode"></code></pre>
           <div class="fam-actions"><button type="button" class="fam-button" id="game-copy" data-testid="game-copy" data-say="copy"></button><span id="game-status" role="status"></span></div>
+        </div>
+        <div class="feed" id="feed" data-testid="feed">
+          <h3 data-say="feedTitle"></h3>
+          <p data-say="feedText"></p>
+          <div class="feed-row">
+            <button type="button" class="fam-button" id="feed-file-pick" data-testid="feed-file-pick" data-say="feedFile"></button><input type="file" id="feed-file" data-testid="feed-file" accept="application/json,.json" hidden>
+          </div>
+          <label class="feed-paste"><span data-say="feedPaste"></span><textarea id="feed-paste" data-testid="feed-paste" rows="3" spellcheck="false"></textarea></label>
+          <div class="feed-row"><button type="button" class="fam-button" id="feed-paste-play" data-testid="feed-paste-play" data-say="feedPastePlay"></button></div>
+          <p class="feed-status" id="feed-status" data-testid="feed-status" role="status"></p>
+          <p class="feed-note" data-testid="feed-note" data-say="feedNote"></p>
+          <p><a href="docs/feeds.html" data-say="feedDocs"></a></p>
         </div>
         <p><a href="examples/games/canada-japan.json" data-testid="game-file" data-say="gameFile"></a> · <a href="docs/example-games.html" data-say="gameDocs"></a></p>
       </section>

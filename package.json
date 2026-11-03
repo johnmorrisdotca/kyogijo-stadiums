@@ -244,6 +244,11 @@
       "import": "./dist/sound-entry.js",
       "default": "./dist/sound-entry.js"
     },
+    "./feeds": {
+      "types": "./dist/feeds-entry.d.ts",
+      "import": "./dist/feeds-entry.js",
+      "default": "./dist/feeds-entry.js"
+    },
     "./scene": {
       "types": "./dist/scene-entry.d.ts",
       "import": "./dist/scene-entry.js",

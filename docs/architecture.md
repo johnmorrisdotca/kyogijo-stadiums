@@ -222,6 +222,10 @@ src/
 ├── replay.follow.ts    following the play, pure: the shot the play asks for (the action, the puck, a stoppage's faceoff dot), the camera that eases to it, and its runner on the replay's clock
 ├── replay.follow.dom.ts the follow camera's buttons in the replay's bar, and the flat replay's camera, which shows part of the drawing by its viewBox
 ├── replay.types.ts     the replay's types
+├── feeds.core.ts       a feed's shared parts: the formats, the game a feed is read into, the error that says why one could not be read, the limits
+├── feeds.ts            a feed read into a replay: kyogijo's open timeline or a game file, checked, and the format told apart
+├── feeds.nhl.ts        an adapter: an NHL-style play-by-play read into a replay (the puck between the plays, the shots, goals and whistles, the periods and the clock)
+├── feeds-entry.ts      the feeds' entry
 ├── replay-entry.ts     the replay's entry
 ├── sound.sets.ts       the index of sound sets: a crowd bed for each kind of venue (its room, its layers, its levels) and each sport's set (its bed and the voices of each kind of moment)
 ├── sound.mix.ts        the sound in its context, pure: the room a venue makes, the crowd for the people in it, each layer's gain at a level, the game's excitement, and the cues of an event and of a replay's move

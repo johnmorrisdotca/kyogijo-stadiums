@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Bring your own feed: a file or a paste (KYOGIJO-STADIUMS-37)** ([feeds](./docs/feeds.md)): a new entry, `/feeds`, reads a game from a feed into a replay. `readFeed` and `readFeedText` read kyogijo's open timeline (a bare timeline or a game file, every value checked, every list capped) and, through a pure adapter, `nhlPlayByPlay`, a play-by-play shaped as the NHL's public one: the puck moved between the plays' places, the shots, goals and whistles, the periods on the game's clock and the sides and players named from the feed at run time. A `FeedError` says what was wrong. The demo's game section has **Bring your own feed**: choose a file or paste a feed, and it plays with the score, the period and the clock on the board.
+
 ## [0.62.0] - 2026-11-03
 
 ### Added

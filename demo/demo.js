@@ -21,7 +21,8 @@ import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-d
 import { replayPlay } from "./replay-data.js";
 import { playGame } from "./play-game.js";
 import { followOfAddress, keepFollow } from "./follow.js";
-import { gameOptions, gameTimeline, loadGame as loadExampleGame, periodAt, scoreAt } from "./game.js";
+import { gameFromFeed, gameOptions, gameTimeline, loadGame as loadExampleGame, periodAt, scoreAt } from "./game.js";
+import { mountFeedControls } from "./feed.js";
 import { mountSoundBar, venueSound } from "./sound-bar.js";
 import { poolRace, shortRace } from "./pool-data.js";
 import { raceTimeline } from "./dist/replay-entry.js";
@@ -1089,8 +1090,11 @@ $("game-code").textContent = gameCode();
 /** Load the game and play it in the section: once, when the section first comes near the screen. */
 function startGame() {
   if (gameView.game !== undefined) return;
+  feedControls.paint();
   loadExampleGame().then(
     (game) => {
+      // A feed the reader chose in the meantime stays.
+      if (gameView.game !== undefined) return;
       gameView.game = game;
       drawGame();
     },
@@ -1105,6 +1109,26 @@ new IntersectionObserver((entries, observer) => {
     startGame();
   }
 }, { rootMargin: "400px 0px" }).observe($("game"));
+
+// ----- Bring your own feed (demo/feed.js): a feed the reader chose is the section's game, played by the same replay; a live one is played again at each answer that changed, at its newest moment while the reader is there.
+const feedControls = mountFeedControls({
+  say,
+  lang: () => language.lang,
+  sport: () => gameView.game?.sport ?? "nhl",
+  play(feed, { live }) {
+    const at = gameView.handle?.state();
+    const edge = live && (at === undefined || at.t >= at.end - 0.5);
+    if (!live) {
+      gameView.handle?.destroy();
+      gameView.handle = undefined;
+    }
+    gameView.game = gameFromFeed(feed, { home: say("feedHome"), away: say("feedAway") });
+    $("game-note").dataset.say = "feedGameNote";
+    $("game-note").textContent = say("feedGameNote");
+    drawGame();
+    if (edge) gameView.handle?.seek(Number.MAX_SAFE_INTEGER);
+  },
+});
 
 // ----- The soccer providers: each pitch in its own frame, and a converter between any two.
 const NUMBER = /^\s*-?\d+(?:\.\d+)?\s*$/;
@@ -1252,6 +1276,7 @@ function onLanguage() {
   heroSound.update();
   gameSound.update();
   liveSound.update();
+  if (gameView.game !== undefined) feedControls.paint();
   for (const grid of grids) grid.relabel();
   fillParks();
   fillGrounds();

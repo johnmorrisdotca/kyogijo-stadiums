@@ -1,0 +1,74 @@
+# フィード
+
+日本語 · [English](feeds.md)
+
+フィードとは、試合をデータとして表したものです。選手やボールの位置の時間変化、試合中に起きたこと（シュート、ゴール、笛など）、そして両チームとピリオドの情報から成ります。[リプレイ](./replay.md)はフィードを平面表示でも[3D表示](./replay.md#in-3d)でも再生でき、アリーナのスコアボードにはスコア、ピリオド、試合時間が表示されます。当パッケージはフィードを配信せず、リーグのデータも保存しません。フィードは利用者自身のものです。選んだファイルか、貼り付けたテキストから読み込みます。
+
+## 守っているルール
+
+- **当サイトのサーバーや中継サーバーは使いません。** どこにも何も送りません。
+- **何も保存しません。** ページを開いている間を超えて残るキャッシュも保存もなく、リポジトリにも何も取り込みません。
+- **名前は実行時にフィードから表示します。** パッケージにはリーグやチームの名前、ロゴ、マークを含めていません。フィードに含まれる名前は、ページを開いている間だけテキストとして表示します。
+- **利用規約は提供元のものです。** 再生するフィードの提供元の利用規約の遵守は、閲覧者の責任です。
+- **テストには当方で作成した架空の応答だけを使い**、実際のリクエストは送りません。
+
+## オープンなタイムライン
+
+kyogijo独自の形式は、JSONで書いた[リプレイのタイムライン](./replay.md#the-timeline)です。`frames`（それぞれ時刻 `t` と `objects` を持ち、各オブジェクトは `id`、`home`・`away`・`ball`・`puck`・`official` のいずれかの `team`、`x` と `y` を持ちます）、`events`（`t`、`pass`・`shot`・`goal`・`whistle` などの `kind`、`team`、位置）、スコアボード用の `periods`（それぞれ `number`、`start`、`end`、そしてリプレイの時間を縮めた場合にスコアボードの時計で数えるピリオドの長さ `length`）と `clock`（残り時間を数える `down` か、経過時間を数える `up`）から成ります。両チームは `teams`（`home` と `away`、それぞれ `abbr`、`name`、`color`）に書き、`readFeed` はそれを試合の `teams` として返します。`from` は位置の座標系を指定します（`nhl-api`、`opta` など。[座標系](./frames.md)を参照）。[サンプルの試合](./example-games.md)のような試合ファイル（`kind: "kyogijo-game"`）は、タイムラインに両チーム、ロースター、ピリオドを加えたもので、どちらの形でも読み込めます。
+
+```json
+{
+  "from": "nhl-api",
+  "frames": [{ "t": 0, "objects": [{ "id": "puck", "team": "puck", "x": 0, "y": 0 }] }, { "t": 30, "objects": [{ "id": "puck", "team": "puck", "x": 80, "y": 4 }] }],
+  "events": [{ "t": 30, "kind": "goal", "team": "home", "x": 80, "y": 4 }],
+  "periods": [{ "number": 1, "start": 0, "end": 1200 }],
+  "teams": { "home": { "abbr": "AAA" }, "away": { "abbr": "BBB" } }
+}
+```
+
+値はすべて読み込み時に検査します。時刻のないフレーム、位置のないオブジェクトや不明なチームのオブジェクト、時刻のないイベントは取り除きます。テキストはあくまでテキストとして扱い、長すぎる部分は切り詰めます。リストの件数にはすべて上限（`FEED_LIMITS`）があるため、壊れた応答や悪意のある応答でページが動かなくなることはありません。
+
+## フィードを読み込む
+
+`@johnmorrisdotca/kyogijo-stadiums/feeds` は、応答を試合データとして読み込みます。得られるのは `timeline`、フィード上で試合が終了しているかどうか（`ended`）、フィードに含まれる選手（`players`）です。`readFeed(json, format?)` は形式を自動で判別するか（`auto`）、`kyogijo` または `nhl` の指定を受け付けます。`readFeedText(text)` は、ファイルや貼り付けで得たテキストを受け取って読み込みます。問題があった場合は、`kind` と説明文を持つ `FeedError` を投げます。
+
+```ts
+import { readFeed } from "@johnmorrisdotca/kyogijo-stadiums/feeds";
+
+const game = readFeed({
+  frames: [{ t: 0, objects: [{ id: "puck", team: "puck", x: 0, y: 0 }] }, { t: 30, objects: [{ id: "puck", team: "puck", x: 80, y: 4 }] }],
+  events: [{ t: 30, kind: "goal", team: "home" }],
+});
+console.log(game.format, game.timeline.frames.length, game.ended);
+// kyogijo 2 true
+```
+
+### ファイルや貼り付けから
+
+ブラウザーからフィードに接続できない場合でも再生できます。閲覧者が応答を保存してファイルとして選ぶか、貼り付けます。
+
+```ts no-run
+import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+import { readFeedText } from "@johnmorrisdotca/kyogijo-stadiums/feeds";
+
+const view = mountKyogijoTurn(document.querySelector("#rink")!, { sport: "nhl" }, { preset: "broadcast" });
+document.querySelector<HTMLInputElement>("#file")!.addEventListener("change", async (event) => {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (file !== undefined) view.replay(readFeedText(await file.text()).timeline).play();
+});
+```
+
+## アダプター
+
+アダプターとは、フィード独自の形式をオープンなタイムラインに変換する純粋関数で、当方で作成した架空の応答でテストしています。各アダプターと、それが読み込む内容は次のとおりです。
+
+| 形式 | 関数 | 読み込む内容 |
+| --- | --- | --- |
+| `kyogijo` | `kyogijoFeed` | オープンなタイムライン、または試合ファイル。 |
+| `nhl` | `nhlPlayByPlay` | NHLの公開データと同じ形のプレーバイプレー。`plays`（それぞれ `periodDescriptor`、`timeInPeriod`、`typeDescKey`、`sortOrder`、そして `xCoord`・`yCoord`・`eventOwnerTeamId`・選手IDを含む `details`）、`homeTeam` と `awayTeam`（`id`、`abbrev`、`commonName`）、`rosterSpots`、`gameState`。 |
+
+プレーバイプレーにはイベントだけがあり、トラッキングデータはありません。そのため `nhlPlayByPlay` は、パックをプレーの位置から次のプレーの位置まで直線で動かし（既知の位置の間を補間したものです）、シュート、ゴール、笛をそれぞれ起きた位置に表示します。すべてのプレーは試合本来の時間軸に置きます（1ピリオド20分、延長はレギュラーシーズンが5分、プレーオフが20分。シュートアウトは含めず、そのゴールもスコアには数えません）。チームは `abbrev`、選手は名前で、いずれも実行時に表示します。`gameState` が `OFF` または `FINAL` になると、`ended` が true になります。
+
+## デモでは
+
+デモの試合のセクションにある[自分のフィードを再生](https://johnmorrisdotca.github.io/kyogijo-stadiums/#feed)では、ファイルまたは貼り付けたテキストからフィードを再生できます。

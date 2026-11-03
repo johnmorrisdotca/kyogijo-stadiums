@@ -2082,6 +2082,38 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `gamePlay` | Play a game | 試合を再生 |
 | `gamePlayTip` | Play {title} on this surface. Press again to take it away. | 「{title}」をこの競技面で再生します。もう一度押すと、元の表示に戻ります。 |
 | `soundButton` | Sound | サウンド |
+| `feedTitle` | Bring your own feed | 自分のフィードを再生 |
+| `feedHome` | Home | ホーム |
+| `feedAway` | Away | アウェイ |
+| `feedText` | Play a real game from a feed: an address, a file or pasted text. Your browser fetches it and this page plays it here, flat or in 3D, with the score, the period and the clock on the arena's board. Nothing is sent to us or kept. | フィードを使って実際の試合を再生します。アドレス、ファイル、貼り付けたテキストのいずれかを指定してください。フィードは閲覧者のブラウザーが取得し、このページで平面表示または3D表示で再生します。アリーナのスコアボードにはスコア、ピリオド、試合時間が表示されます。当サイトに送信されるデータや保存されるデータはありません。 |
+| `feedUrl` | Feed address | フィードのアドレス |
+| `feedLoad` | Play this feed | このフィードを再生 |
+| `feedLive` | Follow live | ライブで追う |
+| `feedFile` | Choose a file… | ファイルを選択… |
+| `feedPaste` | Or paste a feed (JSON) | またはフィード（JSON）を貼り付け |
+| `feedPastePlay` | Play the pasted feed | 貼り付けたフィードを再生 |
+| `feedNote` | You are responsible for the terms of the source you enter. Your browser fetches it directly; we run no server or relay and store nothing. | 入力した提供元の利用規約の遵守は、閲覧者の責任です。フィードは閲覧者のブラウザーが直接取得します。当サイトはサーバーも中継サーバーも運用せず、データを保存しません。 |
+| `feedWhere` | Where to find a feed | フィードの入手先 |
+| `feedUse` | Use | 使う |
+| `feedMayRefuse` | May refuse a page of another site (CORS): if so, save the answer and choose it as a file, or paste it. | ほかのサイトのページからの読み取りを拒否される場合があります（CORS）。その場合は、取得した内容を保存してファイルとして選ぶか、貼り付けてください。 |
+| `feedGuide` | Where to find a feed: the full list | フィードの入手先の一覧 |
+| `feedDocs` | The feed format and the code | フィードの形式とコード |
+| `feedGameNote` | A feed you chose: the names and results are the source's. | 選択したフィードです。名前や結果は提供元のデータによるものです。 |
+| `feedReading` | Reading the feed… | フィードを読み込んでいます… |
+| `feedPlayed` | Playing {home} – {away}: {events} events. | {home} 対 {away} を再生しています（イベント{events}件）。 |
+| `feedLiveShown` | Live: {home} – {away}, {events} events. Asked again every 15 seconds while this page is shown. | ライブ：{home} 対 {away}（イベント{events}件）。このページを表示している間、15秒ごとに再取得します。 |
+| `feedLiveOff` | Stopped following. | ライブの更新を停止しました。 |
+| `feedLiveEnded` | The game is over: following stopped. | 試合が終了したため、ライブの更新を停止しました。 |
+| `feedLiveRefused` | The server asked us to stop (403 or 429): following stopped. | サーバーから停止を求められたため（403または429）、ライブの更新を停止しました。 |
+| `feedNoUrl` | Give a feed address first, or use one from the list below. | 先にフィードのアドレスを入力するか、下の一覧から選んでください。 |
+| `feedPasteEmpty` | Paste a feed first. | 先にフィードを貼り付けてください。 |
+| `feedCors` | Your browser could not read the answer: the server does not let a page of another site read it (CORS), or it could not be reached. Save the answer and choose it as a file, or paste it. | ブラウザーで応答を読み取れませんでした。サーバーがほかのサイトのページからの読み取りを許可していない（CORS）か、サーバーに接続できませんでした。取得した内容を保存してファイルとして選ぶか、貼り付けてください。 |
+| `feedHttp` | The server answered {status}. | サーバーが {status} を返しました。 |
+| `feedAddress` | That is not an address this page can read: give one that starts with https://. | このページで読み込めるアドレスではありません。https:// で始まるアドレスを入力してください。 |
+| `feedLarge` | The answer is larger than this page reads. | 応答が大きすぎて、このページでは読み込めません。 |
+| `feedOffline` | Your browser is offline. | ブラウザーがオフラインです。 |
+| `feedEmpty` | The feed has nothing to play yet. | このフィードには、まだ再生できるデータがありません。 |
+| `feedFormat` | That is not a feed this page reads: a kyogijo timeline or an NHL-style play-by-play. | このページで読み込める形式のフィードではありません。kyogijoのタイムラインか、NHL形式のプレーバイプレーを指定してください。 |
 | `elementTitle` | As an element | 要素として |
 | `elementText` | Each of these is a <kyogijo-field> tag with attributes and no script of its own. | ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。 |
 | `moreText` | Everything here is a call of one function. | ここにあるものは、すべて1つの関数の呼び出しです。 |
@@ -2207,6 +2239,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `example-games` | Example games | サンプルの試合データ |
 | page `sound` | Sound | サウンド |
 | page `sound-credits` | Sound credits | サウンドのクレジット |
+| page `feeds` | Feeds | フィード |
 | page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |

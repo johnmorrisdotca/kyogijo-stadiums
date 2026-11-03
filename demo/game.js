@@ -71,9 +71,9 @@ export function gameTimeline(game, lang, goalWords) {
   if (made[lang] !== undefined) return made[lang];
   const names = new Map([...game.rosters.home, ...game.rosters.away].map((p) => [p.id, p.name[lang] ?? p.name.en]));
   const frames = game.timeline.frames.map((frame) => ({ t: frame.t, objects: frame.objects.map((o) => (names.has(o.id) ? { ...o, label: names.get(o.id) } : o)) }));
-  const events = game.timeline.events.map((e) => (e.kind === "goal" ? { ...e, label: goalWords({ team: game.teams[e.team].name[lang], name: names.get(e.by) ?? "" }) } : e));
+  const events = game.timeline.events.map((e) => (e.kind === "goal" && game.teams[e.team] !== undefined ? { ...e, label: goalWords({ team: game.teams[e.team].name[lang], name: names.get(e.by) ?? "" }) } : e));
   // The periods are the timeline's: the scoreboard hung over the hero's arena shows the period the clock is in and counts its game clock down through them.
-  made[lang] = { ...game.timeline, frames, events, periods: game.periods.map((p) => ({ number: p.number, start: p.start, end: p.end, length: PERIOD_SECONDS })) };
+  made[lang] = { ...game.timeline, frames, events, periods: game.periods.map((p) => ({ number: p.number, start: p.start, end: p.end, ...(game.feed === true ? (p.length === undefined ? {} : { length: p.length }) : { length: PERIOD_SECONDS }) })), ...(game.clock === undefined ? {} : { clock: game.clock }) };
   return made[lang];
 }
 
@@ -95,3 +95,22 @@ export function gameOptions(game, lang, score, period = 1) {
 
 /** The layer colours of the two sides, for a drawing that has no teams of its own (the hero's arena): the discs and the marks take them. */
 export const gameColours = (game) => ({ layerHome: game.teams.home.color, layerAway: game.teams.away.color });
+
+/**
+ * A feed the reader chose (`readFeed`'s answer), as the section's game: its sides (the feed's names, as text, in both languages), its players, its periods (one, the whole feed, when it has none, on the feed's own clock) and its sport.
+ * @param {any} feed
+ * @param {{ home: string, away: string }} unnamed what a side the feed does not name is called
+ */
+export function gameFromFeed(feed, unnamed) {
+  const timeline = feed.timeline;
+  const side = (role) => {
+    const own = feed.teams[role] ?? {};
+    const name = own.name ?? own.abbr ?? unnamed[role];
+    return { name: { en: name, ja: name }, abbr: own.abbr ?? "", ...(own.color === undefined ? {} : { color: own.color }) };
+  };
+  const roster = (role) => Object.entries(feed.players).filter(([, p]) => p.side === role).map(([id, p]) => ({ id, number: p.number, name: { en: p.name ?? "", ja: p.name ?? "" } }));
+  const first = timeline.frames[0].t;
+  const last = timeline.frames.at(-1).t;
+  return { sport: feed.sport ?? "nhl", feed: true, ...(timeline.clock === undefined ? {} : { clock: timeline.clock }), teams: { home: side("home"), away: side("away") }, rosters: { home: roster("home"), away: roster("away") }, periods: timeline.periods?.length > 0 ? timeline.periods : [{ number: 1, start: first, end: last }], timeline: { ...timeline, events: timeline.events ?? [] } };
+}
+

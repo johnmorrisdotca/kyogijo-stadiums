@@ -88,6 +88,21 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .game-stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 8px; min-height: 260px; min-width: 0; }
 .game-note { margin: 8px 0 0; font-size: .9rem; color: var(--muted, inherit); }
 .game-code pre { max-width: 100%; overflow-x: auto; margin: 12px 0 8px; }
+.feed { margin: 16px 0 8px; padding: 12px; border: 1px solid var(--rule); border-radius: 12px; }
+.feed h3, .feed h4 { margin: 0 0 8px; }
+.feed h4 { margin-top: 12px; }
+.feed-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin: 8px 0; }
+.feed-url { display: flex; flex-direction: column; gap: 4px; flex: 1 1 280px; min-width: 0; font-size: .9rem; font-weight: 600; }
+.feed-url input, .feed-paste textarea { font: inherit; font-weight: 400; min-height: 44px; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink); min-width: 0; box-sizing: border-box; width: 100%; }
+.feed-paste { display: flex; flex-direction: column; gap: 4px; font-size: .9rem; font-weight: 600; }
+.feed-paste textarea { font-family: ui-monospace, monospace; font-size: .8rem; resize: vertical; }
+.feed-status { min-height: 1.4em; margin: 4px 0; font-weight: 600; }
+.feed-note { font-size: .85rem; color: var(--muted, inherit); margin: 4px 0; }
+.more .feed-sources { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.feed-source { display: flex; gap: 12px; align-items: flex-start; padding: 8px; border: 1px solid var(--rule); border-radius: 8px; }
+.feed-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.feed-gives { font-size: .85rem; }
+.feed-links { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .85rem; }
 .live-grid { display: grid; gap: 10px; max-width: 720px; }
 .live-stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 8px; display: flex; justify-content: center; }
 .live-stage svg { max-width: 100%; }
