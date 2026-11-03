@@ -26,6 +26,8 @@ export interface BoardLive {
   period?: number;
   /** The clock as it is written, `19:20`: digits and one colon. */
   clock: string;
+  /** A power play: each side's penalty clocks (`1:42`, the soonest first, two at most are drawn) in its block of colour, and `PP` in the block of the side with more skaters. */
+  penalties?: { home: string[]; away: string[]; pp?: "home" | "away" };
 }
 
 /** The scoreboard hung over a surface, with what it is made from: a replay draws its faces again with the score and the clock of the time it is at. */
@@ -183,6 +185,8 @@ export const hangsOver = (sport: string | undefined): boolean => sport !== "mlb"
 
 /** The segments of a seven-segment digit, a to g, that are lit for each digit. */
 const SEGMENTS = ["abcdef", "bc", "abged", "abgcd", "fgbc", "afgcd", "afgedc", "abc", "abcdefg", "abcdfg"] as const;
+/** The letters a seven-segment board writes for a power play. */
+const LETTERS: Record<string, string> = { P: "abefg" };
 
 /** How wide a colon is, as a share of the height of the digits beside it. */
 const COLON = 0.3;
@@ -212,7 +216,7 @@ function segments(text: string, x: number, y: number, high: number): { d: string
       at += cw;
       return;
     }
-    for (const seg of SEGMENTS[Number(ch)] ?? "") {
+    for (const seg of LETTERS[ch] ?? SEGMENTS[Number(ch)] ?? "") {
       const [rx, ry, rw, rh] = rects[seg];
       d += `M${n(at + rx)} ${n(y + ry)}h${n(rw)}v${n(rh)}h${n(-rw)}z`;
     }
@@ -270,6 +274,22 @@ function boardFace(w: number, h: number, look: Boards): string {
   const [h0, a0] = [digits(look.score[0], x0, y0, high), digits(look.score[1], x0 + home.width + gap * 2 + high * dash, y0, high)];
   svg += `<path class="u-led" fill="${c2}" d="${h0.d}${a0.d}M${n(x0 + home.width + gap)} ${n(y0 + high / 2 - high * 0.065)}h${n(high * dash)}v${n(high * 0.13)}h${n(-high * dash)}z"/>`;
   if (live !== undefined) svg += liveRow(w, h, room, live, c2);
+  // A power play: in each side's block of colour, its penalty clocks (one or two, stacked), or PP for the side with more skaters, dark on the colour.
+  if (live?.penalties !== undefined) {
+    const pen = live.penalties;
+    for (const [side, x] of [["home", edge * 2], ["away", w - edge * 2 - block]] as const) {
+      const lines = (pen.pp === side ? ["PP"] : pen[side].filter((one) => safeClock(one) !== "").slice(0, 2));
+      if (lines.length === 0) continue;
+      const rows = lines.length;
+      const high2 = Math.min((hb * 0.8) / rows / 1.15, block / ((lines[0].length - (lines[0].includes(":") ? 1 : 0)) * 0.69 + 0.4));
+      let d = "";
+      lines.forEach((text, i) => {
+        const width = segments(text, 0, 0, high2).width;
+        d += segments(text, x + (block - width) / 2, yb + (hb - rows * high2 * 1.15) / 2 + i * high2 * 1.15, high2).d;
+      });
+      svg += `<path class="u-led-bed" d="${d}"/>`;
+    }
+  }
   return svg;
 }
 

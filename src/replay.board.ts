@@ -3,7 +3,7 @@
 // hung over the surface (`turn.replay.ts`); a page that draws its own board reads it the same way.
 import { deadSeconds, stoppageAt } from "./replay.deadtime.ts";
 import { replayEvents, replayInfo } from "./replay.ts";
-import type { ReplayPeriod, ReplayStoppage, ReplayTimeline } from "./replay.types.ts";
+import type { ReplayPenalty, ReplayPeriod, ReplayStoppage, ReplayTimeline } from "./replay.types.ts";
 
 /** The board at a time. */
 export interface ReplayBoardState {
@@ -13,6 +13,10 @@ export interface ReplayBoardState {
   period?: number;
   /** The game clock as it is written, `19:20`: the time left in the period, or the time gone when the timeline counts `up`. Whole seconds, so it changes once a second of game time at most. */
   clock: string;
+  /** Only when the timeline has penalties: the skaters each side has on the ice (`[5, 4]` is a power play for the home side). */
+  strength?: [number, number];
+  /** Only when the timeline has penalties: each penalty being served at the time, by its side, with its time left as the board writes it (`1:42`), those that make the side play short first. */
+  penalties?: { team: "home" | "away"; left: string; short: boolean }[];
 }
 
 const isNum = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
@@ -80,9 +84,76 @@ export function replayGameClock(timeline: ReplayTimeline, t: number): ReplayGame
 }
 
 /**
+ * The game time at `t` on the replay's clock: the seconds of game clock played since the first period began (the lengths of the periods before, and what has been played of this one). It stands still in a
+ * stoppage, as the game clock does: a penalty's two minutes are two minutes of it.
+ */
+export function replayGameTime(timeline: ReplayTimeline, t: number): number {
+  const periods = replayPeriods(timeline);
+  let before = 0;
+  for (const p of periods) {
+    if (p.end > t) break;
+    const next = periods[periods.indexOf(p) + 1];
+    if (next === undefined || next.start > t) break;
+    before += isNum(p.length) && p.length > 0 ? p.length : p.end - p.start - deadSeconds(timeline, p.start, p.end);
+  }
+  return before + replayGameClock(timeline, t).played;
+}
+
+/** The penalties of a timeline, each checked: a side, a start and minutes that are numbers. Kept for the next call. */
+const PENALTIES = new WeakMap<object, readonly ReplayPenalty[]>();
+export function replayPenalties(timeline: ReplayTimeline): readonly ReplayPenalty[] {
+  const hit = PENALTIES.get(timeline);
+  if (hit !== undefined) return hit;
+  const given = Array.isArray(timeline.penalties) ? timeline.penalties : [];
+  const out = given.filter((p) => typeof p === "object" && p !== null && (p.team === "home" || p.team === "away") && isNum(p.start) && isNum(p.minutes) && p.minutes > 0 && (p.end === undefined || (isNum(p.end) && p.end >= p.start))).map((p) => ({ ...p }));
+  PENALTIES.set(timeline, out);
+  return out;
+}
+
+/** A penalty being served at a time, and its game seconds left. */
+export interface ServedPenalty {
+  penalty: ReplayPenalty;
+  left: number;
+}
+
+/**
+ * The penalties being served at `t` (the player is in the box: from the call to his `end`) with the game seconds left of each, and each side's skaters on the ice: five, less one for each penalty that
+ * makes it play short, never fewer than three. A penalty's time left is the game clock from now to its `end` (it runs only while the game clock does), or, with no end or one a power-play goal
+ * brought early (`endedBy: "goal"`), its minutes from the drop after the call. Pure.
+ * @example
+ * ```ts
+ * import { penaltiesAt } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+ * const timeline = {
+ *   frames: [{ t: 0, objects: [] }, { t: 60, objects: [] }],
+ *   periods: [{ start: 0, end: 60, length: 1200 }],
+ *   penalties: [{ team: "away" as const, by: "a4", start: 10, end: 16, minutes: 2 }],
+ * };
+ * const at = penaltiesAt(timeline, 12);
+ * console.log(at.strength, at.served.map((s) => `${s.penalty.by} ${s.left}`), penaltiesAt(timeline, 16).strength);
+ * // [ 5, 4 ] [ 'a4 80' ] [ 5, 5 ]
+ * ```
+ */
+export function penaltiesAt(timeline: ReplayTimeline, t: number): { served: ServedPenalty[]; strength: [number, number] } {
+  const served: ServedPenalty[] = [];
+  const short = { home: 0, away: 0 };
+  const now = replayGameTime(timeline, t);
+  for (const p of replayPenalties(timeline)) {
+    if (p.start > t || (p.end !== undefined && p.end <= t)) continue;
+    const full = p.minutes * 60;
+    // Its time left: to its end on the game clock (a penalty that waited for a side two short begins its count later), or, with no end or one a power-play goal brought early, its minutes from the call.
+    const left = p.end !== undefined && p.endedBy !== "goal" ? Math.min(full, replayGameTime(timeline, p.end) - now) : full - (now - replayGameTime(timeline, p.start));
+    if (left <= 0 && p.end === undefined) continue;
+    served.push({ penalty: p, left: Math.max(0, left) });
+    if (p.short !== false) short[p.team] += 1;
+  }
+  return { served, strength: [Math.max(3, 5 - short.home), Math.max(3, 5 - short.away)] };
+}
+
+/**
  * The scoreboard of a replay at a time `t`, in seconds on the timeline's clock. The score is the goals at or before it; the period and the clock are the game clock's (`replayGameClock`): the clock runs
  * through the period from its full length to nothing, or from nothing up when the timeline counts `up`, and stands still in a stoppage. A period with a `length` of its own runs its clock through that many
- * seconds however long it lasts on the timeline, so a game re-timed to minutes can read like the real one.
+ * seconds however long it lasts on the timeline, so a game re-timed to minutes can read like the real one. A timeline with `penalties` adds each side's `strength` and the penalties being served,
+ * with their time left (`penaltiesAt`).
  * @example
  * ```ts
  * import { replayBoard } from "@johnmorrisdotca/kyogijo-stadiums/replay";
@@ -110,5 +181,14 @@ export function replayBoard(timeline: ReplayTimeline, t: number): ReplayBoardSta
   const game = replayGameClock(timeline, t);
   // Down: the time left, rounded up, so that the full length shows until the period has moved and nothing shows only at its end. Up: the whole seconds gone.
   const clock = timeline.clock === "up" ? boardClock(game.played) : boardClock(Math.ceil(game.left - 1e-9));
-  return game.period === undefined ? { score, clock } : { score, period: game.period, clock };
+  const board: ReplayBoardState = game.period === undefined ? { score, clock } : { score, period: game.period, clock };
+  if (replayPenalties(timeline).length > 0) {
+    const { served, strength } = penaltiesAt(timeline, t);
+    board.strength = strength;
+    board.penalties = served
+      .map((s) => ({ team: s.penalty.team, left: boardClock(Math.ceil(s.left - 1e-9)), short: s.penalty.short !== false, seconds: s.left }))
+      .sort((a, b) => Number(b.short) - Number(a.short) || a.seconds - b.seconds)
+      .map(({ team, left, short }) => ({ team, left, short }));
+  }
+  return board;
 }

@@ -2,7 +2,7 @@
 // then is out of sight until the restart) and the players go to their places for the restart at a speed a player would. The functions here are pure and know no sport: a sport's rule set
 // (`replay.hockey.ts` for the rink) says where play starts again, how long each part of the dead time lasts and how fast the players go, and `addDeadTime` writes the stoppages into a timeline.
 import { interpolate } from "./replay.ts";
-import type { ReplayEvent, ReplayFrame, ReplayObject, ReplayPeriod, ReplayStoppage, ReplayTimeline } from "./replay.types.ts";
+import type { ReplayEvent, ReplayFrame, ReplayObject, ReplayPenalty, ReplayPeriod, ReplayStoppage, ReplayTimeline } from "./replay.types.ts";
 
 const isNum = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
 type P = readonly [number, number];
@@ -125,7 +125,8 @@ const placeOn = (path: Path, t: number): P | undefined => {
  * Write stoppages into a timeline. The timeline given has each stoppage as an instant: the play up to `t`, then at `until` the restart (the players in their places, the puck on the dot). Each is
  * opened into the dead time the rules give: the puck stays where it stopped for a moment and is then out of sight, the players stand a moment (a goal is celebrated) and then go to their places at the
  * rules' speed or slower (all getting there together, the farthest at the rules' speed), a player going off goes to the bench and the one coming on comes from it, and they stand in their places a
- * moment before the restart. Everything after is moved on by the dead time; the periods with it (each keeps its length on the game clock), the events, and the stoppages already there. Pure.
+ * moment before the restart. Everything after is moved on by the dead time; the periods with it (each keeps its length on the game clock), the events, the stoppages already there and the
+ * penalties. Pure.
  */
 export function addDeadTime(timeline: ReplayTimeline, stops: readonly DeadStop[], rules: DeadTimeRules): ReplayTimeline {
   // Each period's length on the game clock, before the dead time stretches it: a period that had none keeps the live seconds it had.
@@ -136,6 +137,7 @@ export function addDeadTime(timeline: ReplayTimeline, stops: readonly DeadStop[]
   // The last first, so that a stoppage does not move the ones before it.
   const order = [...stops].filter((s) => isNum(s.t)).sort((a, b) => b.t - a.t);
   let pers = periods;
+  let penalties: ReplayPenalty[] | undefined = timeline.penalties?.map((p) => ({ ...p }));
   for (const stop of order) {
     const t0 = stop.t;
     const u = isNum(stop.until) && stop.until > t0 ? stop.until : t0 + 0.04;
@@ -190,6 +192,7 @@ export function addDeadTime(timeline: ReplayTimeline, stops: readonly DeadStop[]
       { start: t0, end: round2(t0 + total), reason: stop.reason, ...(isNum(stop.x) && isNum(stop.y) ? { x: stop.x, y: stop.y } : {}), ...(stop.team === undefined ? {} : { team: stop.team }) },
     ].sort((a, b) => a.start - b.start);
     pers = pers?.map((p) => ({ ...p, start: move(p.start), end: move(p.end) }));
+    penalties = penalties?.map((p) => ({ ...p, start: move(p.start), ...(isNum(p.end) ? { end: move(p.end) } : {}) }));
   }
-  return { ...timeline, frames, events: events.sort((a, b) => a.t - b.t), stoppages, ...(pers === undefined ? {} : { periods: pers }) };
+  return { ...timeline, frames, events: events.sort((a, b) => a.t - b.t), stoppages, ...(pers === undefined ? {} : { periods: pers }), ...(penalties === undefined ? {} : { penalties }) };
 }

@@ -87,6 +87,27 @@ export interface ReplayStoppage {
   team?: "home" | "away";
 }
 
+/**
+ * A penalty: a player in the penalty box from `start` (the call, a stoppage) to `end` (when he leaves it: his time ran out on the game clock, or a power-play goal ended a minor), in seconds on the
+ * timeline's clock. His side plays a skater short in that time unless `short` is `false` (a misconduct, or coincidental penalties, which leave the strength even).
+ */
+export interface ReplayPenalty {
+  team: "home" | "away";
+  /** The player who serves it: the id of his object, which the frames put in the box. */
+  by?: string;
+  start: number;
+  /** When he leaves the box. Without it, the penalty runs for its `minutes` of game clock from the drop after the call. */
+  end?: number;
+  /** Its length on the game clock: 2 for a minor, 4 for a double minor, 5 for a major, 10 for a misconduct. */
+  minutes: number;
+  /** A word of the sport's rule set (in hockey `minor`, `double-minor`, `major`, `misconduct`, `bench-minor`), or one of your own. */
+  kind?: string;
+  /** Whether his side plays short while he sits: `true` unless said otherwise. */
+  short?: boolean;
+  /** `goal` when a power-play goal ended it before its time was up: until that goal the board counts its minutes down as if it would run them all. */
+  endedBy?: "goal";
+}
+
 /** Tracking data over time on a surface. Do not change a timeline after it has been used: make a new one. */
 export interface ReplayTimeline {
   /** The positions, from the first moment to the last. */
@@ -109,6 +130,8 @@ export interface ReplayTimeline {
   clock?: "down" | "up";
   /** The stoppages, in order. The game clock stands still in each, from its `start` to its `end`, and the board shows the same time all through it. */
   stoppages?: readonly ReplayStoppage[];
+  /** The penalties, in order of their calls: who sits in the box, and for how long on the game clock. The board shows each side's strength and the time left of each penalty. */
+  penalties?: readonly ReplayPenalty[];
 }
 
 /** How a frame is drawn. */

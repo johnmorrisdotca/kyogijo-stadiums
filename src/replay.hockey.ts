@@ -169,3 +169,143 @@ export function hockeyStopOf(typeDescKey: string, reason?: string): HockeyStop |
   if (typeDescKey !== "stoppage") return undefined;
   return NHL_REASONS[reason ?? ""] ?? "whistle";
 }
+
+/** The kinds of penalty, and their minutes on the game clock (NHL Rules 16 to 21: a minor 2, a double minor 4, a major 5, a misconduct 10; a bench minor is a minor served by a player the coach names). */
+export const HOCKEY_PENALTY_MINUTES = { minor: 2, "bench-minor": 2, "double-minor": 4, major: 5, misconduct: 10 } as const;
+export type HockeyPenaltyKind = keyof typeof HOCKEY_PENALTY_MINUTES;
+
+/**
+ * The kind of a penalty of an NHL-style play-by-play (`details.typeCode` and `details.duration` of a `penalty`): `MIN` a minor (4 minutes of it a double minor), `BEN` a bench minor, `MAJ` a major,
+ * `MIS` and `GMIS` a misconduct; else by its minutes. `undefined` for a penalty shot or a match penalty, which this rule set does not play.
+ * @example
+ * ```ts
+ * import { hockeyPenaltyKind } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+ * console.log(hockeyPenaltyKind("MIN", 2), hockeyPenaltyKind("MIN", 4), hockeyPenaltyKind("BEN", 2), hockeyPenaltyKind("MAJ", 5), hockeyPenaltyKind("MIS", 10), hockeyPenaltyKind("PS", 0));
+ * // minor double-minor bench-minor major misconduct undefined
+ * ```
+ */
+export function hockeyPenaltyKind(typeCode?: string, duration?: number): HockeyPenaltyKind | undefined {
+  const code = (typeCode ?? "").toUpperCase();
+  if (code === "MIN") return duration === 4 ? "double-minor" : "minor";
+  if (code === "BEN") return "bench-minor";
+  if (code === "MAJ") return "major";
+  if (code === "MIS" || code === "GMIS") return "misconduct";
+  if (code !== "") return undefined;
+  return duration === 2 ? "minor" : duration === 4 ? "double-minor" : duration === 5 ? "major" : duration === 10 ? "misconduct" : undefined;
+}
+
+/**
+ * Where a side's penalty box is, the seat its penalized player sits on, in the `nhl-api` frame: across the ice from the players' benches (NHL Rule 1: the two penalty boxes on the side opposite the
+ * benches, one each side of the off-ice officials' box at centre), the home side's on the left, behind the boards. A stand-in for the rink's own figures (the benches and boxes of the rink, KYOGIJO-
+ * STADIUMS-47) until they are in the package: then this reads them, and nothing that calls it changes.
+ */
+export function hockeyPenaltyBox(team: "home" | "away"): readonly [number, number] {
+  return team === "home" ? HOCKEY_BOXES.home : HOCKEY_BOXES.away;
+}
+const HOCKEY_BOXES = { home: [-14, 45] as const, away: [14, 45] as const };
+
+/** A call of a penalty, on the game clock: when (seconds of game played since the start), against which side, what kind. */
+export interface HockeyCall {
+  team: "home" | "away";
+  kind: HockeyPenaltyKind;
+  at: number;
+}
+
+/** When a penalty's time begins and ends on the game clock, and whether its side plays short. */
+export interface HockeyServed {
+  /** When its time begins: the call, or, for a side already two short, when one of those ends (it never plays with fewer than three skaters). */
+  from: number;
+  /** When the player leaves the box: his time ran out, or a power-play goal ended his minor. */
+  to: number;
+  short: boolean;
+  /** Ended by a power-play goal. */
+  byGoal: boolean;
+}
+
+/**
+ * How a game's penalties are served, by NHL rule, all on the game clock (seconds played since the start): each penalty's player sits from the call; a minor is 2 minutes, a double minor 4, a major 5 and a
+ * misconduct 10; his side plays a skater short (not for a misconduct, served by a substitute, nor for coincidental penalties, called on both sides at once and as many each, which leave the strength
+ * even); a side is never more than two short, so a third penalty's time waits for one of the first two to end; a goal by the side with more skaters ends the scored-on side's minor with the least time
+ * left (a double minor loses the part it is in; a major is served in full). Pure.
+ * @example
+ * ```ts
+ * import { hockeyPenaltyEnds } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+ * const calls = [{ team: "away" as const, kind: "minor" as const, at: 100 }, { team: "home" as const, kind: "major" as const, at: 400 }];
+ * const goals = [{ team: "home" as const, at: 160 }, { team: "away" as const, at: 500 }];
+ * console.log(hockeyPenaltyEnds(calls, goals).map((s) => `${s.from}-${s.to} ${s.short} ${s.byGoal}`).join(", "));
+ * // 100-160 true true, 400-700 true false
+ * ```
+ */
+export function hockeyPenaltyEnds(calls: readonly HockeyCall[], goals: readonly { team: "home" | "away"; at: number }[]): HockeyServed[] {
+  const out: (HockeyServed & { left: number; part: number; kind: HockeyPenaltyKind; team: "home" | "away"; started: boolean })[] = calls.map((c) => ({
+    from: c.at,
+    to: c.at + HOCKEY_PENALTY_MINUTES[c.kind] * 60,
+    short: c.kind !== "misconduct",
+    byGoal: false,
+    left: HOCKEY_PENALTY_MINUTES[c.kind] * 60,
+    part: c.kind === "double-minor" ? 2 : 1,
+    kind: c.kind,
+    team: c.team,
+    started: false,
+  }));
+  // Coincidental: at one moment, the same number of penalties that would make each side short are served without making either short.
+  const moments = [...new Set(calls.map((c) => c.at))];
+  for (const at of moments) {
+    const here = out.filter((p) => p.from === at && p.short);
+    const home = here.filter((p) => p.team === "home");
+    const away = here.filter((p) => p.team === "away");
+    const pairs = Math.min(home.length, away.length);
+    for (let i = 0; i < pairs; i += 1) [home[i].short, away[i].short] = [false, false];
+  }
+  // Walk the game clock: calls start their time (or wait while their side is two short), goals end minors, time runs out.
+  const marks = [...new Set([...calls.map((c) => c.at), ...goals.map((g) => g.at)])].sort((a, b) => a - b);
+  const running = (team: "home" | "away") => out.filter((p) => p.team === team && p.started && p.short && p.left > 0);
+  let now = Number.NEGATIVE_INFINITY;
+  const advance = (to: number): void => {
+    // Time runs for every started penalty; one that runs out lets a waiting one of its side begin.
+    for (;;) {
+      const live = out.filter((p) => p.started && p.left > 0);
+      const first = live.reduce<number>((best, p) => Math.min(best, now + p.left), Infinity);
+      if (first > to || first === Infinity) {
+        if (Number.isFinite(to)) for (const p of live) p.left -= to - now;
+        now = to;
+        return;
+      }
+      for (const p of live) p.left -= first - now;
+      now = first;
+      for (const p of live) if (p.left <= 1e-9) [p.left, p.to] = [0, now];
+      start(now);
+    }
+  };
+  const start = (at: number): void => {
+    for (const p of out) {
+      if (p.started || p.from > at) continue;
+      if (p.short && running(p.team).length >= 2) continue;
+      p.started = true;
+      p.from = Math.max(p.from, at);
+      p.to = p.from + p.left;
+    }
+  };
+  for (const m of marks) {
+    if (now === Number.NEGATIVE_INFINITY) now = m;
+    advance(m);
+    // A goal at the moment of a call ends none of that call's penalties (the call came after it): goals first, then the calls begin.
+    for (const g of goals.filter((one) => one.at === m)) {
+      const other = g.team === "home" ? "away" : "home";
+      const theirs = running(other);
+      if (theirs.length <= running(g.team).length) continue;
+      const minors = theirs.filter((p) => p.kind === "minor" || p.kind === "bench-minor" || p.kind === "double-minor").sort((a, b) => a.left - b.left);
+      const ended = minors[0];
+      if (ended === undefined) continue;
+      if (ended.kind === "double-minor" && ended.left > 120) {
+        ended.left = 120;
+        ended.to = m + 120;
+      } else {
+        [ended.left, ended.to, ended.byGoal] = [0, m, true];
+      }
+    }
+    start(m);
+  }
+  advance(Infinity);
+  return out.map(({ from, to, short, byGoal }) => ({ from, to, short, byGoal }));
+}
