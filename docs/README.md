@@ -41,6 +41,8 @@ The contents of the site, by task. On the site the same pages are also listed by
 - [Boards over a surface](./boards.md) ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/boards.html)): a results board, a bout presentation or a medal table laid over a pool, a mat or an oval, in 2D and in 3D: placed at the top, a side or a corner, kept off the middle of the surface, never stretched.
 - [Judging assignments](./judging.md) ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/judging.html)): who judges where at a judo tournament: each mat's judges by seat with a name and an ID, in the seat where they fit and in a chart that never cuts a name, in 2D and 3D, for a tablet.
 - [Circuits](./circuits.md) ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html)): a famous race track as OpenStreetMap maps it, the Las Vegas Strip Circuit first: the lap at the track's width, the pit lane and the pit building, the start and the finish, each turn's number, in 2D and 3D, and a simulated race on it with a race clock and timing board.
+- [The race feed](./race-feed.md): kyogijo's open race timeline, the OpenF1-style adapter, and a race from an address, pasted or from a file, followed while it is live.
+- [Where to find a feed](./where-to-find-a-feed.md): the known public feeds for each sport, what each gives, a sample address, how to find an id, and each source's docs and terms.
 - [Special games](./special-games.md): a rink in a ballpark, a court on a carrier's deck, baseball over a stadium's pitch: 18 games to scale, each with its sources.
 - [Ballparks](./ballparks.md): 94 parks, each with its own fence, and the past ones by season.
 - [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.

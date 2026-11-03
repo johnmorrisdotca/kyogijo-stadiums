@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+- **Bring your own race feed (KYOGIJO-STADIUMS-38)** ([the race feed](./docs/race-feed.md), [where to find a feed](./docs/where-to-find-a-feed.md)): a race on a circuit plays from a feed the reader chooses instead of the simulation. kyogijo's open race timeline (`kind: "kyogijo-race"`: cars, lap crossings, pit stops, retirements, location samples, `live`) is read strictly by `readRaceFeed` and played by `raceFromFeed` (between the times a feed gives, the cars run at the lap's own speeds; location samples are laid on the circuit's line by how far round the lap they are); `openF1Feed` adapts OpenF1-style lap, pit and driver rows. `loadRaceFeed` reads an address with the reader's own browser (no server or proxy of ours, nothing kept) and says in words when a source will not let a page read it (CORS), refuses (403) or is busy (429); `feedFromText` reads pasted text or a file; `followRaceFeed` asks a live race again every 15 seconds, only while the page is visible, and stops when it is over or refused; `mountCircuitRace` takes `race` and `replace`. `raceToFeed` writes any race in the format: the demo's **Sample feed (made up)** (`examples/races/las-vegas-sample.json`) is the simulated race so written, listed first among the suggestions of `examples/feeds/where-to-find.json` (OpenF1, Jolpica F1), which the circuits page shows beside the address field with what each gives, how to find a race and its docs and terms. Every test runs on made-up stubs; none makes a real request.
+
 ## [0.55.0] - 2026-11-03
 
 ### Added
