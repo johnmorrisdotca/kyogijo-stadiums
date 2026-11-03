@@ -9,7 +9,7 @@ import { RACE_FOLLOW_LIMITS, flatRaceShow, followModeOf, planBox, raceFollowInpu
 import { createReplayBar, replayKey, type ReplayBarSlots } from "./replay.bar.ts";
 import { followRunner, type FollowBox, type FollowInput, type FollowRunner } from "./replay.follow.ts";
 import type { ReplayChange } from "./replay.types.ts";
-import { aimOf, autoFollowButton } from "./turn.follow.ts";
+import { aimOf, autoFollowButton } from "./turn.aim.ts";
 import { CIRCUIT_ATTRIBUTION } from "./circuits.ts";
 import { simulateRace, type CircuitRace, type RaceOptions } from "./circuits.race.ts";
 import { RACE_WORDS } from "./circuits.race.words.ts";

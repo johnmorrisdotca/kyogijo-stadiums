@@ -4,6 +4,7 @@
 // the browser are in replay.control.ts and replay.dom.ts. Written for this package; hockey_rink's and mplsoccer's animations were
 // read about, for the idea of a timeline of positions played on a surface, and no code of either is used.
 import { drawKyogijo, describe } from "./draw.ts";
+import { replayEvents } from "./replay.events.ts";
 import { esc, hash } from "./format.ts";
 import { envFor, place, unitOfLayer } from "./layers.env.ts";
 import { renderLayers } from "./layers.ts";
@@ -64,7 +65,7 @@ interface Prepared {
   step: number;
   /** For each frame, the index of the last frame at or before it that says who has the ball (or -1). */
   said: number[];
-  events: ReplayEvent[];
+  events: readonly ReplayEvent[];
 }
 
 const CACHE = new WeakMap<object, Prepared>();
@@ -104,7 +105,7 @@ function prepare(timeline: ReplayTimeline): Prepared {
     if (frame.possession !== undefined) said = i;
     return said;
   });
-  const events = Array.isArray(timeline.events) ? timeline.events.filter((e) => typeof e === "object" && e !== null && isNum(e.t) && typeof e.kind === "string").map((e) => ({ ...e })).sort((a, b) => a.t - b.t) : [];
+  const events = replayEvents(timeline);
   const prepared: Prepared = {
     timeline,
     frames,
@@ -206,10 +207,7 @@ export function replayTimes(timeline: ReplayTimeline): readonly number[] {
   return prepare(timeline).times;
 }
 
-/** The events of a timeline, in time order. */
-export function replayEvents(timeline: ReplayTimeline): readonly ReplayEvent[] {
-  return prepare(timeline).events;
-}
+export { replayEvents };
 
 /**
  * Where everything is at a time: each object of the frame at or before `t` placed between that frame and the next, in a straight line or, with

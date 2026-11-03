@@ -1,7 +1,7 @@
 // Following the play: where the camera looks while a replay plays, as arithmetic on numbers. `followShot` is the shot the play asks for at a moment (the skaters near the puck, padded, or the
 // puck itself, or the faceoff dot in a stoppage); `followCamera` eases toward it with a critically damped spring, a dead zone and a leash that keeps the puck in the frame; `followRunner` is
 // what a page's replay calls on each change of its clock. Nothing here reads the page or a clock: the caller says how many seconds went by, and a test does it with numbers.
-import { replayEvents } from "./replay.ts";
+import { replayEvents } from "./replay.events.ts";
 import type { ReplayChange, ReplayObject, ReplayTimeline } from "./replay.types.ts";
 
 /** What the camera follows: nothing (the whole surface), the action (the players near the puck or ball, and it), or the puck or ball alone. */

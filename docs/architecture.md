@@ -223,6 +223,7 @@ src/
 ├── replay.deadtime.ts  dead time, pure and of no sport: the stoppages of a timeline, and addDeadTime that opens each into the dead puck, the walk to the line-up and the restart
 ├── replay.hockey.ts    hockey's rule set for dead time: the nine face-off spots, the spot after each kind of stoppage, the line-up, the speeds and the benches
 ├── replay.dom.ts       the replay's painter (it moves only the marks that move), its driver (the clock on animation frames, the bar, the keys, the live region) and the flat replay made of them
+├── replay.events.ts    a timeline's events in time order, apart from the frames and the drawing, so that the follow camera loads none of them
 ├── replay.follow.ts    following the play, pure: the shot the play asks for (the action, the puck, a stoppage's faceoff dot), the camera that eases to it, and its runner on the replay's clock
 ├── replay.follow.dom.ts the follow camera's buttons in the replay's bar, and the flat replay's camera, which shows part of the drawing by its viewBox
 ├── replay.types.ts     the replay's types
@@ -437,6 +438,7 @@ src/
 ├── turn.replay.ts      a replay on the 3D view, as data: the floor at a time and the players standing up as discs that face the eye
 ├── turn.replay.board.ts the scoreboard hung over a 3D view following a replay: its faces drawn again with the score and the clock, written when they change
 ├── turn.replay.dom.ts  a replay on the 3D view in a page: its controls under the view's, the floor's marks and the discs moved each frame
+├── turn.aim.ts         a follow camera on a 3D view, the parts that know no replay: a shot as the view's aim, and the Auto-follow toggle beside Auto-turn (a game's replay and a race use them)
 ├── turn.follow.ts      following the play on a 3D view: the shot as a point of the floor to look at and a zoom on top of the view's; the reader's own turn holds it
 ├── quality.ts          how much a 3D view draws: the three tiers and what each leaves out, the pixel ratio a layer is made at, and the governor that steps a tier down and up by the frames the view makes
 ├── turn-entry.ts       the 3D view's entry
