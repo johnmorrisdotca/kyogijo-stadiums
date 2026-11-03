@@ -36,7 +36,7 @@ Kyogijo Stadiums draws the places a game is played on, with the score of the gam
 
 ## The showcase
 
-Real buildings drawn in the outline OpenStreetMap maps for them, each with a plausible bowl of the seats, tiers and roof its sources give. In the first three rows the picture in the middle turns, slowly, and the others stand still; the last row is still.
+Real buildings drawn in the outline OpenStreetMap maps for them, each with a plausible bowl of the seats, tiers and roof its sources give. In the first three rows the picture in the middle turns, slowly, and the others stand still; the last two rows are still.
 
 **Arenas and stadiums** ([real arenas](./docs/venues.md), [real stadiums](./docs/stadiums.md))
 
@@ -143,6 +143,34 @@ Real buildings drawn in the outline OpenStreetMap maps for them, each with a pla
 </tr>
 </table>
 
+**A game on the ice** ([the replay in 3D](./docs/replay.md#in-3d), [the example game](./docs/example-games.md))
+
+<table align="center">
+<tr>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/replay-game-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/replay-game-3d-desk-light.webp" alt="A made-up game of Canada and Japan replayed on the rink in 3D from the main camera: the players standing up as discs with their numbers, red circles and blue squares, the score hung over centre ice, and a shot's arrow and a whistle's cross on the ice." width="250">
+</picture>
+<br><em>A made-up game, replayed in 3D</em>
+</td>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-game-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-game-3d-desk-light.webp" alt="The same game on the ice of a real arena, in front of its crowd: the players standing as discs on the rink inside two tiers of seats." width="250">
+</picture>
+<br><em>The same game in an arena, in front of the crowd</em>
+</td>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/replay-game-flat-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/replay-game-flat-desk-light.webp" alt="The same moment of the game flat: each side's flag and name at the end it defends, the score panel at centre ice, the players as circles and squares with their numbers, a goal's star at the net." width="250">
+</picture>
+<br><em>The same moment, flat</em>
+</td>
+</tr>
+</table>
+
 **Surfaces** ([the surfaces](./docs/surfaces.md), [score and layout](./docs/score.md))
 
 <table align="center">
@@ -217,7 +245,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 - **A 3D view** of any surface or venue that turns by mouse, touch or keys, with the roof and the walls to switch and a quality level for every device. [The 3D view](./docs/turn.md), [quality](./docs/quality.md).
 - **Circuits**: a famous race track as OpenStreetMap maps it, the Las Vegas Strip Circuit first, with its turns numbered and its pit building standing in 3D. [Circuits](./docs/circuits.md).
 - **Tournaments**: several surfaces on one floor, who judges where, boards laid over a surface. [Layouts](./docs/multi.md), [judging](./docs/judging.md), [boards](./docs/boards.md).
-- **Data on a surface**: points, heat maps, shot and pass charts, team shapes and a replay, in 48 providers' coordinate frames. [Layers](./docs/layers.md), [frames](./docs/frames.md), [replay](./docs/replay.md).
+- **Data on a surface**: points, heat maps, shot and pass charts, team shapes and a replay, flat or in 3D with the players standing on the ice, in 48 providers' coordinate frames. [Layers](./docs/layers.md), [frames](./docs/frames.md), [replay](./docs/replay.md), [an example game](./docs/example-games.md).
 - **Looks and flags**: eight named looks, a flag or crest on each half, trophies and crests from Dougu Sports, flags from Hata, light and dark. [Theming](./docs/theming.md), [the pageant](./docs/pageant.md).
 - **Four ways in**: a function that returns SVG text, a helper that draws into a container, a custom element, a frame for pages with no script; renderers for a canvas, d3, Observable Plot, GeoJSON and PNG. [Entry points](./docs/entry-points.md), [renderers](./docs/renderers.md).
 - **Accessible and small**: each drawing is an `img` with a title and a description, in English or Japanese; no dependencies, no network requests, nothing stored.

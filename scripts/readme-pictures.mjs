@@ -1,3 +1,4 @@
+/* global Event */
 // Takes the pictures the README shows, from the built demo in `site/`: `pnpm screenshots:readme` (builds the demo, then runs this).
 // The family's standard is in johnmorrisdotca/.github (README-STANDARD.md); the shared part is readme-pictures-lib.mjs.
 // The page is served to a browser without a port, never fetched from the live site, and the same each run: the sport, the park and
@@ -38,6 +39,25 @@ const behind = (names, before, after) => async (page, state) => {
   await page.waitForSelector(`#felt[data-background="${name}"]`);
   await settle(page);
   if (after) await after(page, state);
+};
+
+/** Move a replay's position slider in `holder` to a time, as a reader drags it. */
+const seekTo = (page, holder, t) =>
+  page.locator(`${holder} .ky-position`).evaluate((el, value) => {
+    el.value = String(value);
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+  }, t);
+/** The home page's game section in a view, at a time: it is loaded when it comes near the screen. */
+const game = (view, t) => async (page) => {
+  await page.locator("#game").scrollIntoViewIfNeeded();
+  await page.waitForSelector(view === "3d" ? "#game-stage .ky-turn-replay" : "#game-stage .ky-replay");
+  if (view === "flat") {
+    await page.locator('[data-testid="game-flat"]').click();
+    await page.waitForSelector("#game-stage .ky-replay .ky-stage svg.kyogijo");
+  }
+  await seekTo(page, "#game-stage", t);
+  await page.mouse.move(0, 0);
+  await settle(page);
 };
 
 // ONLY=multi-judo,multi-curling takes just those subjects and leaves the other pictures as they are.
@@ -231,6 +251,29 @@ await takePictures({
     { subject: "tabletennis-area", views: ["desk"], url: address("sport=tabletennis&size=surface&orientation=landscape"), ready: READY, target: stage, prepare: behind("spotlight") },
     // The same area in 3D from a low corner.
     { subject: "tabletennis-area-3d", views: ["desk"], url: address("sport=tabletennis&size=surface&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
+    // A game on the ice (0.51.0): the examples' made-up game in the home page's game section, in 3D from the main camera and flat, a moment after a goal (the shot's arrow and the goal's star on the ice), and on the
+    // hero's arena with Play a game on, in front of its crowd.
+    { subject: "replay-game-3d", views: ["desk"], url: address(""), ready: READY, target: "#game-stage .ky-turn-view", prepare: game("3d", 271) },
+    { subject: "replay-game-flat", views: ["desk"], url: address(""), ready: READY, target: "#game-stage .ky-stage", prepare: game("flat", 271) },
+    {
+      subject: "hero-game-3d",
+      views: ["desk"],
+      url: address(""),
+      height: 1100,
+      ready: READY,
+      target: "#feature-stage .ky-turn-view",
+      prepare: async (page) => {
+        await page.locator('[data-testid="feature-game"]').click();
+        await page.waitForSelector("#feature-stage .ky-turn-replay");
+        await seekTo(page, "#feature-stage", 271);
+        await page.locator("#feature-stage .ky-turn-view").focus();
+        for (let i = 0; i < 3; i += 1) await page.keyboard.press("+");
+        await page.waitForTimeout(400);
+        await page.locator("#feature-stage .ky-turn-view").blur();
+        await page.mouse.move(0, 0);
+        await settle(page);
+      },
+    },
     // The strips for a list of games, on midnight. They are a list and not a surface, so the background is laid behind the list itself, by the same module and in the same way as behind the felt.
     {
       subject: "badges",

@@ -79,6 +79,15 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 
 .replay-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
 .replay-grid .card-stage { min-width: 0; }
+/* A game on the ice: the view and the periods in rows of chips, the stage, the note, and the code with its Copy button. */
+.game-bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 0 0 8px; }
+.game-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.game-row .fam-chip { cursor: pointer; font: inherit; font-size: .9rem; font-weight: 700; color: var(--ink); min-height: 44px; }
+.game-row .fam-chip[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+.game-score { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.game-stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 8px; min-height: 260px; min-width: 0; }
+.game-note { margin: 8px 0 0; font-size: .9rem; color: var(--muted, inherit); }
+.game-code pre { max-width: 100%; overflow-x: auto; margin: 12px 0 8px; }
 .live-grid { display: grid; gap: 10px; max-width: 720px; }
 .live-stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 8px; display: flex; justify-content: center; }
 .live-stage svg { max-width: 100%; }
@@ -261,7 +270,12 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 #feature-stage .rv-three, #feature-stage .ky-turn { height: 100%; }
 #feature-stage .ky-turn { display: flex; flex-direction: column; }
 #feature-stage .ky-turn-view { flex: 1 1 auto; height: auto; min-height: 0; }
-#feature-stage .ky-turn-controls { flex: none; }
+#feature-stage .ky-turn-controls, #feature-stage .ky-turn-replay { flex: none; }
+/* With the game on, the box grows by the replay's row of controls, so that the view keeps its size. */
+#feature-stage:has(.ky-turn-replay) { height: calc(var(--feature-h) + 56px); }
+#feature-game-note { margin: 8px 0; }
+@media (max-width: 600px) { #feature-stage:has(.ky-turn-replay) { height: calc(var(--feature-h) + 112px); } }
+#feature-pick { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .feature-links { margin: 8px 0 0; font-size: .95rem; }
 @media (max-width: 600px) { .feature .rv-bar { margin-bottom: 4px; padding-bottom: 0; scrollbar-width: none; } .feature .rv-bar::-webkit-scrollbar { display: none; } #feature-stage { --feature-h: 430px; }
   /* The text of the arenas comes under the view and its buttons on a phone, so that the bar, the view and the buttons are what the screen shows when it arrives at them. */

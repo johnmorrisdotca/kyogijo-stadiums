@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **A replay plays on the 3D view (KYOGIJO-STADIUMS-23)** ([the replay in 3D](./docs/replay.md#in-3d)): `view.replay(timeline, settings?)` on the handle of `mountKyogijoTurn` gives the same controller as `mount.replay`, and the rink can be turned, tipped and zoomed while the game plays. The players and officials stand up as discs that face the eye (the flat replay's circles, squares, triangles and numbers, turned up), and the ball or the puck, its trail, the passes, the shots and the goals stay on the floor. `stand: false` keeps the players flat. On the view, Space plays and pauses, comma and full stop step, and the arrow keys still turn it; on the replay's controls the arrows step. Nothing runs while it is paused, hidden or out of sight, the auto-turn and the replay share one animation frame, only what moves is written, and destroy leaves nothing; browser tests hold each of these. `replayTurnModel` is the pure model of a frame, and `<kyogijo-field turn>` with a `timeline` plays it on its 3D view.
+- **An example game (KYOGIJO-STADIUMS-25)** ([example games](./docs/example-games.md)): `examples/games/canada-japan.json`, a whole made-up game of Canada and Japan, three periods, shaped from a public NHL play-by-play with every team, player, place, time and the result changed. It is in the repository and on the demo's site, not in the npm package.
+- The demo: a section, "A game on the ice, in 3D", plays the example game in 3D or flat, with a button for each period, the score on the board as it goes, and the code with a Copy button; the arena at the top of the page has **Play a game**, which loads the game when it is first pressed and plays it on the arena's ice in front of its crowd.
+
+### Changed
+
+- The flat replay's page side is a painter and a driver that the 3D replay shares (`replay.dom.ts`); the flat replay behaves as before.
+
 ## [0.51.0] - 2026-11-03
 
 ### Added

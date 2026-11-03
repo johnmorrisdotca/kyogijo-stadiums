@@ -78,9 +78,11 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     document.head.append(styled);
   }
 
+  /** What a page lays over the options (the hero's game gives the sides' colours): empty by default. */
+  let extra = {};
   const optionsNow = () => {
     const { lang, theme } = page();
-    return { sport: "nhl", arena: state.venue, crowd: { real: true, stands: state.stands, ...(state.boards ? { boards: BOARDS } : {}), ...(lightingFor(state) === false ? {} : { lighting: lightingFor(state) }) }, language: lang, ...(theme === undefined ? {} : { theme }) };
+    return { ...extra, sport: "nhl", arena: state.venue, crowd: { real: true, stands: state.stands, ...(state.boards ? { boards: BOARDS } : {}), ...(lightingFor(state) === false ? {} : { lighting: lightingFor(state) }) }, language: lang, ...(theme === undefined ? {} : { theme }) };
   };
   const venueNow = () => ({ roof: state.roof, walls: state.walls, boards: state.boards ? BOARDS : false, lighting: lightingFor(state) });
   const hidden = () => ["building", "markings", "labels"].filter((part) => !state[part]).join(" ");
@@ -224,6 +226,11 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     setVenue(id) {
       state.venue = id;
       apply();
+    },
+    /** Lay options of the page's over the view's (`{}` takes them off): drawn again, and a 3D view goes on turning. */
+    setExtra(next) {
+      extra = next;
+      draw();
     },
     /** The page's language or theme changed: draw again, and write the words of the buttons again. */
     refresh() {

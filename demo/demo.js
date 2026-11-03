@@ -19,6 +19,7 @@ import { gameOf as gameFor, teamOf } from "./games.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
 import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-data.js";
 import { replayPlay } from "./replay-data.js";
+import { gameColours, gameOptions, gameTimeline, loadGame as loadExampleGame, periodAt, scoreAt } from "./game.js";
 import { poolRace, shortRace } from "./pool-data.js";
 import { raceTimeline } from "./dist/replay-entry.js";
 import { nation } from "./nations.js";
@@ -859,6 +860,112 @@ function drawReplays() {
   element.timeline = REPLAY_PLAYS.hockey;
 }
 
+// ----- A game on the ice, in 3D: the examples' made-up game, loaded when the section comes near the screen (or when the hero's Play game is pressed), played by `view.replay` on the
+// 3D rink or by `mount.replay` on the flat one. The score on the board follows the clock; the period buttons seek. Nothing plays by itself.
+const gameView = { view: "3d", game: undefined, handle: undefined, holder: undefined, score: "", period: 0, stop: undefined };
+const goalWords = (values) => say("gameGoal").replace("{team}", values.team).replace("{name}", values.name);
+/** The code for the view shown: what a page of a reader's own would run. */
+function gameCode() {
+  const three = gameView.view === "3d";
+  const game = gameView.game;
+  const team = (side) => (game === undefined ? "" : `{ name: "${game.teams[side].name[language.lang]}", abbr: "${game.teams[side].abbr}", color: "${game.teams[side].color}", score: 0 }`);
+  const from = three ? `import { mountKyogijoTurn } from "${CDN}/dist/turn-entry.js";\n// or, from npm: import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";` : `import { mountKyogijo } from "${CDN}/dist/mount-entry.js";\n// or, from npm: import { mountKyogijo } from "@johnmorrisdotca/kyogijo-stadiums/mount";`;
+  const mount = three ? `const view = mountKyogijoTurn(document.querySelector("#rink"), options, { preset: "broadcast" });\nconst replay = view.replay(game.timeline);` : `const mount = mountKyogijo(document.querySelector("#rink"), options);\nconst replay = mount.replay(game.timeline);`;
+  return `${from}\n\nconst game = await (await fetch("https://johnmorrisdotca.github.io/kyogijo-stadiums/examples/games/canada-japan.json")).json();\nconst options = { sport: "nhl", language: "${language.lang}", home: ${team("home")}, away: ${team("away")} };\n${mount}\nreplay.play();`;
+}
+/** The score line and the board: written only when the score changes. */
+function gameFollow(t) {
+  const game = gameView.game;
+  const score = scoreAt(game, t);
+  const period = periodAt(game, t);
+  const said = `${score.home}-${score.away}`;
+  if (said !== gameView.score || period !== gameView.period) {
+    const first = gameView.score === "";
+    gameView.score = said;
+    gameView.period = period;
+    $("game-score").textContent = `${game.teams.home.name[language.lang]} ${score.home} – ${score.away} ${game.teams.away.name[language.lang]}`;
+    for (const button of $("game-periods").children) button.setAttribute("aria-pressed", String(Number(button.dataset.period) === period));
+    // The board and the names on the ice follow the score and the ends the sides defend; the drawing made a moment ago is already right.
+    if (!first) gameView.holder?.update(gameOptions(game, language.lang, score, period));
+  }
+}
+function drawGame() {
+  const game = gameView.game;
+  if (game === undefined) return;
+  const at = gameView.handle?.state();
+  gameView.stop?.();
+  gameView.handle?.destroy();
+  gameView.holder?.destroy();
+  const stage = $("game-stage");
+  stage.replaceChildren();
+  gameView.score = "";
+  gameView.period = 0;
+  const score = scoreAt(game, at?.t ?? 0);
+  const options = gameOptions(game, language.lang, score, periodAt(game, at?.t ?? 0));
+  const settings = at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop };
+  const timeline = gameTimeline(game, language.lang, goalWords);
+  if (gameView.view === "3d") {
+    const view = mountKyogijoTurn(stage, options, { preset: "broadcast", ...wayOf() });
+    gameView.holder = view;
+    gameView.handle = view.replay(timeline, settings);
+  } else {
+    const mount = mountKyogijo(stage, { ...options, orientation: "landscape" });
+    gameView.holder = { update: (next) => mount.update({ ...next, orientation: "landscape" }), destroy: () => mount.destroy() };
+    gameView.handle = mount.replay(timeline, settings);
+  }
+  gameView.stop = gameView.handle.subscribe((change) => gameFollow(change.state.t));
+  gameFollow(gameView.handle.state().t);
+  for (const button of $("game-views").children) button.setAttribute("aria-pressed", String(button.dataset.gameView === gameView.view));
+  $("game-periods").replaceChildren(
+    ...game.periods.map((p) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "fam-chip";
+      button.dataset.period = String(p.number);
+      button.dataset.testid = `game-period-${p.number}`;
+      button.textContent = say("gamePeriod").replace("{n}", String(p.number));
+      button.setAttribute("aria-pressed", String(p.number === gameView.period));
+      return button;
+    }),
+  );
+  $("game-code").textContent = gameCode();
+}
+$("game-views").addEventListener("click", (event) => {
+  const view = event.target.closest("button")?.dataset.gameView;
+  if (view === undefined || view === gameView.view) return;
+  gameView.view = view;
+  drawGame();
+});
+$("game-periods").addEventListener("click", (event) => {
+  const period = gameView.game?.periods.find((p) => String(p.number) === event.target.closest("button")?.dataset.period);
+  if (period !== undefined) gameView.handle?.seek(period.start);
+});
+$("game-copy").addEventListener("click", async () => {
+  await copyText($("game-code").textContent);
+  $("game-status").textContent = say("copiedLine");
+  setTimeout(() => { $("game-status").textContent = ""; }, 2400);
+});
+$("game-code").textContent = gameCode();
+/** Load the game and play it in the section: once, when the section first comes near the screen. */
+function startGame() {
+  if (gameView.game !== undefined) return;
+  loadExampleGame().then(
+    (game) => {
+      gameView.game = game;
+      drawGame();
+    },
+    () => {
+      $("game-stage").textContent = say("gameFailed");
+    },
+  );
+}
+new IntersectionObserver((entries, observer) => {
+  if (entries.some((entry) => entry.isIntersecting)) {
+    observer.disconnect();
+    startGame();
+  }
+}, { rootMargin: "400px 0px" }).observe($("game"));
+
 // ----- The soccer providers: each pitch in its own frame, and a converter between any two.
 const NUMBER = /^\s*-?\d+(?:\.\d+)?\s*$/;
 function drawProviders() {
@@ -1001,6 +1108,9 @@ function onLanguage() {
   atlas.relabel();
   fillFeatured();
   featured.refresh();
+  paintHeroGame();
+  if (heroGame.handle !== undefined) heroPlay();
+  drawGame();
   for (const grid of grids) grid.relabel();
   fillParks();
   fillGrounds();
@@ -1072,6 +1182,45 @@ function fillFeatured() {
 }
 $("feature-venue").addEventListener("input", (event) => featured.setVenue(event.target.value));
 fillFeatured();
+
+// ----- The hero's Play a game: the examples' made-up game on the featured arena's ice, in front of its crowd, by the same `view.replay` as the game section. Off when the page opens; the game is
+// loaded the first time it is pressed, and pressing again takes it away and leaves the empty ice.
+const heroGame = { on: false, handle: undefined, game: undefined };
+function paintHeroGame() {
+  const button = $("feature-game");
+  button.textContent = say("heroGame");
+  button.title = say("heroGameTip");
+  button.setAttribute("aria-pressed", String(heroGame.on));
+  $("feature-game-note").hidden = !heroGame.on;
+  $("feature-game-note").textContent = say("gameNote");
+}
+function heroPlay() {
+  const view = featured.turn();
+  if (!heroGame.on || heroGame.game === undefined || view === undefined) return;
+  const at = heroGame.handle?.state();
+  heroGame.handle?.destroy();
+  featured.setExtra({ colors: gameColours(heroGame.game) });
+  heroGame.handle = view.replay(gameTimeline(heroGame.game, language.lang, goalWords), at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop });
+  if (at === undefined) heroGame.handle.play();
+}
+$("feature-game").addEventListener("click", () => {
+  heroGame.on = !heroGame.on;
+  paintHeroGame();
+  if (!heroGame.on) {
+    heroGame.handle?.destroy();
+    heroGame.handle = undefined;
+    featured.setExtra({});
+    return;
+  }
+  loadExampleGame().then((game) => {
+    heroGame.game = game;
+    heroPlay();
+  }, () => {
+    heroGame.on = false;
+    paintHeroGame();
+  });
+});
+paintHeroGame();
 
 // ----- Start.
 applyTheme();
