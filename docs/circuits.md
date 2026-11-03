@@ -97,7 +97,11 @@ The floor is the circuit's own drawing, with its name left to the page and its t
 
 ## A race
 
+**[Try the race: circuits.html?race=1](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1)**, live in the demo.
+
 ![The Las Vegas Strip Circuit half an hour into a simulated race: twenty coloured dots, each with the position it holds written on it, spread round the lap, a few close together in a train on the Strip; under the drawing the race clock reads 30:00 and Lap 18 / 50, then the play button and the slider over the whole race, the line that says it is a simulation, and the timing board with each car's position, driver, team, gap, interval, last and best laps and stops](./images/circuits-race-desk-light.webp)
+
+[Try the race: circuits.html?race=1](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1)
 
 ```ts
 import { raceAt, simulateRace } from "@johnmorrisdotca/kyogijo-stadiums/circuits";

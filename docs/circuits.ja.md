@@ -90,7 +90,11 @@ console.log(html.includes('data-part="turn-17"'), html.includes("preserve-3d"));
 
 ## レース
 
+**[レースを試す：circuits.html?race=1](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1)**（デモで実際に動きます）
+
 ![シミュレーションレース開始から30分のラスベガス・ストリップ・サーキット。色分けされた20個の点に、それぞれの現在の順位が書かれ、周回路のあちこちに散らばり、ストリップでは数台が連なっています。図の下にはレース時計（30:00、18 / 50周）、再生ボタンとレース全体のスライダー、シミュレーションであることを示す一文、そして各車の順位、ドライバー、チーム、トップ差、前車との差、前周タイム、ベストラップ、ピット回数を並べたタイミングボードがあります](./images/circuits-race-desk-light.webp)
+
+[レースを試す：circuits.html?race=1](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1)
 
 ```ts
 import { raceAt, simulateRace } from "@johnmorrisdotca/kyogijo-stadiums/circuits";
