@@ -7,7 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.56.0] - 2026-11-03
+
+### Added
+
 - **Bring your own race feed (KYOGIJO-STADIUMS-38)** ([the race feed](./docs/race-feed.md), [where to find a feed](./docs/where-to-find-a-feed.md)): a race on a circuit plays from a feed the reader chooses instead of the simulation. kyogijo's open race timeline (`kind: "kyogijo-race"`: cars, lap crossings, pit stops, retirements, location samples, `live`) is read strictly by `readRaceFeed` and played by `raceFromFeed` (between the times a feed gives, the cars run at the lap's own speeds; location samples are laid on the circuit's line by how far round the lap they are); `openF1Feed` adapts OpenF1-style lap, pit and driver rows. `loadRaceFeed` reads an address with the reader's own browser (no server or proxy of ours, nothing kept) and says in words when a source will not let a page read it (CORS), refuses (403) or is busy (429); `feedFromText` reads pasted text or a file; `followRaceFeed` asks a live race again every 15 seconds, only while the page is visible, and stops when it is over or refused; `mountCircuitRace` takes `race` and `replace`. `raceToFeed` writes any race in the format: the demo's **Sample feed (made up)** (`examples/races/las-vegas-sample.json`) is the simulated race so written, listed first among the suggestions of `examples/feeds/where-to-find.json` (OpenF1, Jolpica F1), which the circuits page shows beside the address field with what each gives, how to find a race and its docs and terms. Every test runs on made-up stubs; none makes a real request.
+
+### Fixed
+
+- A 3D view that goes asks for no frame after it: the measure of the display a view takes in its first moments is stopped on destroy (a view destroyed then asked for one more frame, seen in WebKit when Play a game stopped on another surface), and the frame the auto-turn, a replay and a race share is cleared, a request made in the same tick included (`src/turn.frames.ts`, with unit tests).
+- The docs of the race and of the race feed link straight into the live demo (`circuits.html?race=1`, `circuits.html?race=1&feed=sample`).
 
 ## [0.55.0] - 2026-11-03
 
