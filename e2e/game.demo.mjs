@@ -102,6 +102,22 @@ test.describe("Play a game on the real arenas", () => {
     await expect(button).toHaveAttribute("aria-pressed", "true");
   });
 
+  test("the scoreboard over the ice follows the game here too, and goes back to its own when the game stops", async ({ page }) => {
+    await venues(page, "?venue=rogers-place&view=3d&boards=1");
+    const face = page.locator('#stage [data-part="centre-board-south"]');
+    await expect(face).toHaveCount(1);
+    expect(await face.getAttribute("data-score")).toBeNull();
+    await page.locator(at("game")).click();
+    await expect(page.locator("#stage .ky-turn-replay")).toBeVisible();
+    await pause(page, "#stage");
+    await seek(page, "#stage", 120);
+    await expect(face).toHaveAttribute("data-score", "1-1");
+    await expect(face).toHaveAttribute("data-period", "1");
+    await page.locator(at("game")).click();
+    await expect(page.locator("#stage .ky-turn-replay")).toHaveCount(0);
+    expect(await face.getAttribute("data-score")).toBeNull();
+  });
+
   test("the flat arena stops it and frees everything: the same listeners as when it never played, and no frame asked for", async ({ page }) => {
     await venues(page, "?venue=rogers-place");
     // Into 3D and back, with no game: what the page listens to then.
