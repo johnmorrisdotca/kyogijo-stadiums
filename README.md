@@ -36,7 +36,7 @@ Kyogijo Stadiums draws the places a game is played on, with the score of the gam
 
 ## The showcase
 
-Real buildings drawn in the outline OpenStreetMap maps for them, each with a plausible bowl of the seats, tiers and roof its sources give. In the first three rows the picture in the middle turns, slowly, and the others stand still; the last two rows are still.
+Real buildings drawn in the outline OpenStreetMap maps for them, each with a plausible bowl of the seats, tiers and roof its sources give. In the rows of arenas, of halls and of districts the picture in the middle turns, slowly, and the others stand still; the other rows are still.
 
 **Arenas and stadiums** ([real arenas](./docs/venues.md), [real stadiums](./docs/stadiums.md))
 
