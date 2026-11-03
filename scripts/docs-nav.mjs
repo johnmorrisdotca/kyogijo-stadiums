@@ -88,6 +88,7 @@ export const NAV = [
       { slug: "targets", ja: "ゴールマウス・ストライクゾーン・スタンプ" },
       { slug: "team-shape", ja: "チームの形" },
       { slug: "replay", ja: "リプレイ" },
+      { slug: "example-games", ja: "サンプルの試合データ" },
       { slug: "renderers", ja: "レンダラー" },
     ],
   },

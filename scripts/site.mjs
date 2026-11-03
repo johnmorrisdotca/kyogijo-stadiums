@@ -42,6 +42,8 @@ const toggle = (name, label) => `<button type="button" class="fam-chip" id="${na
 rmSync("site", { recursive: true, force: true });
 mkdirSync("site", { recursive: true });
 cpSync("demo", "site", { recursive: true });
+// The examples' files (a made-up game to replay), at the same path as in the repository: the demo loads it when asked, and a reader can fetch it.
+cpSync("examples", "site/examples", { recursive: true });
 // The declarations are for editors, not for a browser.
 cpSync("dist", "site/dist", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) });
 // The map of the Atlas is chizu's: the few files of its build that the page loads (the world and the mounted map, not the
@@ -242,8 +244,9 @@ const page = `<!doctype html>
           <p data-say="featureText"></p>
         </div>
         <div class="rv-bar" id="feature-bar" data-testid="feature-bar"></div>
-        <div class="rv-bar" id="feature-pick"><select class="fam-field" id="feature-venue" data-testid="feature-venue"></select></div>
+        <div class="rv-bar" id="feature-pick"><select class="fam-field" id="feature-venue" data-testid="feature-venue"></select><button type="button" class="fam-chip" id="feature-game" data-testid="feature-game" aria-pressed="false"></button></div>
         <div id="feature-stage" data-testid="feature-stage"></div>
+        <p class="game-note" id="feature-game-note" data-testid="feature-game-note" hidden></p>
         <p class="feature-links"><a href="venues.html" data-say="featureVenues"></a> · <a href="halls.html?preset=tabletennis-4&amp;view=3d" data-say="featureHalls"></a> · <a href="judging.html?mat=1&amp;view=broadcast" data-say="featureJudging"></a> · <a href="circuits.html" data-say="featureCircuits"></a></p>
       </section>
 
@@ -601,6 +604,27 @@ const page = `<!doctype html>
           <figure class="card"><div class="card-stage" id="replay-pool" data-testid="replay-pool"></div><figcaption data-say="replayPool"></figcaption></figure>
           <figure class="card"><kyogijo-field id="replay-element" data-testid="replay-element" sport="nhl" loop speed="2" language="en"></kyogijo-field><figcaption data-say="replayElement"></figcaption></figure>
         </div>
+        <p><a href="#game" data-say="replayGame"></a></p>
+      </section>
+
+      <section class="more" id="game" aria-labelledby="game-title">
+        <h2 id="game-title" data-say="gameTitle"></h2>
+        <p data-say="gameText"></p>
+        <div class="game-bar">
+          <div class="game-row" id="game-views" role="group" data-say-label="gameViews">
+            <button type="button" class="fam-chip" data-game-view="3d" data-testid="game-3d" aria-pressed="true" data-say="view_3d"></button>
+            <button type="button" class="fam-chip" data-game-view="flat" data-testid="game-flat" aria-pressed="false" data-say="view_flat"></button>
+          </div>
+          <div class="game-row" id="game-periods" data-testid="game-periods" role="group" data-say-label="gamePeriods"></div>
+          <p class="game-score" id="game-score" data-testid="game-score"></p>
+        </div>
+        <div class="game-stage" id="game-stage" data-testid="game-stage"><p class="game-wait" data-say="gameLoading"></p></div>
+        <p class="game-note" data-testid="game-note" data-say="gameNote"></p>
+        <div class="game-code">
+          <pre><code id="game-code" data-testid="game-code" tabindex="0" data-say-label="gameCode"></code></pre>
+          <div class="fam-actions"><button type="button" class="fam-button" id="game-copy" data-testid="game-copy" data-say="copy"></button><span id="game-status" role="status"></span></div>
+        </div>
+        <p><a href="examples/games/canada-japan.json" data-testid="game-file" data-say="gameFile"></a> · <a href="docs/example-games.html" data-say="gameDocs"></a></p>
       </section>
 
       <section class="more" id="parks" aria-labelledby="parks-title">

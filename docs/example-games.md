@@ -1,0 +1,64 @@
+# Example games
+
+A whole game to replay, for trying the [replay](./replay.md) on something longer than a play: [`examples/games/canada-japan.json`](../examples/games/canada-japan.json), a made-up game of hockey between Canada and Japan, all three periods, about ten and a half minutes long.
+
+**A made-up game, shaped from a public NHL play-by-play; teams and players are invented.** The kinds of its events and, roughly, where on the ice and in what order they came are a real game's; nothing else is. The sides are national sides with their countries' names and colours only (no federation's or team's mark), every player's name and number is invented, the places are turned, mirrored across the rink and jittered, every gap is re-timed, an overtime is left out and the result is changed, so that the game it was shaped from cannot be read from it. The play-by-play has events only, so the five skaters and the goaltender of each side are moved between the events in a plausible shape round the puck, and the goaltenders stay in their crease.
+
+## What is in the file
+
+| Field | What it is |
+| --- | --- |
+| `kind`, `version` | `"kyogijo-game"` and `1`. |
+| `sport` | `"nhl"`: the surface it is played on. |
+| `note` | The sentence above, in English and Japanese (`{ en, ja }`). |
+| `teams.home`, `teams.away` | Each side's `name` (`{ en, ja }`), `abbr`, `flag` (a country code) and `color`. |
+| `rosters.home`, `rosters.away` | Every player: `id` (the id in the frames), `number`, `name` (`{ en, ja }`) and `position` (`G`, `F` or `D`). |
+| `score` | The final score, `home` and `away`, and `byPeriod`: `[home, away]` for each period. |
+| `periods` | Each period's `number` and its `start` and `end` on the timeline's clock, in seconds. |
+| `timeline` | A [replay timeline](./replay.md#the-timeline) in the `nhl-api` frame (feet from centre ice): key frames twice a second and at every event, each with the twelve players on the ice and the puck, and the events (`pass`, `shot`, `goal`, `whistle`). |
+
+It is 1.3 MB as it is and about 120 kB compressed, as a web server sends it; the frames are key frames, and the replay moves everything between them. It is not in the npm package, whose size it would multiply for something only a demo needs: it is in the repository and on the demo's site, at `https://johnmorrisdotca.github.io/kyogijo-stadiums/examples/games/canada-japan.json`.
+
+## Play it
+
+![The made-up game on the ice of a real arena from a low corner, the players standing as discs in front of the crowd, with the replay's controls under the view](./images/hero-game-3d-desk-light.webp)
+
+In 3D, the players standing up on the ice and the view turning while it plays ([the replay in 3D](./replay.md#in-3d)):
+
+```ts no-run
+import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const game = await (await fetch("https://johnmorrisdotca.github.io/kyogijo-stadiums/examples/games/canada-japan.json")).json();
+const view = mountKyogijoTurn(document.querySelector("#rink")!, {
+  sport: "nhl",
+  home: { name: "Canada", abbr: "CAN", color: "#d52b1e", score: 0 },
+  away: { name: "Japan", abbr: "JPN", color: "#1d3f8f", score: 0 },
+}, { preset: "broadcast" });
+const replay = view.replay(game.timeline);
+// A period's buttons: seek to its start.
+replay.seek(game.periods[1].start);
+replay.play();
+```
+
+Flat, on the same rink, with `mountKyogijo` of `/mount` in place of `mountKyogijoTurn` and `mount.replay(game.timeline)` in place of `view.replay`. Or with no script of your own but the line that loads the game, as an element: `<kyogijo-field sport="nhl" turn>` and `element.timeline = game.timeline`.
+
+In Node, a frame of it as SVG, from the file in this repository:
+
+```js
+import { readFileSync } from "node:fs";
+import { drawFrame, replayInfo } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+
+const game = JSON.parse(readFileSync("examples/games/canada-japan.json", "utf8"));
+const timeline = game.timeline;
+console.log(game.score.home, game.score.away, game.periods.length, Math.round(replayInfo(timeline).duration / 60));
+const svg = drawFrame({ sport: "nhl", home: { name: "Canada", score: 0 }, away: { name: "Japan", score: 0 } }, timeline, game.periods[1].start);
+console.log(svg.startsWith("<svg"), svg.includes("Shirt numbers"));
+// 6 5 3 11
+// true true
+```
+
+The score at a time is the goals at or before it (`timeline.events`, `kind: "goal"`, by `team`); the names in a language are the roster's (`name.en`, `name.ja`), which a page can put on the frames' objects as their `label` for the tooltip. The demo does both: [A game on the ice, in 3D](https://johnmorrisdotca.github.io/kyogijo-stadiums/#game), and the arena at the top of the page plays it in front of its crowd with **Play a game**.
+
+## How it is made
+
+`scripts/game-fiction.mjs` makes it, pure and seeded, so that the same play-by-play gives the same game every time; `node scripts/make-game.mjs <play-by-play.json>` writes the file. The play-by-play is read from a file kept outside the repository and is never committed: only the made-up game is. Its test (`scripts/game-fiction.test.mjs`) runs on a few invented plays.
