@@ -712,7 +712,7 @@ By group, in order of how famous each venue is. "The building's outline" is a ve
 | 1 | `beijing-national-stadium` | Beijing National Stadium | Beijing, People's Republic of China | Athletics, Soccer | the venue | 80,000 | [Q133525](https://www.wikidata.org/wiki/Q133525) |
 | 2 | `london-stadium` | London Stadium | London, United Kingdom | Athletics, Soccer | the venue | 62,500 | [Q172190](https://www.wikidata.org/wiki/Q172190) |
 | 3 | `los-angeles-memorial-coliseum` | Los Angeles Memorial Coliseum | Los Angeles, United States | Athletics, American football | the venue | 77,500 | [Q849784](https://www.wikidata.org/wiki/Q849784) |
-| 4 | `athens-olympic-stadium` | Olympic Stadium | Greece | Athletics, Soccer | the venue | 69,618 | [Q189663](https://www.wikidata.org/wiki/Q189663) |
+| 4 | `athens-olympic-stadium` | Athens Olympic Stadium | Greece | Athletics, Soccer | the venue | 69,618 | [Q189663](https://www.wikidata.org/wiki/Q189663) |
 | 5 | `estadi-olimpic-lluis-companys` | Estadi Olímpic Lluís Companys | Barcelona, Spain | Athletics, Soccer | the venue | 55,926 | [Q275715](https://www.wikidata.org/wiki/Q275715) |
 | 6 | `hayward-field` | Hayward Field | Eugene, United States | Athletics | the venue | 10,500 | [Q1568417](https://www.wikidata.org/wiki/Q1568417) |
 | 7 | `letzigrund` | Letzigrund | Switzerland | Athletics, Soccer | the venue | 25,000 | [Q207623](https://www.wikidata.org/wiki/Q207623) |
@@ -727,7 +727,7 @@ By group, in order of how famous each venue is. "The building's outline" is a ve
 | 3 | `ohio-stadium` | Ohio Stadium | Columbus, United States | American football | the venue | 102,780 | [Q774694](https://www.wikidata.org/wiki/Q774694) |
 | 4 | `kyle-field` | Kyle Field | United States | American football | the venue | 102,733 | [Q945223](https://www.wikidata.org/wiki/Q945223) |
 | 5 | `neyland-stadium` | Neyland Stadium | Knoxville, United States | American football | the venue | 102,455 | [Q1984022](https://www.wikidata.org/wiki/Q1984022) |
-| 6 | `tiger-stadium-lsu` | Tiger Stadium | Baton Rouge, United States | American football | the venue | 102,321 | [Q1594708](https://www.wikidata.org/wiki/Q1594708) |
+| 6 | `tiger-stadium-lsu` | Tiger Stadium (LSU) | Baton Rouge, United States | American football | the venue | 102,321 | [Q1594708](https://www.wikidata.org/wiki/Q1594708) |
 | 7 | `rose-bowl` | Rose Bowl | Pasadena, United States | Soccer | the building's outline |  | [Q582280](https://www.wikidata.org/wiki/Q582280) |
 
 ### Baseball around the world (4)
@@ -744,7 +744,7 @@ By group, in order of how famous each venue is. "The building's outline" is a ve
 | # | Key | Venue | City | Sport | Wanted | Capacity | Wikidata |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `thialf` | Thialf | Heerenveen, Kingdom of the Netherlands | Speed skating | the venue | 12,500 | [Q1371953](https://www.wikidata.org/wiki/Q1371953) |
-| 2 | `olympic-oval-calgary` | Olympic Oval | Canada | Speed skating | the venue | 4,000 | [Q1341643](https://www.wikidata.org/wiki/Q1341643) |
+| 2 | `olympic-oval-calgary` | Olympic Oval (Calgary) | Canada | Speed skating | the venue | 4,000 | [Q1341643](https://www.wikidata.org/wiki/Q1341643) |
 | 3 | `utah-olympic-oval` | Utah Olympic Oval | United States | Speed skating | the venue | 3,000 | [Q1369595](https://www.wikidata.org/wiki/Q1369595) |
 | 4 | `london-aquatics-centre` | London Aquatics Centre | London, United Kingdom | Swimming | the venue | 17,500 | [Q308874](https://www.wikidata.org/wiki/Q308874) |
 | 5 | `beijing-national-aquatics-center` | Water Cube | Beijing, People's Republic of China | Swimming, Curling | the venue | 17,000 | [Q244877](https://www.wikidata.org/wiki/Q244877) |

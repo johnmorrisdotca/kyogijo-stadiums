@@ -1,5 +1,5 @@
 {
- "about": "The source of the catalogue (pnpm catalogue). The supported venues are not here: they are made from the package's own data (PLACES of the atlas, STADIUMS, VENUES). Here are the venues the package does not draw yet (status wanted or working-on), and the circuits it draws (`package: \"circuits\"`: the id is the key of `CIRCUITS`, whose names and country the build reads), each named by its English Wikipedia title, and the groups the Wanted section is ordered by. Every fact that is not a title, a city, a sport or a team is read from the raw answers kept in data-sources/catalogue/<date>/ (pnpm catalogue:fetch). A name in Japanese written here (nameJa) is used only where Wikidata has no Japanese label and the Japanese Wikipedia has no article, and was checked by a reviewer.",
+ "about": "The source of the catalogue (pnpm catalogue). The supported venues are not here: they are made from the package's own data (PLACES of the atlas, STADIUMS, VENUES). Here are the venues the package does not draw yet (status wanted or working-on), and the circuits it draws (`package: \"circuits\"`: the id is the key of `CIRCUITS`, whose names and country the build reads), each named by its English Wikipedia title, and the groups the Wanted section is ordered by. Every fact that is not a title, a city, a sport or a team is read from the raw answers kept in data-sources/catalogue/<date>/ (pnpm catalogue:fetch). A name in Japanese written here (nameJa) is used only where Wikidata has no Japanese label and the Japanese Wikipedia has no article, and was checked by a reviewer. A `name` written here replaces the article's title where the title, without its qualifier, would be the name of another venue (Olympic Stadium, Tiger Stadium, Olympic Oval).",
  "read": "2026-11-03",
  "workingOnTicket": "KYOGIJO-STADIUMS-22",
  "leagues": [
@@ -893,7 +893,8 @@
     "athletics",
     "soccer"
    ],
-   "nameJa": "アテネ・オリンピック・スタジアム"
+   "nameJa": "アテネ・オリンピック・スタジアム",
+   "name": "Athens Olympic Stadium"
   },
   {
    "id": "estadi-olimpic-lluis-companys",
@@ -978,7 +979,8 @@
    "city": "Baton Rouge",
    "sports": [
     "american-football"
-   ]
+   ],
+   "name": "Tiger Stadium (LSU)"
   },
   {
    "id": "jamsil-baseball-stadium",
@@ -1028,7 +1030,8 @@
    "sports": [
     "skating"
    ],
-   "nameJa": "オリンピック・オーバル"
+   "nameJa": "オリンピック・オーバル",
+   "name": "Olympic Oval (Calgary)"
   },
   {
    "id": "utah-olympic-oval",
