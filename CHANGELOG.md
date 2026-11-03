@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.57.0] - 2026-11-03
+
 ### Changed
 
 - **The wheel zooms the 3D view** (KAZOKU-UI-45). The wheel over the view now zooms it, as a map does (up in, down out, about the view's middle, which is where the pinch and the buttons zoom; a notch about as much as the + key); before, the plain wheel was the page's and tipped a focused view. A trackpad's pinch (Ctrl or Command and the wheel) still zooms. Shift and the wheel, or a sideways swipe, turns the view. The wheel never tips it: a drag, the arrows and the buttons do. With the pointer anywhere else the wheel scrolls the page, and a wheel that starts while the zoom is already at its end that way scrolls the page too, so a page of views is never trapped; the steps of a turn that reaches the end part-way through stay with the view, so the page does not jump.
