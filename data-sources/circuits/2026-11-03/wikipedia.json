@@ -1,0 +1,57 @@
+{
+ "read": "2026-11-03",
+ "licence": "English and Japanese Wikipedia, CC BY-SA 4.0: lines kept as evidence only",
+ "articles": {
+  "las-vegas-en": {
+   "title": "Las Vegas Strip Circuit",
+   "revision": 1376988769,
+   "timestamp": "2026-09-27T07:55:45Z",
+   "infobox": [
+    "coordinates = ",
+    "opened = ",
+    "events = Current: Formula One Las Vegas Grand Prix (2023–present) F1 Academy (2025–present) Former: Ferrari Challenge North America (2024)",
+    "layout = Grand Prix Circuit (2023–present)",
+    "surface = Asphalt",
+    "length_km = 6.201",
+    "length_mi = 3.853",
+    "turns = 17",
+    "record_time = 1:33.365"
+   ],
+   "sentences": [
+    "Designed by Carsten Tilke, the son of Formula One circuit designer Hermann Tilke, the circuit broke ground in March 2022 and opened on November 16, 2023, during the weekend of the first Las Vegas Grand Prix. ==History== This circuit has been designed to incorporate part of the Las Vegas Strip.",
+    "When the race was announced in March 2022, the track layout featured 14 corners.",
+    "It was later revised with the addition of a chicane, bringing the number of corners to 17. ===Alleged attempt to prevent circuit certification=== On March 5, 2024, several months after the inaugural 2023 race at the track, the BBC reported that FIA president Mohammed Ben Sulayem had allegedly tried to pressure race officials into not certifying the circuit in time for the race.",
+    "However, on March 20, 2024, the FIA announced it had cleared Ben Sulayem of any wrongdoing. ==Layout== The 3.853 mi street circuit runs counterclockwise and features 17 corners and a 1.2 mi straight.",
+    "It starts in a former parking lot that was purchased by Formula One for $240 million and developed into the pits and paddock area, and now contains a permanent part of the circuit.",
+    "The first corner is a hairpin, and after that the course bends slightly left and then into a fast right, transitioning from the permanent circuit to city streets.",
+    "The cars go 0.5 mi down Koval Lane before entering a slow 90-degree right turn and then entering a long, sweeping left turn that encircles the Sphere arena, before going through a left–right twisty section (a change from the initial design) and then a slightly faster left turn that transitions onto Sands Avenue.",
+    "The track then goes through two high-speed bends (Turns 10–11) on Sands Avenue before entering a slow left turn (Turn 12) onto Las Vegas Boulevard.",
+    "The 1.2 mi flat-out section with two straights and a slight sweeping left curve (Turn 13) starts at the Venetian and proceed south past some of Las Vegas's most famous hotels and casinos, including Flamingo, Paris, Bellagio, the Cosmopolitan, and Caesars Palace.",
+    "The circuit then goes through Turns 14–16, a tight series of three slow corners onto Harmon Avenue at the Planet Hollywood casino, down a 0.5 mi straight before going through a fast left bend (Turn 17) to complete the lap and transition back to the permanent part of the circuit after the pits.",
+    "The maximum speed recorded in a Formula One car was 358.3 km/h, established by Yuki Tsunoda in a Red Bull at the end of the Las Vegas Strip.",
+    "Event |- ! colspan=\"5\" | Grand Prix Circuit: 6.201 km (2023–present) |- | Formula One || 1:33.365 || Max Verstappen || Red Bull Racing RB21 || 2025 Las Vegas Grand Prix |- | Ferrari Challenge || 1:54.677 || Michael Verhagen || Ferrari 296 Challenge || 2024 Las Vegas Ferrari Challenge North America round |- | Formula 4 || 2:06.623 || Chloe Chambers || Tatuus F4-T421 || 2025 Las Vegas F1 Academy round |- |} ==References== ==External links== *"
+   ]
+  },
+  "las-vegas-ja": {
+   "title": "ラスベガス・ストリップ・サーキット",
+   "revision": 108197128,
+   "timestamp": "2026-01-29T08:40:07Z",
+   "infobox": [
+    "Coordinates = ",
+    "Opened = 2023年11月16日",
+    "Events = F1 ラスベガスグランプリ",
+    "Length_km = 6.201",
+    "Length_mi = 3.853",
+    "Turns = 17",
+    "Record_time = 1:33.365"
+   ],
+   "sentences": [
+    " == 特徴 == 全長は6.120km。",
+    "コースは反時計回りになっており、17のコーナーと最長1.9kmに及ぶ3本のストレート、1つのヘアピンセクションで構成されたサーキットになっている。",
+    "ターン5から9にかけては、2023年9月に開業した球体型コンサート会場スフィアの周囲を走行する。",
+    "ターン12から14にかけてのバックストレートはベネチアンやシーザース・パレス、ベラージオなどの高級カジノホテルが立ち並ぶ目抜き通り（ストリップ）を通過する約2kmの全開区間となる。",
+    " ピットガレージやパドック、ホスピタリティ施設などはストリップの東側に設けられる予定で、F1を主催するリバティメディアでは、2022年5月にピット用地として39エーカーの土地を2億4000万ドル（約310億円）で購入したことを明らかにしている。"
+   ]
+  }
+ }
+}

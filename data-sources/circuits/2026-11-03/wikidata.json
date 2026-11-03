@@ -1,0 +1,506 @@
+{
+ "read": "2026-11-03",
+ "licence": "Wikidata, CC0",
+ "entities": {
+  "Q113112116": {
+   "type": "item",
+   "id": "Q113112116",
+   "labels": {
+    "en": {
+     "language": "en",
+     "value": "Las Vegas Strip Circuit"
+    },
+    "ja": {
+     "language": "ja",
+     "value": "ラスベガス・ストリップ・サーキット"
+    }
+   },
+   "claims": {
+    "P31": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P31",
+       "hash": "e17b389312a235afaba7453f1f303142f0583468",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 926439,
+         "id": "Q926439"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q113112116$80c7eccc-5e33-4317-bc66-a960f4834810",
+      "rank": "normal"
+     }
+    ],
+    "P625": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P625",
+       "hash": "1c4d16115a1fa1130456a427beb261aa7829626e",
+       "datavalue": {
+        "value": {
+         "latitude": 36.11002777777778,
+         "longitude": -115.16180555555556,
+         "altitude": null,
+         "precision": 0.000277778,
+         "globe": "http://www.wikidata.org/entity/Q2"
+        },
+        "type": "globecoordinate"
+       },
+       "datatype": "globe-coordinate"
+      },
+      "type": "statement",
+      "id": "Q113112116$0270fe21-61f8-460c-afad-0f34e30c8d6b",
+      "rank": "normal"
+     }
+    ],
+    "P373": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P373",
+       "hash": "b60328bc561b3686f71747d8fb8521dc8183b4d7",
+       "datavalue": {
+        "value": "Las Vegas Street Circuit",
+        "type": "string"
+       },
+       "datatype": "string"
+      },
+      "type": "statement",
+      "id": "Q113112116$790dea02-0113-43cb-a73a-05034c530454",
+      "rank": "normal"
+     }
+    ],
+    "P17": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P17",
+       "hash": "be4c6eafa2984964f04be85667263f5642ba1a72",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 30,
+         "id": "Q30"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q113112116$0568F6D4-8695-475C-9E05-251E8AA64F19",
+      "rank": "normal"
+     }
+    ],
+    "P10046": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P10046",
+       "hash": "3fc01be2535482e6a590f02da49b1f38a94bfcf3",
+       "datavalue": {
+        "value": "5314709357925288277",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q113112116$fcd52ae5-46f0-8aa5-2e48-90584735b0ae",
+      "rank": "normal"
+     }
+    ],
+    "P2671": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2671",
+       "hash": "6b79047f954e2ea8cbe7b08a637330a241a473fd",
+       "datavalue": {
+        "value": "/g/11t3z_qtrm",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q113112116$E96BA5E4-B46C-4402-B2F4-952E0742EB48",
+      "rank": "normal"
+     }
+    ],
+    "P910": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P910",
+       "hash": "713f5f2d86b7ae13afff1deda2957eda72911448",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 130255357,
+         "id": "Q130255357"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q113112116$46B89502-2A2B-445F-9F99-E9B92256AC87",
+      "rank": "normal"
+     }
+    ],
+    "P1705": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1705",
+       "hash": "b65c62f5e0b03fd60c6079bb6a79c911034c4af7",
+       "datavalue": {
+        "value": {
+         "text": "Las Vegas Strip Circuit",
+         "language": "en"
+        },
+        "type": "monolingualtext"
+       },
+       "datatype": "monolingualtext"
+      },
+      "type": "statement",
+      "id": "Q113112116$2de7e8e9-426c-bfa2-ae0b-39de3f6b91bd",
+      "rank": "normal"
+     }
+    ],
+    "P742": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P742",
+       "hash": "64176d55aa574357899bd4d3d5f9e6a86020dc7f",
+       "datavalue": {
+        "value": "Las Vegas Street Circuit",
+        "type": "string"
+       },
+       "datatype": "string"
+      },
+      "type": "statement",
+      "id": "Q113112116$3c0e2b2a-4d02-ef2f-1d26-46ba0204b5de",
+      "rank": "normal"
+     }
+    ],
+    "P131": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P131",
+       "hash": "d79e00d78e989225d0c0cd7b937ed2dd37130be1",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 984542,
+         "id": "Q984542"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q113112116$f3a785c6-4e7c-6de1-616e-843af93430eb",
+      "rank": "normal"
+     }
+    ],
+    "P3311": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3311",
+       "hash": "bee53ebbcf4f2331f3f2e981b9ff9c8e18ddabb8",
+       "datavalue": {
+        "value": "2023 Las Vegas street circuit.svg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q113112116$d6006617-4c7d-b014-0746-002a0f5f8687",
+      "rank": "normal"
+     }
+    ],
+    "P856": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P856",
+       "hash": "efc9148e23ea96c90657afa73e2819200c82a8f1",
+       "datavalue": {
+        "value": "https://www.f1lasvegasgp.com/track-layout/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "daf1c4fcb58181b02dff9cc89deb084004ddae4b",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 1860,
+           "id": "Q1860"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q113112116$12f0e1da-4d72-ca3e-af6c-50a1f22fbba8",
+      "rank": "normal"
+     }
+    ],
+    "P18": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P18",
+       "hash": "82d90e36c9e5f24c1d586b68ea2ec50b4d577e75",
+       "datavalue": {
+        "value": "2023 Las Vegas street circuit.svg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q113112116$003c809f-4a26-c93b-9729-f729d2c66088",
+      "rank": "normal"
+     }
+    ],
+    "P1619": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1619",
+       "hash": "17ad0af87ae86b21312e9316c28d2d43c81f07e9",
+       "datavalue": {
+        "value": {
+         "time": "+2023-11-16T00:00:00Z",
+         "timezone": 0,
+         "before": 0,
+         "after": 0,
+         "precision": 11,
+         "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+        },
+        "type": "time"
+       },
+       "datatype": "time"
+      },
+      "type": "statement",
+      "id": "Q113112116$cd9bca64-429e-8a36-092d-80e785cce2e2",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "0c987f7cf64a1c87f1883a4daa6543154f498f4a",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "6a164248fc96bfa583bbb495cb63ae6401ec203c",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 206855,
+             "id": "Q206855"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "79788f2cd8ef2d31cbebb897171cf68b91e7a933",
+           "datavalue": {
+            "value": "https://ru.wikipedia.org/?oldid=150275752",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P402": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P402",
+       "hash": "c4e7220afd72eaf7685cbf9e730d6fb33434386b",
+       "datavalue": {
+        "value": "16696508",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q113112116$2ca2dae1-cead-4488-a368-4c48f7fb35f9",
+      "rank": "normal"
+     }
+    ]
+   },
+   "sitelinks": {
+    "afwiki": {
+     "site": "afwiki",
+     "title": "Las Vegas Straatrenbaan",
+     "badges": []
+    },
+    "arwiki": {
+     "site": "arwiki",
+     "title": "حلبة لاس فيغاس",
+     "badges": []
+    },
+    "cawiki": {
+     "site": "cawiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "cswiki": {
+     "site": "cswiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "dewiki": {
+     "site": "dewiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "enwiki": {
+     "site": "enwiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "eswiki": {
+     "site": "eswiki",
+     "title": "Circuito callejero de Las Vegas",
+     "badges": []
+    },
+    "fawiki": {
+     "site": "fawiki",
+     "title": "پیست لاس وگاس استریپ",
+     "badges": []
+    },
+    "fiwiki": {
+     "site": "fiwiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "frwiki": {
+     "site": "frwiki",
+     "title": "Circuit urbain de Las Vegas",
+     "badges": []
+    },
+    "glwiki": {
+     "site": "glwiki",
+     "title": "Circuíto urbano de Las Vegas",
+     "badges": []
+    },
+    "huwiki": {
+     "site": "huwiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "idwiki": {
+     "site": "idwiki",
+     "title": "Sirkuit Las Vegas Strip",
+     "badges": []
+    },
+    "itwiki": {
+     "site": "itwiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "itwikiquote": {
+     "site": "itwikiquote",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "jawiki": {
+     "site": "jawiki",
+     "title": "ラスベガス・ストリップ・サーキット",
+     "badges": []
+    },
+    "kowiki": {
+     "site": "kowiki",
+     "title": "라스베이거스 스트립 서킷",
+     "badges": []
+    },
+    "nlwiki": {
+     "site": "nlwiki",
+     "title": "Las Vegas Street Circuit",
+     "badges": []
+    },
+    "plwiki": {
+     "site": "plwiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "ptwiki": {
+     "site": "ptwiki",
+     "title": "Circuito Urbano de Las Vegas",
+     "badges": []
+    },
+    "ruwiki": {
+     "site": "ruwiki",
+     "title": "Лас-Вегас (трасса)",
+     "badges": []
+    },
+    "skwiki": {
+     "site": "skwiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "slwiki": {
+     "site": "slwiki",
+     "title": "Las Vegas Strip Circuit",
+     "badges": []
+    },
+    "trwiki": {
+     "site": "trwiki",
+     "title": "Las Vegas Cadde Pisti",
+     "badges": []
+    },
+    "ukwiki": {
+     "site": "ukwiki",
+     "title": "Лас-Вегас (траса)",
+     "badges": []
+    },
+    "viwiki": {
+     "site": "viwiki",
+     "title": "Trường đua Las Vegas",
+     "badges": []
+    },
+    "zhwiki": {
+     "site": "zhwiki",
+     "title": "拉斯维加斯大道赛道",
+     "badges": []
+    }
+   }
+  }
+ }
+}
