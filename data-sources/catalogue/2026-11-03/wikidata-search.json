@@ -1,0 +1,138 @@
+{
+ "read": "2026-11-03",
+ "source": "Wikidata API (wbsearchentities), CC0",
+ "answers": {
+  "Court Philippe-Chatrier": {
+   "searchinfo": {
+    "search": "Court Philippe-Chatrier"
+   },
+   "search": [
+    {
+     "id": "Q3026397",
+     "title": "Q3026397",
+     "pageid": 2893330,
+     "concepturi": "http://www.wikidata.org/entity/Q3026397",
+     "repository": "wikidata",
+     "url": "//www.wikidata.org/wiki/Q3026397",
+     "display": {
+      "label": {
+       "value": "Court Philippe-Chatrier",
+       "language": "en"
+      },
+      "description": {
+       "value": "tennis venue in Paris, France",
+       "language": "en"
+      }
+     },
+     "label": "Court Philippe-Chatrier",
+     "description": "tennis venue in Paris, France",
+     "match": {
+      "type": "label",
+      "language": "en",
+      "text": "Court Philippe-Chatrier"
+     }
+    }
+   ],
+   "success": 1
+  },
+  "Court Suzanne-Lenglen": {
+   "searchinfo": {
+    "search": "Court Suzanne-Lenglen"
+   },
+   "search": [
+    {
+     "id": "Q547549",
+     "title": "Q547549",
+     "pageid": 515882,
+     "concepturi": "http://www.wikidata.org/entity/Q547549",
+     "repository": "wikidata",
+     "url": "//www.wikidata.org/wiki/Q547549",
+     "display": {
+      "label": {
+       "value": "Court Suzanne-Lenglen",
+       "language": "en"
+      },
+      "description": {
+       "value": "tennis court in Paris",
+       "language": "en"
+      }
+     },
+     "label": "Court Suzanne-Lenglen",
+     "description": "tennis court in Paris",
+     "match": {
+      "type": "label",
+      "language": "en",
+      "text": "Court Suzanne-Lenglen"
+     }
+    }
+   ],
+   "success": 1
+  },
+  "Danube Arena": {
+   "searchinfo": {
+    "search": "Danube Arena"
+   },
+   "search": [
+    {
+     "id": "Q25454740",
+     "title": "Q25454740",
+     "pageid": 27407529,
+     "concepturi": "http://www.wikidata.org/entity/Q25454740",
+     "repository": "wikidata",
+     "url": "//www.wikidata.org/wiki/Q25454740",
+     "display": {
+      "label": {
+       "value": "Danube Arena",
+       "language": "en"
+      },
+      "description": {
+       "value": "Indoor pool in Budapest (Hungary)",
+       "language": "en"
+      }
+     },
+     "label": "Danube Arena",
+     "description": "Indoor pool in Budapest (Hungary)",
+     "match": {
+      "type": "label",
+      "language": "en",
+      "text": "Danube Arena"
+     }
+    }
+   ],
+   "success": 1
+  },
+  "Fukuoka Kokusai Center": {
+   "searchinfo": {
+    "search": "Fukuoka Kokusai Center"
+   },
+   "search": [
+    {
+     "id": "Q11592190",
+     "title": "Q11592190",
+     "pageid": 12732271,
+     "concepturi": "http://www.wikidata.org/entity/Q11592190",
+     "repository": "wikidata",
+     "url": "//www.wikidata.org/wiki/Q11592190",
+     "display": {
+      "label": {
+       "value": "Fukuoka Kokusai Center",
+       "language": "en"
+      },
+      "description": {
+       "value": "building in Hakata-ku, Fukuoka Prefecture, Japan",
+       "language": "en"
+      }
+     },
+     "label": "Fukuoka Kokusai Center",
+     "description": "building in Hakata-ku, Fukuoka Prefecture, Japan",
+     "match": {
+      "type": "label",
+      "language": "en",
+      "text": "Fukuoka Kokusai Center"
+     }
+    }
+   ],
+   "success": 1
+  }
+ }
+}

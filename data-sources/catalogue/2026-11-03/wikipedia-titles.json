@@ -1,0 +1,1621 @@
+{
+ "read": "2026-11-03",
+ "source": "en.wikipedia.org API (action=query, prop=pageprops)",
+ "asked": [
+  "Arthur Ashe Stadium",
+  "Louis Armstrong Stadium",
+  "Rod Laver Arena",
+  "Margaret Court Arena",
+  "John Cain Arena",
+  "Court Philippe Chatrier",
+  "Court Suzanne Lenglen",
+  "Centre Court",
+  "No. 1 Court",
+  "Ariake Coliseum",
+  "State Farm Stadium",
+  "M&T Bank Stadium",
+  "Highmark Stadium",
+  "Bank of America Stadium",
+  "Soldier Field",
+  "Paycor Stadium",
+  "Huntington Bank Field",
+  "Empower Field at Mile High",
+  "Ford Field",
+  "Lambeau Field",
+  "Lucas Oil Stadium",
+  "EverBank Stadium",
+  "Allegiant Stadium",
+  "U.S. Bank Stadium",
+  "Caesars Superdome",
+  "Acrisure Stadium",
+  "Raymond James Stadium",
+  "Nissan Stadium (Nashville)",
+  "Northwest Stadium",
+  "McMahon Stadium",
+  "Commonwealth Stadium",
+  "Mosaic Stadium",
+  "Princess Auto Stadium",
+  "Hamilton Stadium",
+  "TD Place Stadium",
+  "Percival Molson Memorial Stadium",
+  "Lord's",
+  "Melbourne Cricket Ground",
+  "Eden Gardens",
+  "Narendra Modi Stadium",
+  "The Oval",
+  "Wankhede Stadium",
+  "Sydney Cricket Ground",
+  "Adelaide Oval",
+  "Newlands Cricket Ground",
+  "Old Trafford Cricket Ground",
+  "Twickenham Stadium",
+  "Eden Park",
+  "Millennium Stadium",
+  "Murrayfield Stadium",
+  "Aviva Stadium",
+  "Ellis Park Stadium",
+  "Hanazono Rugby Stadium",
+  "Chichibunomiya Rugby Stadium",
+  "Croke Park",
+  "Perth Stadium",
+  "Docklands Stadium",
+  "The Gabba",
+  "Osaka Prefectural Gymnasium",
+  "Aichi International Arena",
+  "Fukuoka Convention Center",
+  "Beijing National Stadium",
+  "London Stadium",
+  "Los Angeles Memorial Coliseum",
+  "Olympic Stadium (Athens)",
+  "Estadi Olímpic Lluís Companys",
+  "Hayward Field",
+  "Letzigrund",
+  "Bislett Stadium",
+  "Michigan Stadium",
+  "Beaver Stadium",
+  "Ohio Stadium",
+  "Kyle Field",
+  "Neyland Stadium",
+  "Tiger Stadium (Louisiana)",
+  "Jamsil Baseball Stadium",
+  "Gocheok Sky Dome",
+  "Taipei Dome",
+  "Estadio Latinoamericano",
+  "Thialf",
+  "Olympic Oval",
+  "Utah Olympic Oval",
+  "London Aquatics Centre",
+  "Water Cube",
+  "Tokyo Aquatics Centre",
+  "Duna Arena",
+  "MGM Grand Garden Arena",
+  "Ginásio do Maracanãzinho",
+  "Istora Gelora Bung Karno",
+  "Lanxess Arena",
+  "Ariake Arena",
+  "Albert Park Circuit",
+  "Shanghai International Circuit",
+  "Suzuka Circuit",
+  "Bahrain International Circuit",
+  "Jeddah Corniche Circuit",
+  "Miami International Autodrome",
+  "Circuit Gilles Villeneuve",
+  "Circuit de Monaco",
+  "Circuit de Barcelona-Catalunya",
+  "Red Bull Ring",
+  "Silverstone Circuit",
+  "Circuit de Spa-Francorchamps",
+  "Hungaroring",
+  "Circuit Zandvoort",
+  "Monza Circuit",
+  "Madring",
+  "Baku City Circuit",
+  "Marina Bay Street Circuit",
+  "Circuit of the Americas",
+  "Autódromo Hermanos Rodríguez",
+  "Interlagos Circuit",
+  "Las Vegas Strip Circuit",
+  "Lusail International Circuit",
+  "Sepang International Circuit",
+  "Yas Marina Circuit",
+  "Indianapolis Motor Speedway",
+  "Circuit de la Sarthe",
+  "Daytona International Speedway",
+  "Nürburgring",
+  "Mount Panorama Circuit",
+  "Talladega Superspeedway",
+  "Bristol Motor Speedway",
+  "Charlotte Motor Speedway",
+  "Darlington Raceway",
+  "Fuji Speedway",
+  "Sebring International Raceway",
+  "Imola Circuit",
+  "Mugello Circuit",
+  "Phillip Island Grand Prix Circuit",
+  "TT Circuit Assen",
+  "Sachsenring",
+  "Motegi Circuit",
+  "Circuito de Jerez",
+  "Buriram International Circuit",
+  "Circuit Ricardo Tormo",
+  "MotorLand Aragón",
+  "Mandalika International Street Circuit",
+  "Algarve International Circuit",
+  "Balaton Park Circuit",
+  "Brno Circuit",
+  "Misano World Circuit",
+  "Bugatti Circuit",
+  "Autódromo Internacional Ayrton Senna (Goiânia)",
+  "Autódromo Termas de Río Hondo",
+  "Arizona Cardinals",
+  "Baltimore Ravens",
+  "Buffalo Bills",
+  "Carolina Panthers",
+  "Chicago Bears",
+  "Cincinnati Bengals",
+  "Cleveland Browns",
+  "Denver Broncos",
+  "Detroit Lions",
+  "Green Bay Packers",
+  "Indianapolis Colts",
+  "Jacksonville Jaguars",
+  "Las Vegas Raiders",
+  "Minnesota Vikings",
+  "New Orleans Saints",
+  "Pittsburgh Steelers",
+  "Tampa Bay Buccaneers",
+  "Tennessee Titans",
+  "Washington Commanders",
+  "Calgary Stampeders",
+  "Edmonton Elks",
+  "Saskatchewan Roughriders",
+  "Winnipeg Blue Bombers",
+  "Hamilton Tiger-Cats",
+  "Ottawa Redblacks",
+  "Montreal Alouettes",
+  "List of current National Football League stadiums",
+  "List of Canadian Football League stadiums",
+  "2026 Formula One World Championship",
+  "2026 MotoGP World Championship"
+ ],
+ "answers": [
+  {
+   "batchcomplete": true,
+   "query": {
+    "redirects": [
+     {
+      "from": "Court Philippe Chatrier",
+      "to": "Stade Roland Garros",
+      "tofragment": "Court Philippe Chatrier"
+     },
+     {
+      "from": "Court Suzanne Lenglen",
+      "to": "Stade Roland Garros",
+      "tofragment": "Court Suzanne Lenglen"
+     },
+     {
+      "from": "No. 1 Court",
+      "to": "No. 1 Court (Wimbledon)"
+     }
+    ],
+    "pages": [
+     {
+      "pageid": 19765,
+      "ns": 0,
+      "title": "Melbourne Cricket Ground",
+      "pageprops": {
+       "wikibase_item": "Q330136"
+      }
+     },
+     {
+      "pageid": 149583,
+      "ns": 0,
+      "title": "Lambeau Field",
+      "pageprops": {
+       "wikibase_item": "Q860790"
+      }
+     },
+     {
+      "pageid": 345892,
+      "ns": 0,
+      "title": "M&T Bank Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1141336"
+      }
+     },
+     {
+      "pageid": 381880,
+      "ns": 0,
+      "title": "Lord's",
+      "pageprops": {
+       "wikibase_item": "Q331613"
+      }
+     },
+     {
+      "pageid": 387687,
+      "ns": 0,
+      "title": "The Oval",
+      "pageprops": {
+       "wikibase_item": "Q1155836"
+      }
+     },
+     {
+      "pageid": 395592,
+      "ns": 0,
+      "title": "Northwest Stadium",
+      "pageprops": {
+       "wikibase_item": "Q583085"
+      }
+     },
+     {
+      "pageid": 467823,
+      "ns": 0,
+      "title": "Nissan Stadium (Nashville)",
+      "pageprops": {
+       "wikibase_item": "Q1142992"
+      }
+     },
+     {
+      "pageid": 501440,
+      "ns": 0,
+      "title": "Empower Field at Mile High",
+      "pageprops": {
+       "wikibase_item": "Q1046135"
+      }
+     },
+     {
+      "pageid": 509225,
+      "ns": 0,
+      "title": "Soldier Field",
+      "pageprops": {
+       "wikibase_item": "Q1132413"
+      }
+     },
+     {
+      "pageid": 626568,
+      "ns": 0,
+      "title": "Caesars Superdome",
+      "pageprops": {
+       "wikibase_item": "Q756452"
+      }
+     },
+     {
+      "pageid": 626623,
+      "ns": 0,
+      "title": "Paycor Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1632294"
+      }
+     },
+     {
+      "pageid": 626654,
+      "ns": 0,
+      "title": "EverBank Stadium",
+      "pageprops": {
+       "wikibase_item": "Q635117"
+      }
+     },
+     {
+      "pageid": 626674,
+      "ns": 0,
+      "title": "Bank of America Stadium",
+      "pageprops": {
+       "wikibase_item": "Q806673"
+      }
+     },
+     {
+      "pageid": 626700,
+      "ns": 0,
+      "title": "Huntington Bank Field",
+      "pageprops": {
+       "wikibase_item": "Q1100756"
+      }
+     },
+     {
+      "pageid": 626713,
+      "ns": 0,
+      "title": "Acrisure Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1067148"
+      }
+     },
+     {
+      "pageid": 660231,
+      "ns": 0,
+      "title": "Adelaide Oval",
+      "pageprops": {
+       "wikibase_item": "Q2462430"
+      }
+     },
+     {
+      "pageid": 660597,
+      "ns": 0,
+      "title": "Old Trafford Cricket Ground",
+      "pageprops": {
+       "wikibase_item": "Q1572215"
+      }
+     },
+     {
+      "pageid": 752260,
+      "ns": 0,
+      "title": "Ford Field",
+      "pageprops": {
+       "wikibase_item": "Q1142586"
+      }
+     },
+     {
+      "pageid": 752288,
+      "ns": 0,
+      "title": "Raymond James Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1141343"
+      }
+     },
+     {
+      "pageid": 758364,
+      "ns": 0,
+      "title": "Commonwealth Stadium",
+      "pageprops": {
+       "wikibase_item": "Q130381"
+      }
+     },
+     {
+      "pageid": 760019,
+      "ns": 0,
+      "title": "Percival Molson Memorial Stadium",
+      "pageprops": {
+       "wikibase_item": "Q732147"
+      }
+     },
+     {
+      "pageid": 772338,
+      "ns": 0,
+      "title": "TD Place Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1442809"
+      }
+     },
+     {
+      "pageid": 772462,
+      "ns": 0,
+      "title": "McMahon Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1810204"
+      }
+     },
+     {
+      "pageid": 773497,
+      "ns": 0,
+      "title": "Sydney Cricket Ground",
+      "pageprops": {
+       "wikibase_item": "Q856393"
+      }
+     },
+     {
+      "pageid": 867243,
+      "ns": 0,
+      "title": "Millennium Stadium",
+      "pageprops": {
+       "wikibase_item": "Q204496"
+      }
+     },
+     {
+      "pageid": 871456,
+      "ns": 0,
+      "title": "Twickenham Stadium",
+      "pageprops": {
+       "wikibase_item": "Q209725"
+      }
+     },
+     {
+      "pageid": 1062987,
+      "ns": 0,
+      "title": "Arthur Ashe Stadium",
+      "pageprops": {
+       "wikibase_item": "Q609551"
+      }
+     },
+     {
+      "pageid": 1084597,
+      "ns": 0,
+      "title": "Eden Park",
+      "pageprops": {
+       "wikibase_item": "Q312411"
+      }
+     },
+     {
+      "pageid": 1210642,
+      "ns": 0,
+      "title": "Murrayfield Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1024926"
+      }
+     },
+     {
+      "pageid": 1448962,
+      "ns": 0,
+      "title": "Rod Laver Arena",
+      "pageprops": {
+       "wikibase_item": "Q222878"
+      }
+     },
+     {
+      "pageid": 1594772,
+      "ns": 0,
+      "title": "Wankhede Stadium",
+      "pageprops": {
+       "wikibase_item": "Q177067"
+      }
+     },
+     {
+      "pageid": 2453505,
+      "ns": 0,
+      "title": "Centre Court",
+      "pageprops": {
+       "wikibase_item": "Q2603183"
+      }
+     },
+     {
+      "pageid": 2746089,
+      "ns": 0,
+      "title": "Lucas Oil Stadium",
+      "pageprops": {
+       "wikibase_item": "Q867160"
+      }
+     },
+     {
+      "pageid": 2748329,
+      "ns": 0,
+      "title": "State Farm Stadium",
+      "pageprops": {
+       "wikibase_item": "Q756433"
+      }
+     },
+     {
+      "pageid": 3124982,
+      "ns": 0,
+      "title": "Newlands Cricket Ground",
+      "pageprops": {
+       "wikibase_item": "Q3045283"
+      }
+     },
+     {
+      "pageid": 3516193,
+      "ns": 0,
+      "title": "Stade Roland Garros",
+      "pageprops": {
+       "wikibase_item": "Q1613027"
+      }
+     },
+     {
+      "pageid": 4244269,
+      "ns": 0,
+      "title": "Ariake Coliseum",
+      "pageprops": {
+       "wikibase_item": "Q3299452"
+      }
+     },
+     {
+      "pageid": 4771518,
+      "ns": 0,
+      "title": "Margaret Court Arena",
+      "pageprops": {
+       "wikibase_item": "Q732679"
+      }
+     },
+     {
+      "pageid": 10853062,
+      "ns": 0,
+      "title": "U.S. Bank Stadium",
+      "pageprops": {
+       "wikibase_item": "Q7929512"
+      }
+     },
+     {
+      "pageid": 12107093,
+      "ns": 0,
+      "title": "No. 1 Court (Wimbledon)",
+      "pageprops": {
+       "wikibase_item": "Q2306600"
+      }
+     },
+     {
+      "pageid": 15937050,
+      "ns": 0,
+      "title": "Princess Auto Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1671788"
+      }
+     },
+     {
+      "pageid": 22384475,
+      "ns": 0,
+      "title": "Eden Gardens",
+      "pageprops": {
+       "wikibase_item": "Q2035004"
+      }
+     },
+     {
+      "pageid": 24997913,
+      "ns": 0,
+      "title": "Hamilton Stadium",
+      "pageprops": {
+       "wikibase_item": "Q7008048"
+      }
+     },
+     {
+      "pageid": 28949737,
+      "ns": 0,
+      "title": "John Cain Arena",
+      "pageprops": {
+       "wikibase_item": "Q1245311"
+      }
+     },
+     {
+      "pageid": 36429757,
+      "ns": 0,
+      "title": "Mosaic Stadium",
+      "pageprops": {
+       "wikibase_item": "Q7011148"
+      }
+     },
+     {
+      "pageid": 39235022,
+      "ns": 0,
+      "title": "Highmark Stadium",
+      "pageprops": {
+       "wikibase_item": "Q16251517"
+      }
+     },
+     {
+      "pageid": 52047141,
+      "ns": 0,
+      "title": "Allegiant Stadium",
+      "pageprops": {
+       "wikibase_item": "Q27768421"
+      }
+     },
+     {
+      "pageid": 55201703,
+      "ns": 0,
+      "title": "Louis Armstrong Stadium",
+      "pageprops": {
+       "wikibase_item": "Q47487977"
+      }
+     },
+     {
+      "pageid": 80201506,
+      "ns": 0,
+      "title": "Narendra Modi Stadium",
+      "pageprops": {
+       "wikibase_item": "Q3531421"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "batchcomplete": true,
+   "query": {
+    "pages": [
+     {
+      "ns": 0,
+      "title": "Duna Arena",
+      "missing": true
+     },
+     {
+      "pageid": 10945,
+      "ns": 0,
+      "title": "Albert Park Circuit",
+      "pageprops": {
+       "wikibase_item": "Q171288"
+      }
+     },
+     {
+      "pageid": 322713,
+      "ns": 0,
+      "title": "Croke Park",
+      "pageprops": {
+       "wikibase_item": "Q478225"
+      }
+     },
+     {
+      "pageid": 444801,
+      "ns": 0,
+      "title": "Olympic Oval",
+      "pageprops": {
+       "wikibase_item": "Q1341643"
+      }
+     },
+     {
+      "pageid": 541428,
+      "ns": 0,
+      "title": "Docklands Stadium",
+      "pageprops": {
+       "wikibase_item": "Q917998"
+      }
+     },
+     {
+      "pageid": 614878,
+      "ns": 0,
+      "title": "Circuit de Barcelona-Catalunya",
+      "pageprops": {
+       "wikibase_item": "Q171404"
+      }
+     },
+     {
+      "pageid": 637441,
+      "ns": 0,
+      "title": "Los Angeles Memorial Coliseum",
+      "pageprops": {
+       "wikibase_item": "Q849784"
+      }
+     },
+     {
+      "pageid": 646419,
+      "ns": 0,
+      "title": "Letzigrund",
+      "pageprops": {
+       "wikibase_item": "Q207623"
+      }
+     },
+     {
+      "pageid": 742587,
+      "ns": 0,
+      "title": "Circuit de Monaco",
+      "pageprops": {
+       "wikibase_item": "Q171400"
+      }
+     },
+     {
+      "pageid": 748984,
+      "ns": 0,
+      "title": "Suzuka Circuit",
+      "pageprops": {
+       "wikibase_item": "Q174170"
+      }
+     },
+     {
+      "pageid": 780170,
+      "ns": 0,
+      "title": "Ohio Stadium",
+      "pageprops": {
+       "wikibase_item": "Q774694"
+      }
+     },
+     {
+      "pageid": 926381,
+      "ns": 0,
+      "title": "Michigan Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1640118"
+      }
+     },
+     {
+      "pageid": 927703,
+      "ns": 0,
+      "title": "Olympic Stadium (Athens)",
+      "pageprops": {
+       "wikibase_item": "Q189663"
+      }
+     },
+     {
+      "pageid": 944365,
+      "ns": 0,
+      "title": "Bahrain International Circuit",
+      "pageprops": {
+       "wikibase_item": "Q171332"
+      }
+     },
+     {
+      "pageid": 947540,
+      "ns": 0,
+      "title": "Circuit Gilles Villeneuve",
+      "pageprops": {
+       "wikibase_item": "Q172860"
+      }
+     },
+     {
+      "pageid": 950028,
+      "ns": 0,
+      "title": "Beaver Stadium",
+      "pageprops": {
+       "wikibase_item": "Q692816"
+      }
+     },
+     {
+      "pageid": 952143,
+      "ns": 0,
+      "title": "Shanghai International Circuit",
+      "pageprops": {
+       "wikibase_item": "Q171358"
+      }
+     },
+     {
+      "pageid": 1119361,
+      "ns": 0,
+      "title": "Neyland Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1984022"
+      }
+     },
+     {
+      "pageid": 1243751,
+      "ns": 0,
+      "title": "Kyle Field",
+      "pageprops": {
+       "wikibase_item": "Q945223"
+      }
+     },
+     {
+      "pageid": 1327312,
+      "ns": 0,
+      "title": "The Gabba",
+      "pageprops": {
+       "wikibase_item": "Q2462392"
+      }
+     },
+     {
+      "pageid": 1356175,
+      "ns": 0,
+      "title": "Chichibunomiya Rugby Stadium",
+      "pageprops": {
+       "wikibase_item": "Q631237"
+      }
+     },
+     {
+      "pageid": 1379418,
+      "ns": 0,
+      "title": "Hanazono Rugby Stadium",
+      "pageprops": {
+       "wikibase_item": "Q1267545"
+      }
+     },
+     {
+      "pageid": 1390679,
+      "ns": 0,
+      "title": "Ellis Park Stadium",
+      "pageprops": {
+       "wikibase_item": "Q182081"
+      }
+     },
+     {
+      "pageid": 1801063,
+      "ns": 0,
+      "title": "Bislett Stadium",
+      "pageprops": {
+       "wikibase_item": "Q866409"
+      }
+     },
+     {
+      "pageid": 1873992,
+      "ns": 0,
+      "title": "Tiger Stadium (Louisiana)",
+      "pageprops": {
+       "wikibase_item": "Q1594708"
+      }
+     },
+     {
+      "pageid": 1904944,
+      "ns": 0,
+      "title": "Estadi Olímpic Lluís Companys",
+      "pageprops": {
+       "wikibase_item": "Q275715"
+      }
+     },
+     {
+      "pageid": 1926541,
+      "ns": 0,
+      "title": "Hayward Field",
+      "pageprops": {
+       "wikibase_item": "Q1568417"
+      }
+     },
+     {
+      "pageid": 1967972,
+      "ns": 0,
+      "title": "MGM Grand Garden Arena",
+      "pageprops": {
+       "wikibase_item": "Q717472"
+      }
+     },
+     {
+      "pageid": 2179597,
+      "ns": 0,
+      "title": "London Stadium",
+      "pageprops": {
+       "wikibase_item": "Q172190"
+      }
+     },
+     {
+      "pageid": 2214042,
+      "ns": 0,
+      "title": "London Aquatics Centre",
+      "pageprops": {
+       "wikibase_item": "Q308874"
+      }
+     },
+     {
+      "pageid": 2300102,
+      "ns": 0,
+      "title": "Estadio Latinoamericano",
+      "pageprops": {
+       "wikibase_item": "Q1369326"
+      }
+     },
+     {
+      "pageid": 2445647,
+      "ns": 0,
+      "title": "Lanxess Arena",
+      "pageprops": {
+       "wikibase_item": "Q310525"
+      }
+     },
+     {
+      "pageid": 2447040,
+      "ns": 0,
+      "title": "Thialf",
+      "pageprops": {
+       "wikibase_item": "Q1371953"
+      }
+     },
+     {
+      "pageid": 2482393,
+      "ns": 0,
+      "title": "Istora Gelora Bung Karno",
+      "pageprops": {
+       "wikibase_item": "Q15108473"
+      }
+     },
+     {
+      "pageid": 3731237,
+      "ns": 0,
+      "title": "Water Cube",
+      "pageprops": {
+       "wikibase_item": "Q244877"
+      }
+     },
+     {
+      "pageid": 3961221,
+      "ns": 0,
+      "title": "Jamsil Baseball Stadium",
+      "pageprops": {
+       "wikibase_item": "Q490616"
+      }
+     },
+     {
+      "pageid": 4230938,
+      "ns": 0,
+      "title": "Ginásio do Maracanãzinho",
+      "pageprops": {
+       "wikibase_item": "Q1300456"
+      }
+     },
+     {
+      "pageid": 4248353,
+      "ns": 0,
+      "title": "Utah Olympic Oval",
+      "pageprops": {
+       "wikibase_item": "Q1369595"
+      }
+     },
+     {
+      "pageid": 5000605,
+      "ns": 0,
+      "title": "Osaka Prefectural Gymnasium",
+      "pageprops": {
+       "wikibase_item": "Q7105594"
+      }
+     },
+     {
+      "pageid": 6810505,
+      "ns": 0,
+      "title": "Fukuoka Convention Center",
+      "pageprops": {
+       "wikibase_item": "Q2607897"
+      }
+     },
+     {
+      "pageid": 7307446,
+      "ns": 0,
+      "title": "Taipei Dome",
+      "pageprops": {
+       "wikibase_item": "Q858333"
+      }
+     },
+     {
+      "pageid": 10148678,
+      "ns": 0,
+      "title": "Gocheok Sky Dome",
+      "pageprops": {
+       "wikibase_item": "Q10855359"
+      }
+     },
+     {
+      "pageid": 17322361,
+      "ns": 0,
+      "title": "Perth Stadium",
+      "pageprops": {
+       "wikibase_item": "Q7170896"
+      }
+     },
+     {
+      "pageid": 21508033,
+      "ns": 0,
+      "title": "Aviva Stadium",
+      "pageprops": {
+       "wikibase_item": "Q244402"
+      }
+     },
+     {
+      "pageid": 26207532,
+      "ns": 0,
+      "title": "Beijing National Stadium",
+      "pageprops": {
+       "wikibase_item": "Q133525"
+      }
+     },
+     {
+      "pageid": 63015891,
+      "ns": 0,
+      "title": "Ariake Arena",
+      "pageprops": {
+       "wikibase_item": "Q28068157"
+      }
+     },
+     {
+      "pageid": 65767280,
+      "ns": 0,
+      "title": "Jeddah Corniche Circuit",
+      "pageprops": {
+       "wikibase_item": "Q102141307"
+      }
+     },
+     {
+      "pageid": 67431068,
+      "ns": 0,
+      "title": "Miami International Autodrome",
+      "pageprops": {
+       "wikibase_item": "Q106544792"
+      }
+     },
+     {
+      "pageid": 68318588,
+      "ns": 0,
+      "title": "Tokyo Aquatics Centre",
+      "pageprops": {
+       "wikibase_item": "Q65038183"
+      }
+     },
+     {
+      "pageid": 78745837,
+      "ns": 0,
+      "title": "Aichi International Arena",
+      "pageprops": {
+       "wikibase_item": "Q124460245"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "batchcomplete": true,
+   "query": {
+    "redirects": [
+     {
+      "from": "Bugatti Circuit",
+      "to": "Circuit de la Sarthe",
+      "tofragment": "Bugatti Circuit"
+     }
+    ],
+    "pages": [
+     {
+      "pageid": 2102,
+      "ns": 0,
+      "title": "Arizona Cardinals",
+      "pageprops": {
+       "wikibase_item": "Q224164"
+      }
+     },
+     {
+      "pageid": 4293,
+      "ns": 0,
+      "title": "Baltimore Ravens",
+      "pageprops": {
+       "wikibase_item": "Q276539"
+      }
+     },
+     {
+      "pageid": 4315,
+      "ns": 0,
+      "title": "Buffalo Bills",
+      "pageprops": {
+       "wikibase_item": "Q221626"
+      }
+     },
+     {
+      "pageid": 6610,
+      "ns": 0,
+      "title": "Carolina Panthers",
+      "pageprops": {
+       "wikibase_item": "Q330120"
+      }
+     },
+     {
+      "pageid": 6611,
+      "ns": 0,
+      "title": "Chicago Bears",
+      "pageprops": {
+       "wikibase_item": "Q205033"
+      }
+     },
+     {
+      "pageid": 7767,
+      "ns": 0,
+      "title": "Circuit Zandvoort",
+      "pageprops": {
+       "wikibase_item": "Q173083"
+      }
+     },
+     {
+      "pageid": 22122,
+      "ns": 0,
+      "title": "Nürburgring",
+      "pageprops": {
+       "wikibase_item": "Q152207"
+      }
+     },
+     {
+      "pageid": 227965,
+      "ns": 0,
+      "title": "Indianapolis Motor Speedway",
+      "pageprops": {
+       "wikibase_item": "Q172732"
+      }
+     },
+     {
+      "pageid": 249152,
+      "ns": 0,
+      "title": "Fuji Speedway",
+      "pageprops": {
+       "wikibase_item": "Q171399"
+      }
+     },
+     {
+      "pageid": 431712,
+      "ns": 0,
+      "title": "Daytona International Speedway",
+      "pageprops": {
+       "wikibase_item": "Q1179250"
+      }
+     },
+     {
+      "pageid": 522676,
+      "ns": 0,
+      "title": "Silverstone Circuit",
+      "pageprops": {
+       "wikibase_item": "Q171402"
+      }
+     },
+     {
+      "pageid": 617486,
+      "ns": 0,
+      "title": "Hungaroring",
+      "pageprops": {
+       "wikibase_item": "Q171356"
+      }
+     },
+     {
+      "pageid": 674219,
+      "ns": 0,
+      "title": "Charlotte Motor Speedway",
+      "pageprops": {
+       "wikibase_item": "Q1067286"
+      }
+     },
+     {
+      "pageid": 681674,
+      "ns": 0,
+      "title": "Talladega Superspeedway",
+      "pageprops": {
+       "wikibase_item": "Q1547320"
+      }
+     },
+     {
+      "pageid": 685467,
+      "ns": 0,
+      "title": "Darlington Raceway",
+      "pageprops": {
+       "wikibase_item": "Q1166378"
+      }
+     },
+     {
+      "pageid": 794321,
+      "ns": 0,
+      "title": "Bristol Motor Speedway",
+      "pageprops": {
+       "wikibase_item": "Q383490"
+      }
+     },
+     {
+      "pageid": 944336,
+      "ns": 0,
+      "title": "Sepang International Circuit",
+      "pageprops": {
+       "wikibase_item": "Q172738"
+      }
+     },
+     {
+      "pageid": 947056,
+      "ns": 0,
+      "title": "Imola Circuit",
+      "pageprops": {
+       "wikibase_item": "Q171313"
+      }
+     },
+     {
+      "pageid": 948477,
+      "ns": 0,
+      "title": "Circuit de Spa-Francorchamps",
+      "pageprops": {
+       "wikibase_item": "Q172851"
+      }
+     },
+     {
+      "pageid": 952083,
+      "ns": 0,
+      "title": "Monza Circuit",
+      "pageprops": {
+       "wikibase_item": "Q171417"
+      }
+     },
+     {
+      "pageid": 952521,
+      "ns": 0,
+      "title": "Interlagos Circuit",
+      "pageprops": {
+       "wikibase_item": "Q171387"
+      }
+     },
+     {
+      "pageid": 1143784,
+      "ns": 0,
+      "title": "Sebring International Raceway",
+      "pageprops": {
+       "wikibase_item": "Q172883"
+      }
+     },
+     {
+      "pageid": 1172797,
+      "ns": 0,
+      "title": "Brno Circuit",
+      "pageprops": {
+       "wikibase_item": "Q222686"
+      }
+     },
+     {
+      "pageid": 1219699,
+      "ns": 0,
+      "title": "Red Bull Ring",
+      "pageprops": {
+       "wikibase_item": "Q171566"
+      }
+     },
+     {
+      "pageid": 1403553,
+      "ns": 0,
+      "title": "Autódromo Hermanos Rodríguez",
+      "pageprops": {
+       "wikibase_item": "Q173099"
+      }
+     },
+     {
+      "pageid": 1416541,
+      "ns": 0,
+      "title": "Circuito de Jerez",
+      "pageprops": {
+       "wikibase_item": "Q172884"
+      }
+     },
+     {
+      "pageid": 2015293,
+      "ns": 0,
+      "title": "TT Circuit Assen",
+      "pageprops": {
+       "wikibase_item": "Q843925"
+      }
+     },
+     {
+      "pageid": 2015774,
+      "ns": 0,
+      "title": "Motegi Circuit",
+      "pageprops": {
+       "wikibase_item": "Q1420895"
+      }
+     },
+     {
+      "pageid": 2308490,
+      "ns": 0,
+      "title": "Circuit Ricardo Tormo",
+      "pageprops": {
+       "wikibase_item": "Q786577"
+      }
+     },
+     {
+      "pageid": 2850265,
+      "ns": 0,
+      "title": "Mount Panorama Circuit",
+      "pageprops": {
+       "wikibase_item": "Q1950645"
+      }
+     },
+     {
+      "pageid": 2930198,
+      "ns": 0,
+      "title": "Circuit de la Sarthe",
+      "pageprops": {
+       "wikibase_item": "Q174090"
+      }
+     },
+     {
+      "pageid": 3209946,
+      "ns": 0,
+      "title": "Sachsenring",
+      "pageprops": {
+       "wikibase_item": "Q567770"
+      }
+     },
+     {
+      "pageid": 5586342,
+      "ns": 0,
+      "title": "Lusail International Circuit",
+      "pageprops": {
+       "wikibase_item": "Q547535"
+      }
+     },
+     {
+      "pageid": 5773142,
+      "ns": 0,
+      "title": "Mugello Circuit",
+      "pageprops": {
+       "wikibase_item": "Q782455"
+      }
+     },
+     {
+      "pageid": 6495369,
+      "ns": 0,
+      "title": "Phillip Island Grand Prix Circuit",
+      "pageprops": {
+       "wikibase_item": "Q571271"
+      }
+     },
+     {
+      "pageid": 7876335,
+      "ns": 0,
+      "title": "Misano World Circuit",
+      "pageprops": {
+       "wikibase_item": "Q1347804"
+      }
+     },
+     {
+      "pageid": 11169104,
+      "ns": 0,
+      "title": "Yas Marina Circuit",
+      "pageprops": {
+       "wikibase_item": "Q172869"
+      }
+     },
+     {
+      "pageid": 11170175,
+      "ns": 0,
+      "title": "Marina Bay Street Circuit",
+      "pageprops": {
+       "wikibase_item": "Q171390"
+      }
+     },
+     {
+      "pageid": 15807327,
+      "ns": 0,
+      "title": "Algarve International Circuit",
+      "pageprops": {
+       "wikibase_item": "Q789427"
+      }
+     },
+     {
+      "pageid": 20279399,
+      "ns": 0,
+      "title": "MotorLand Aragón",
+      "pageprops": {
+       "wikibase_item": "Q1321650"
+      }
+     },
+     {
+      "pageid": 22398886,
+      "ns": 0,
+      "title": "Autódromo Termas de Río Hondo",
+      "pageprops": {
+       "wikibase_item": "Q4827242"
+      }
+     },
+     {
+      "pageid": 23410097,
+      "ns": 0,
+      "title": "Autódromo Internacional Ayrton Senna (Goiânia)",
+      "pageprops": {
+       "wikibase_item": "Q789407"
+      }
+     },
+     {
+      "pageid": 28663179,
+      "ns": 0,
+      "title": "Circuit of the Americas",
+      "pageprops": {
+       "wikibase_item": "Q59626"
+      }
+     },
+     {
+      "pageid": 42704634,
+      "ns": 0,
+      "title": "Baku City Circuit",
+      "pageprops": {
+       "wikibase_item": "Q17004958"
+      }
+     },
+     {
+      "pageid": 45485671,
+      "ns": 0,
+      "title": "Buriram International Circuit",
+      "pageprops": {
+       "wikibase_item": "Q16307503"
+      }
+     },
+     {
+      "pageid": 68816955,
+      "ns": 0,
+      "title": "Mandalika International Street Circuit",
+      "pageprops": {
+       "wikibase_item": "Q105061873"
+      }
+     },
+     {
+      "pageid": 73286436,
+      "ns": 0,
+      "title": "Las Vegas Strip Circuit",
+      "pageprops": {
+       "wikibase_item": "Q113112116"
+      }
+     },
+     {
+      "pageid": 73463243,
+      "ns": 0,
+      "title": "Balaton Park Circuit",
+      "pageprops": {
+       "wikibase_item": "Q118511681"
+      }
+     },
+     {
+      "pageid": 80044756,
+      "ns": 0,
+      "title": "Madring",
+      "pageprops": {
+       "wikibase_item": "Q126193406"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "batchcomplete": true,
+   "query": {
+    "redirects": [
+     {
+      "from": "List of current National Football League stadiums",
+      "to": "List of current NFL stadiums"
+     }
+    ],
+    "pages": [
+     {
+      "pageid": 6576,
+      "ns": 0,
+      "title": "Cleveland Browns",
+      "pageprops": {
+       "wikibase_item": "Q223527"
+      }
+     },
+     {
+      "pageid": 6612,
+      "ns": 0,
+      "title": "Cincinnati Bengals",
+      "pageprops": {
+       "wikibase_item": "Q223511"
+      }
+     },
+     {
+      "pageid": 8122,
+      "ns": 0,
+      "title": "Denver Broncos",
+      "pageprops": {
+       "wikibase_item": "Q223507"
+      }
+     },
+     {
+      "pageid": 8577,
+      "ns": 0,
+      "title": "Detroit Lions",
+      "pageprops": {
+       "wikibase_item": "Q271880"
+      }
+     },
+     {
+      "pageid": 12663,
+      "ns": 0,
+      "title": "Green Bay Packers",
+      "pageprops": {
+       "wikibase_item": "Q213837"
+      }
+     },
+     {
+      "pageid": 15049,
+      "ns": 0,
+      "title": "Indianapolis Colts",
+      "pageprops": {
+       "wikibase_item": "Q193753"
+      }
+     },
+     {
+      "pageid": 16156,
+      "ns": 0,
+      "title": "Jacksonville Jaguars",
+      "pageprops": {
+       "wikibase_item": "Q272223"
+      }
+     },
+     {
+      "pageid": 20134,
+      "ns": 0,
+      "title": "Minnesota Vikings",
+      "pageprops": {
+       "wikibase_item": "Q221150"
+      }
+     },
+     {
+      "pageid": 21720,
+      "ns": 0,
+      "title": "New Orleans Saints",
+      "pageprops": {
+       "wikibase_item": "Q172435"
+      }
+     },
+     {
+      "pageid": 22312,
+      "ns": 0,
+      "title": "Las Vegas Raiders",
+      "pageprops": {
+       "wikibase_item": "Q324523"
+      }
+     },
+     {
+      "pageid": 23338,
+      "ns": 0,
+      "title": "Pittsburgh Steelers",
+      "pageprops": {
+       "wikibase_item": "Q191477"
+      }
+     },
+     {
+      "pageid": 30837,
+      "ns": 0,
+      "title": "Tampa Bay Buccaneers",
+      "pageprops": {
+       "wikibase_item": "Q320476"
+      }
+     },
+     {
+      "pageid": 30839,
+      "ns": 0,
+      "title": "Tennessee Titans",
+      "pageprops": {
+       "wikibase_item": "Q320484"
+      }
+     },
+     {
+      "pageid": 33673,
+      "ns": 0,
+      "title": "Washington Commanders",
+      "pageprops": {
+       "wikibase_item": "Q212654"
+      }
+     },
+     {
+      "pageid": 70601,
+      "ns": 0,
+      "title": "Montreal Alouettes",
+      "pageprops": {
+       "wikibase_item": "Q576837"
+      }
+     },
+     {
+      "pageid": 242714,
+      "ns": 0,
+      "title": "Edmonton Elks",
+      "pageprops": {
+       "wikibase_item": "Q1285835"
+      }
+     },
+     {
+      "pageid": 254166,
+      "ns": 0,
+      "title": "Saskatchewan Roughriders",
+      "pageprops": {
+       "wikibase_item": "Q596796"
+      }
+     },
+     {
+      "pageid": 254169,
+      "ns": 0,
+      "title": "Calgary Stampeders",
+      "pageprops": {
+       "wikibase_item": "Q1026679"
+      }
+     },
+     {
+      "pageid": 254173,
+      "ns": 0,
+      "title": "Winnipeg Blue Bombers",
+      "pageprops": {
+       "wikibase_item": "Q2117549"
+      }
+     },
+     {
+      "pageid": 759971,
+      "ns": 0,
+      "title": "Hamilton Tiger-Cats",
+      "pageprops": {
+       "wikibase_item": "Q44149"
+      }
+     },
+     {
+      "pageid": 4845004,
+      "ns": 0,
+      "title": "List of Canadian Football League stadiums",
+      "pageprops": {
+       "wikibase_item": "Q6565685"
+      }
+     },
+     {
+      "pageid": 10814816,
+      "ns": 0,
+      "title": "List of current NFL stadiums",
+      "pageprops": {
+       "wikibase_item": "Q684521"
+      }
+     },
+     {
+      "pageid": 16627032,
+      "ns": 0,
+      "title": "Ottawa Redblacks",
+      "pageprops": {
+       "wikibase_item": "Q7109151"
+      }
+     },
+     {
+      "pageid": 71681684,
+      "ns": 0,
+      "title": "2026 Formula One World Championship",
+      "pageprops": {
+       "wikibase_item": "Q115942640"
+      }
+     },
+     {
+      "pageid": 78088946,
+      "ns": 0,
+      "title": "2026 MotoGP World Championship",
+      "pageprops": {
+       "wikibase_item": "Q130633606"
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

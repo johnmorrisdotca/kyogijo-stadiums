@@ -1,0 +1,969 @@
+{
+ "read": "2026-11-03",
+ "source": "en.wikipedia.org API (action=parse); CC BY-SA 4.0; only the titles linked from the rows of one table are kept, as evidence",
+ "articles": {
+  "List of current National Football League stadiums": {
+   "revision": 1382562348,
+   "section": "Current",
+   "linked": [
+    "File:SteelersWarmUp.JPG",
+    "Acrisure Stadium",
+    "Pittsburgh Steelers",
+    "Pittsburgh, Pennsylvania",
+    "Cynodon dactylon",
+    "File:2022 Las Vegas Bowl Allegiant Stadium.jpg",
+    "Allegiant Stadium",
+    "Las Vegas Raiders",
+    "Paradise, Nevada",
+    "Bermuda grass",
+    "Skylight",
+    "File:Arrowhead Stadium (October 27, 2019 - 4).jpg",
+    "Arrowhead Stadium",
+    "Kansas City Chiefs",
+    "Kansas City, Missouri",
+    "File:AT&T Stadium 2022-08-24.jpg",
+    "AT&T Stadium",
+    "Dallas Cowboys",
+    "Arlington, Texas",
+    "Artificial turf",
+    "Retractable roof",
+    "File:BofAStadium2015.JPG",
+    "Bank of America Stadium",
+    "Carolina Panthers",
+    "Charlotte, North Carolina",
+    "FieldTurf",
+    "File:The Dome New Orleans Man Trip.jpg",
+    "Caesars Superdome",
+    "New Orleans Saints",
+    "New Orleans, Louisiana",
+    "Dome",
+    "File:SAF at Mile High AFC Championship game pom-poms.jpg",
+    "Empower Field at Mile High",
+    "Denver Broncos",
+    "Denver, Colorado",
+    "File:Chiefs at Jaguars (53314666155).jpg",
+    "EverBank Stadium",
+    "Jacksonville Jaguars",
+    "Jacksonville, Florida",
+    "File:Packers at Lions Dec 2020 (50715608723).jpg",
+    "Ford Field",
+    "Detroit Lions",
+    "Detroit, Michigan",
+    "File:Gillette Stadium02.jpg",
+    "Gillette Stadium",
+    "New England Patriots",
+    "Foxborough, Massachusetts",
+    "File:Interior of updated Hard Rock Stadium.jpg",
+    "Hard Rock Stadium",
+    "Miami Dolphins",
+    "Miami Gardens, Florida",
+    "File:HighmarkDay.jpg",
+    "Highmark Stadium",
+    "Buffalo Bills",
+    "Orchard Park, New York",
+    "File:FirstEnergy Stadium 50 yardline panorama.png",
+    "Huntington Bank Field",
+    "Cleveland Browns",
+    "Cleveland, Ohio",
+    "File:Lambeau Field panorama.jpg",
+    "Lambeau Field",
+    "Green Bay Packers",
+    "Green Bay, Wisconsin",
+    "Hybrid grass",
+    "File:Broncos vs 49ers preseason game at Levi's Stadium.jpg",
+    "Levi's Stadium",
+    "San Francisco 49ers",
+    "Santa Clara, California",
+    "File:2017-18 NFC championship game.jpg",
+    "Lincoln Financial Field",
+    "Philadelphia Eagles",
+    "Philadelphia, Pennsylvania",
+    "GrassMaster",
+    "File:LucasOilStadiumTheLuke.jpg",
+    "Lucas Oil Stadium",
+    "Indianapolis Colts",
+    "Indianapolis, Indiana",
+    "File:CenturyLink Field panorama 2016.jpg",
+    "Lumen Field",
+    "Seattle Seahawks",
+    "Seattle, Washington",
+    "File:M&T Bank Stadium DoD.jpg",
+    "M&T Bank Stadium",
+    "Baltimore Ravens",
+    "Baltimore, Maryland",
+    "Perennial ryegrass",
+    "File:Peach Bowl Pre-game (39431667481).jpg",
+    "Mercedes-Benz Stadium",
+    "Atlanta Falcons",
+    "Atlanta, Georgia",
+    "File:MetLife Stadium, Jets.jpg",
+    "MetLife Stadium",
+    "New York Giants",
+    "New York Jets",
+    "East Rutherford, New Jersey",
+    "File:Night Settles on LP Field.jpg",
+    "Nissan Stadium (Nashville)",
+    "Tennessee Titans",
+    "Nashville, Tennessee",
+    "File:Commanders vs Giants (53345178211).jpg",
+    "Northwest Stadium",
+    "Washington Commanders",
+    "Landover, Maryland",
+    "File:Paul Brown Stadium interior 2017.jpg",
+    "Paycor Stadium",
+    "Cincinnati Bengals",
+    "Cincinnati, Ohio",
+    "File:Raymond James Stadium02.JPG",
+    "Raymond James Stadium",
+    "Tampa Bay Buccaneers",
+    "Tampa, Florida",
+    "File:Reliantstadium.jpg",
+    "Reliant Stadium",
+    "Houston Texans",
+    "Houston, Texas",
+    "File:SoFi Stadium interior 2021.jpg",
+    "SoFi Stadium",
+    "Los Angeles Chargers",
+    "Los Angeles Rams",
+    "Inglewood, California",
+    "File:Bears vs Eagles.jpg",
+    "Soldier Field",
+    "Chicago Bears",
+    "Chicago, Illinois",
+    "File:Phoenix - State Farm Stadium - IMG 8244 (51576996287).jpg",
+    "State Farm Stadium",
+    "Arizona Cardinals",
+    "Glendale, Arizona",
+    "File:Vikings-US16.jpg",
+    "U.S. Bank Stadium",
+    "Minnesota Vikings",
+    "Minneapolis, Minnesota"
+   ],
+   "rows": [
+    [
+     "File:SteelersWarmUp.JPG",
+     "Acrisure Stadium",
+     "Pittsburgh Steelers",
+     "Pittsburgh, Pennsylvania",
+     "Cynodon dactylon"
+    ],
+    [
+     "File:2022 Las Vegas Bowl Allegiant Stadium.jpg",
+     "Allegiant Stadium",
+     "Las Vegas Raiders",
+     "Paradise, Nevada",
+     "Bermuda grass",
+     "Skylight"
+    ],
+    [
+     "File:Arrowhead Stadium (October 27, 2019 - 4).jpg",
+     "Arrowhead Stadium",
+     "Kansas City Chiefs",
+     "Kansas City, Missouri"
+    ],
+    [
+     "File:AT&T Stadium 2022-08-24.jpg",
+     "AT&T Stadium",
+     "Dallas Cowboys",
+     "Arlington, Texas",
+     "Artificial turf",
+     "Retractable roof"
+    ],
+    [
+     "File:BofAStadium2015.JPG",
+     "Bank of America Stadium",
+     "Carolina Panthers",
+     "Charlotte, North Carolina",
+     "FieldTurf"
+    ],
+    [
+     "File:The Dome New Orleans Man Trip.jpg",
+     "Caesars Superdome",
+     "New Orleans Saints",
+     "New Orleans, Louisiana",
+     "Dome"
+    ],
+    [
+     "File:SAF at Mile High AFC Championship game pom-poms.jpg",
+     "Empower Field at Mile High",
+     "Denver Broncos",
+     "Denver, Colorado"
+    ],
+    [
+     "File:Chiefs at Jaguars (53314666155).jpg",
+     "EverBank Stadium",
+     "Jacksonville Jaguars",
+     "Jacksonville, Florida"
+    ],
+    [
+     "File:Packers at Lions Dec 2020 (50715608723).jpg",
+     "Ford Field",
+     "Detroit Lions",
+     "Detroit, Michigan"
+    ],
+    [
+     "File:Gillette Stadium02.jpg",
+     "Gillette Stadium",
+     "New England Patriots",
+     "Foxborough, Massachusetts"
+    ],
+    [
+     "File:Interior of updated Hard Rock Stadium.jpg",
+     "Hard Rock Stadium",
+     "Miami Dolphins",
+     "Miami Gardens, Florida"
+    ],
+    [
+     "File:HighmarkDay.jpg",
+     "Highmark Stadium",
+     "Buffalo Bills",
+     "Orchard Park, New York"
+    ],
+    [
+     "File:FirstEnergy Stadium 50 yardline panorama.png",
+     "Huntington Bank Field",
+     "Cleveland Browns",
+     "Cleveland, Ohio"
+    ],
+    [
+     "File:Lambeau Field panorama.jpg",
+     "Lambeau Field",
+     "Green Bay Packers",
+     "Green Bay, Wisconsin",
+     "Hybrid grass"
+    ],
+    [
+     "File:Broncos vs 49ers preseason game at Levi's Stadium.jpg",
+     "Levi's Stadium",
+     "San Francisco 49ers",
+     "Santa Clara, California"
+    ],
+    [
+     "File:2017-18 NFC championship game.jpg",
+     "Lincoln Financial Field",
+     "Philadelphia Eagles",
+     "Philadelphia, Pennsylvania",
+     "GrassMaster"
+    ],
+    [
+     "File:LucasOilStadiumTheLuke.jpg",
+     "Lucas Oil Stadium",
+     "Indianapolis Colts",
+     "Indianapolis, Indiana"
+    ],
+    [
+     "File:CenturyLink Field panorama 2016.jpg",
+     "Lumen Field",
+     "Seattle Seahawks",
+     "Seattle, Washington"
+    ],
+    [
+     "File:M&T Bank Stadium DoD.jpg",
+     "M&T Bank Stadium",
+     "Baltimore Ravens",
+     "Baltimore, Maryland",
+     "Perennial ryegrass"
+    ],
+    [
+     "File:Peach Bowl Pre-game (39431667481).jpg",
+     "Mercedes-Benz Stadium",
+     "Atlanta Falcons",
+     "Atlanta, Georgia"
+    ],
+    [
+     "File:MetLife Stadium, Jets.jpg",
+     "MetLife Stadium",
+     "New York Giants",
+     "New York Jets",
+     "East Rutherford, New Jersey"
+    ],
+    [
+     "File:Night Settles on LP Field.jpg",
+     "Nissan Stadium (Nashville)",
+     "Tennessee Titans",
+     "Nashville, Tennessee"
+    ],
+    [
+     "File:Commanders vs Giants (53345178211).jpg",
+     "Northwest Stadium",
+     "Washington Commanders",
+     "Landover, Maryland"
+    ],
+    [
+     "File:Paul Brown Stadium interior 2017.jpg",
+     "Paycor Stadium",
+     "Cincinnati Bengals",
+     "Cincinnati, Ohio"
+    ],
+    [
+     "File:Raymond James Stadium02.JPG",
+     "Raymond James Stadium",
+     "Tampa Bay Buccaneers",
+     "Tampa, Florida"
+    ],
+    [
+     "File:Reliantstadium.jpg",
+     "Reliant Stadium",
+     "Houston Texans",
+     "Houston, Texas"
+    ],
+    [
+     "File:SoFi Stadium interior 2021.jpg",
+     "SoFi Stadium",
+     "Los Angeles Chargers",
+     "Los Angeles Rams",
+     "Inglewood, California"
+    ],
+    [
+     "File:Bears vs Eagles.jpg",
+     "Soldier Field",
+     "Chicago Bears",
+     "Chicago, Illinois"
+    ],
+    [
+     "File:Phoenix - State Farm Stadium - IMG 8244 (51576996287).jpg",
+     "State Farm Stadium",
+     "Arizona Cardinals",
+     "Glendale, Arizona"
+    ],
+    [
+     "File:Vikings-US16.jpg",
+     "U.S. Bank Stadium",
+     "Minnesota Vikings",
+     "Minneapolis, Minnesota"
+    ]
+   ]
+  },
+  "List of Canadian Football League stadiums": {
+   "revision": 1383444131,
+   "section": "Current stadiums",
+   "linked": [
+    "File:BC Place Opening Day 2011-09-30.jpg",
+    "BC Place",
+    "Vancouver",
+    "British Columbia",
+    "BC Lions",
+    "West Division (CFL)",
+    "File:BMO Field, 104th Grey Cup.jpeg",
+    "BMO Field",
+    "Toronto",
+    "Ontario",
+    "Toronto Argonauts",
+    "East Division (CFL)",
+    "File:Commonwealth Stadium.jpg",
+    "Commonwealth Stadium",
+    "Edmonton",
+    "Alberta",
+    "Edmonton Elks",
+    "File:McMahon Stadium.jpg",
+    "McMahon Stadium",
+    "Calgary",
+    "Calgary Stampeders",
+    "File:Mosaic Stadium.jpg",
+    "Mosaic Stadium",
+    "Regina, Saskatchewan",
+    "Saskatchewan",
+    "Saskatchewan Roughriders",
+    "File:Percival Molson Memorial Stadium, Montreal, Quebec.jpg",
+    "Percival Molson Memorial Stadium",
+    "Montreal",
+    "Quebec",
+    "Montreal Alouettes",
+    "File:Winnipeg CFL football stadium.jpg",
+    "Princess Auto Stadium",
+    "Winnipeg",
+    "Manitoba",
+    "Winnipeg Blue Bombers",
+    "File:TD Place 2022.jpg",
+    "TD Place Stadium",
+    "Ottawa",
+    "Ottawa Redblacks",
+    "File:Lions at Tiger-Cats 2014.jpg",
+    "Hamilton Stadium",
+    "Hamilton, Ontario",
+    "Hamilton Tiger-Cats"
+   ],
+   "rows": [
+    [
+     "File:BC Place Opening Day 2011-09-30.jpg",
+     "BC Place",
+     "Vancouver",
+     "British Columbia",
+     "BC Lions",
+     "West Division (CFL)"
+    ],
+    [
+     "File:BMO Field, 104th Grey Cup.jpeg",
+     "BMO Field",
+     "Toronto",
+     "Ontario",
+     "Toronto Argonauts",
+     "East Division (CFL)"
+    ],
+    [
+     "File:Commonwealth Stadium.jpg",
+     "Commonwealth Stadium",
+     "Edmonton",
+     "Alberta",
+     "Edmonton Elks",
+     "West Division (CFL)"
+    ],
+    [
+     "File:McMahon Stadium.jpg",
+     "McMahon Stadium",
+     "Calgary",
+     "Alberta",
+     "Calgary Stampeders",
+     "West Division (CFL)"
+    ],
+    [
+     "File:Mosaic Stadium.jpg",
+     "Mosaic Stadium",
+     "Regina, Saskatchewan",
+     "Saskatchewan",
+     "Saskatchewan Roughriders",
+     "West Division (CFL)"
+    ],
+    [
+     "File:Percival Molson Memorial Stadium, Montreal, Quebec.jpg",
+     "Percival Molson Memorial Stadium",
+     "Montreal",
+     "Quebec",
+     "Montreal Alouettes",
+     "East Division (CFL)"
+    ],
+    [
+     "File:Winnipeg CFL football stadium.jpg",
+     "Princess Auto Stadium",
+     "Winnipeg",
+     "Manitoba",
+     "Winnipeg Blue Bombers",
+     "West Division (CFL)"
+    ],
+    [
+     "File:TD Place 2022.jpg",
+     "TD Place Stadium",
+     "Ottawa",
+     "Ontario",
+     "Ottawa Redblacks",
+     "East Division (CFL)"
+    ],
+    [
+     "File:Lions at Tiger-Cats 2014.jpg",
+     "Hamilton Stadium",
+     "Hamilton, Ontario",
+     "Ontario",
+     "Hamilton Tiger-Cats",
+     "East Division (CFL)"
+    ]
+   ]
+  },
+  "2026 Formula One World Championship": {
+   "revision": 1383447981,
+   "section": "Calendar",
+   "linked": [
+    "List of Formula One Grands Prix",
+    "List of Formula One circuits",
+    "Australian Grand Prix",
+    "Albert Park Circuit",
+    "Melbourne",
+    "Chinese Grand Prix",
+    "Shanghai International Circuit",
+    "Shanghai",
+    "Japanese Grand Prix",
+    "Suzuka Circuit",
+    "Suzuka, Mie",
+    "Miami Grand Prix",
+    "Miami International Autodrome",
+    "Miami Gardens, Florida",
+    "Canadian Grand Prix",
+    "Circuit Gilles Villeneuve",
+    "Montreal",
+    "Monaco Grand Prix",
+    "Circuit de Monaco",
+    "Municipality of Monaco",
+    "Barcelona-Catalunya Grand Prix",
+    "Circuit de Barcelona-Catalunya",
+    "Montmeló",
+    "Austrian Grand Prix",
+    "Red Bull Ring",
+    "Spielberg, Styria",
+    "British Grand Prix",
+    "Silverstone Circuit",
+    "Silverstone",
+    "Belgian Grand Prix",
+    "Circuit de Spa-Francorchamps",
+    "Stavelot",
+    "Hungarian Grand Prix",
+    "Hungaroring",
+    "Mogyoród",
+    "Dutch Grand Prix",
+    "Circuit Zandvoort",
+    "Zandvoort",
+    "Italian Grand Prix",
+    "Monza Circuit",
+    "Monza",
+    "Spanish Grand Prix",
+    "Madring",
+    "Madrid",
+    "Azerbaijan Grand Prix",
+    "Baku City Circuit",
+    "Baku",
+    "Bahrain Grand Prix",
+    "Sepang International Circuit",
+    "Sepang",
+    "Singapore Grand Prix",
+    "Marina Bay Street Circuit",
+    "Singapore",
+    "United States Grand Prix",
+    "Circuit of the Americas",
+    "Austin, Texas",
+    "Mexico City Grand Prix",
+    "Autódromo Hermanos Rodríguez",
+    "Mexico City",
+    "São Paulo Grand Prix",
+    "Interlagos Circuit",
+    "São Paulo",
+    "Las Vegas Grand Prix",
+    "Las Vegas Strip Circuit",
+    "Paradise, Nevada",
+    "Qatar Grand Prix",
+    "Lusail International Circuit",
+    "Lusail",
+    "Abu Dhabi Grand Prix",
+    "Yas Marina Circuit",
+    "Abu Dhabi"
+   ],
+   "rows": [
+    [
+     "Australian Grand Prix",
+     "Albert Park Circuit",
+     "Melbourne"
+    ],
+    [
+     "Chinese Grand Prix",
+     "Shanghai International Circuit",
+     "Shanghai"
+    ],
+    [
+     "Japanese Grand Prix",
+     "Suzuka Circuit",
+     "Suzuka, Mie"
+    ],
+    [
+     "Miami Grand Prix",
+     "Miami International Autodrome",
+     "Miami Gardens, Florida"
+    ],
+    [
+     "Canadian Grand Prix",
+     "Circuit Gilles Villeneuve",
+     "Montreal"
+    ],
+    [
+     "Monaco Grand Prix",
+     "Circuit de Monaco",
+     "Municipality of Monaco"
+    ],
+    [
+     "Barcelona-Catalunya Grand Prix",
+     "Circuit de Barcelona-Catalunya",
+     "Montmeló"
+    ],
+    [
+     "Austrian Grand Prix",
+     "Red Bull Ring",
+     "Spielberg, Styria"
+    ],
+    [
+     "British Grand Prix",
+     "Silverstone Circuit",
+     "Silverstone"
+    ],
+    [
+     "Belgian Grand Prix",
+     "Circuit de Spa-Francorchamps",
+     "Stavelot"
+    ],
+    [
+     "Hungarian Grand Prix",
+     "Hungaroring",
+     "Mogyoród"
+    ],
+    [
+     "Dutch Grand Prix",
+     "Circuit Zandvoort",
+     "Zandvoort"
+    ],
+    [
+     "Italian Grand Prix",
+     "Monza Circuit",
+     "Monza"
+    ],
+    [
+     "Spanish Grand Prix",
+     "Madring",
+     "Madrid"
+    ],
+    [
+     "Azerbaijan Grand Prix",
+     "Baku City Circuit",
+     "Baku"
+    ],
+    [
+     "Bahrain Grand Prix",
+     "Sepang International Circuit",
+     "Sepang"
+    ],
+    [
+     "Singapore Grand Prix",
+     "Marina Bay Street Circuit",
+     "Singapore"
+    ],
+    [
+     "United States Grand Prix",
+     "Circuit of the Americas",
+     "Austin, Texas"
+    ],
+    [
+     "Mexico City Grand Prix",
+     "Autódromo Hermanos Rodríguez",
+     "Mexico City"
+    ],
+    [
+     "São Paulo Grand Prix",
+     "Interlagos Circuit",
+     "São Paulo"
+    ],
+    [
+     "Las Vegas Grand Prix",
+     "Las Vegas Strip Circuit",
+     "Paradise, Nevada"
+    ],
+    [
+     "Qatar Grand Prix",
+     "Lusail International Circuit",
+     "Lusail"
+    ],
+    [
+     "Abu Dhabi Grand Prix",
+     "Yas Marina Circuit",
+     "Abu Dhabi"
+    ]
+   ],
+   "circuits": [
+    "Albert Park Circuit",
+    "Shanghai International Circuit",
+    "Suzuka Circuit",
+    "Miami International Autodrome",
+    "Circuit Gilles Villeneuve",
+    "Circuit de Monaco",
+    "Circuit de Barcelona-Catalunya",
+    "Red Bull Ring",
+    "Silverstone Circuit",
+    "Circuit de Spa-Francorchamps",
+    "Hungaroring",
+    "Circuit Zandvoort",
+    "Monza Circuit",
+    "Madring",
+    "Baku City Circuit",
+    "Sepang International Circuit",
+    "Marina Bay Street Circuit",
+    "Circuit of the Americas",
+    "Autódromo Hermanos Rodríguez",
+    "Interlagos Circuit",
+    "Las Vegas Strip Circuit",
+    "Lusail International Circuit",
+    "Yas Marina Circuit"
+   ]
+  },
+  "2026 MotoGP World Championship": {
+   "revision": 1383460791,
+   "section": "Calendar",
+   "linked": [
+    "List of Grand Prix motorcycle circuits",
+    "Thailand motorcycle Grand Prix",
+    "Buriram International Circuit",
+    "Buriram",
+    "Brazilian motorcycle Grand Prix",
+    "Autódromo Internacional Ayrton Senna (Goiânia)",
+    "Goiânia",
+    "United States motorcycle Grand Prix",
+    "Circuit of the Americas",
+    "Austin, Texas",
+    "Spanish motorcycle Grand Prix",
+    "Circuito de Jerez",
+    "Jerez de la Frontera",
+    "French motorcycle Grand Prix",
+    "Bugatti Circuit",
+    "Le Mans",
+    "Catalan motorcycle Grand Prix",
+    "Circuit de Barcelona-Catalunya",
+    "Montmeló",
+    "Italian motorcycle Grand Prix",
+    "Mugello Circuit",
+    "Scarperia e San Piero",
+    "Hungarian motorcycle Grand Prix",
+    "Balaton Park Circuit",
+    "Balatonfőkajár",
+    "Czech Republic motorcycle Grand Prix",
+    "Brno Circuit",
+    "Brno",
+    "Dutch TT",
+    "TT Circuit Assen",
+    "Assen",
+    "German motorcycle Grand Prix",
+    "Sachsenring",
+    "Hohenstein-Ernstthal",
+    "British motorcycle Grand Prix",
+    "Silverstone Circuit",
+    "Silverstone",
+    "Aragon motorcycle Grand Prix",
+    "MotorLand Aragón",
+    "Alcañiz",
+    "San Marino and Rimini Riviera motorcycle Grand Prix",
+    "Misano World Circuit",
+    "Misano Adriatico",
+    "Austrian motorcycle Grand Prix",
+    "Red Bull Ring",
+    "Spielberg, Styria",
+    "Japanese motorcycle Grand Prix",
+    "Motegi Circuit",
+    "Motegi, Tochigi",
+    "Indonesian motorcycle Grand Prix",
+    "Mandalika International Street Circuit",
+    "Mandalika (resort area)",
+    "Australian motorcycle Grand Prix",
+    "Phillip Island Grand Prix Circuit",
+    "Phillip Island",
+    "Malaysian motorcycle Grand Prix",
+    "Sepang International Circuit",
+    "Sepang",
+    "Qatar motorcycle Grand Prix",
+    "Lusail International Circuit",
+    "Lusail",
+    "Portuguese motorcycle Grand Prix",
+    "Algarve International Circuit",
+    "Portimão",
+    "Valencian Community motorcycle Grand Prix",
+    "Circuit Ricardo Tormo",
+    "Valencia"
+   ],
+   "rows": [
+    [
+     "Thailand motorcycle Grand Prix",
+     "Buriram International Circuit",
+     "Buriram"
+    ],
+    [
+     "Brazilian motorcycle Grand Prix",
+     "Autódromo Internacional Ayrton Senna (Goiânia)",
+     "Goiânia"
+    ],
+    [
+     "United States motorcycle Grand Prix",
+     "Circuit of the Americas",
+     "Austin, Texas"
+    ],
+    [
+     "Spanish motorcycle Grand Prix",
+     "Circuito de Jerez",
+     "Jerez de la Frontera"
+    ],
+    [
+     "French motorcycle Grand Prix",
+     "Bugatti Circuit",
+     "Le Mans"
+    ],
+    [
+     "Catalan motorcycle Grand Prix",
+     "Circuit de Barcelona-Catalunya",
+     "Montmeló"
+    ],
+    [
+     "Italian motorcycle Grand Prix",
+     "Mugello Circuit",
+     "Scarperia e San Piero"
+    ],
+    [
+     "Hungarian motorcycle Grand Prix",
+     "Balaton Park Circuit",
+     "Balatonfőkajár"
+    ],
+    [
+     "Czech Republic motorcycle Grand Prix",
+     "Brno Circuit",
+     "Brno"
+    ],
+    [
+     "Dutch TT",
+     "TT Circuit Assen",
+     "Assen"
+    ],
+    [
+     "German motorcycle Grand Prix",
+     "Sachsenring",
+     "Hohenstein-Ernstthal"
+    ],
+    [
+     "British motorcycle Grand Prix",
+     "Silverstone Circuit",
+     "Silverstone"
+    ],
+    [
+     "Aragon motorcycle Grand Prix",
+     "MotorLand Aragón",
+     "Alcañiz"
+    ],
+    [
+     "San Marino and Rimini Riviera motorcycle Grand Prix",
+     "Misano World Circuit",
+     "Misano Adriatico"
+    ],
+    [
+     "Austrian motorcycle Grand Prix",
+     "Red Bull Ring",
+     "Spielberg, Styria"
+    ],
+    [
+     "Japanese motorcycle Grand Prix",
+     "Motegi Circuit",
+     "Motegi, Tochigi"
+    ],
+    [
+     "Indonesian motorcycle Grand Prix",
+     "Mandalika International Street Circuit",
+     "Mandalika (resort area)"
+    ],
+    [
+     "Australian motorcycle Grand Prix",
+     "Phillip Island Grand Prix Circuit",
+     "Phillip Island"
+    ],
+    [
+     "Malaysian motorcycle Grand Prix",
+     "Sepang International Circuit",
+     "Sepang"
+    ],
+    [
+     "Qatar motorcycle Grand Prix",
+     "Lusail International Circuit",
+     "Lusail"
+    ],
+    [
+     "Portuguese motorcycle Grand Prix",
+     "Algarve International Circuit",
+     "Portimão"
+    ],
+    [
+     "Valencian Community motorcycle Grand Prix",
+     "Circuit Ricardo Tormo",
+     "Valencia"
+    ]
+   ],
+   "circuits": [
+    "Thailand motorcycle Grand Prix",
+    "Brazilian motorcycle Grand Prix",
+    "United States motorcycle Grand Prix",
+    "Spanish motorcycle Grand Prix",
+    "French motorcycle Grand Prix",
+    "Catalan motorcycle Grand Prix",
+    "Italian motorcycle Grand Prix",
+    "Hungarian motorcycle Grand Prix",
+    "Czech Republic motorcycle Grand Prix",
+    "Dutch TT",
+    "German motorcycle Grand Prix",
+    "British motorcycle Grand Prix",
+    "Aragon motorcycle Grand Prix",
+    "San Marino and Rimini Riviera motorcycle Grand Prix",
+    "Austrian motorcycle Grand Prix",
+    "Japanese motorcycle Grand Prix",
+    "Indonesian motorcycle Grand Prix",
+    "Australian motorcycle Grand Prix",
+    "Malaysian motorcycle Grand Prix",
+    "Qatar motorcycle Grand Prix",
+    "Portuguese motorcycle Grand Prix",
+    "Valencian Community motorcycle Grand Prix"
+   ]
+  }
+ },
+ "redirects": [
+  {
+   "from": "Bermuda grass",
+   "to": "Cynodon dactylon"
+  },
+  {
+   "from": "New Orleans, Louisiana",
+   "to": "New Orleans"
+  },
+  {
+   "from": "Denver, Colorado",
+   "to": "Denver"
+  },
+  {
+   "from": "Detroit, Michigan",
+   "to": "Detroit"
+  },
+  {
+   "from": "Pittsburgh, Pennsylvania",
+   "to": "Pittsburgh"
+  },
+  {
+   "from": "Perennial ryegrass",
+   "to": "Lolium perenne"
+  },
+  {
+   "from": "Philadelphia, Pennsylvania",
+   "to": "Philadelphia"
+  },
+  {
+   "from": "Seattle, Washington",
+   "to": "Seattle"
+  },
+  {
+   "from": "Atlanta, Georgia",
+   "to": "Atlanta"
+  },
+  {
+   "from": "Baltimore, Maryland",
+   "to": "Baltimore"
+  },
+  {
+   "from": "Indianapolis, Indiana",
+   "to": "Indianapolis"
+  },
+  {
+   "from": "Cleveland, Ohio",
+   "to": "Cleveland"
+  },
+  {
+   "from": "Chicago, Illinois",
+   "to": "Chicago"
+  },
+  {
+   "from": "Houston, Texas",
+   "to": "Houston"
+  },
+  {
+   "from": "Minneapolis, Minnesota",
+   "to": "Minneapolis"
+  },
+  {
+   "from": "Cincinnati, Ohio",
+   "to": "Cincinnati"
+  },
+  {
+   "from": "São Paulo Grand Prix",
+   "to": "Brazilian Grand Prix"
+  },
+  {
+   "from": "Mexico City Grand Prix",
+   "to": "Mexican Grand Prix"
+  },
+  {
+   "from": "Bugatti Circuit",
+   "to": "Circuit de la Sarthe",
+   "tofragment": "Bugatti Circuit"
+  }
+ ]
+}

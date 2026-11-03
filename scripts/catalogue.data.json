@@ -1,0 +1,1827 @@
+{
+ "about": "The source of the catalogue (pnpm catalogue). The supported venues are not here: they are made from the package's own data (PLACES of the atlas, STADIUMS, VENUES). Here are the venues the package does not draw yet (status wanted or working-on), each named by its English Wikipedia title, and the groups the Wanted section is ordered by. Every fact that is not a title, a city, a sport or a team is read from the raw answers kept in data-sources/catalogue/<date>/ (pnpm catalogue:fetch). A name in Japanese written here (nameJa) is used only where Wikidata has no Japanese label and the Japanese Wikipedia has no article, and was checked by a reviewer.",
+ "read": "2026-11-03",
+ "workingOnTicket": "KYOGIJO-STADIUMS-22",
+ "leagues": [
+  {
+   "id": "nba",
+   "sport": "basketball",
+   "tenant": "NBA",
+   "season": "2026-27"
+  },
+  {
+   "id": "mlb",
+   "sport": "baseball",
+   "tenant": "MLB",
+   "season": "2026"
+  },
+  {
+   "id": "nfl",
+   "sport": "american-football",
+   "tenant": "NFL",
+   "season": "2026",
+   "check": "List of current National Football League stadiums"
+  },
+  {
+   "id": "cfl",
+   "sport": "canadian-football",
+   "tenant": "CFL",
+   "season": "2026",
+   "check": "List of Canadian Football League stadiums"
+  },
+  {
+   "id": "nhl",
+   "sport": "hockey",
+   "tenant": "NHL",
+   "season": "2026-27"
+  }
+ ],
+ "seasons": [
+  {
+   "id": "f1",
+   "article": "2026 Formula One World Championship"
+  },
+  {
+   "id": "motogp",
+   "article": "2026 MotoGP World Championship"
+  }
+ ],
+ "groups": [
+  {
+   "id": "tennis",
+   "status": "working-on",
+   "ids": [
+    "arthur-ashe-stadium",
+    "louis-armstrong-stadium",
+    "rod-laver-arena",
+    "margaret-court-arena",
+    "john-cain-arena",
+    "court-philippe-chatrier",
+    "court-suzanne-lenglen",
+    "centre-court",
+    "no-1-court",
+    "ariake-coliseum"
+   ]
+  },
+  {
+   "id": "soccer",
+   "ids": [
+    "camp-nou",
+    "santiago-bernabeu",
+    "maracana",
+    "wembley",
+    "old-trafford",
+    "san-siro",
+    "anfield",
+    "estadio-azteca",
+    "signal-iduna-park",
+    "la-bombonera"
+   ]
+  },
+  {
+   "id": "cricket",
+   "ids": [
+    "lords",
+    "melbourne-cricket-ground",
+    "eden-gardens",
+    "narendra-modi-stadium",
+    "the-oval",
+    "wankhede-stadium",
+    "sydney-cricket-ground",
+    "adelaide-oval",
+    "newlands-cricket-ground",
+    "old-trafford-cricket-ground"
+   ]
+  },
+  {
+   "id": "rugby",
+   "ids": [
+    "twickenham-stadium",
+    "eden-park",
+    "millennium-stadium",
+    "murrayfield-stadium",
+    "aviva-stadium",
+    "ellis-park-stadium",
+    "hanazono-rugby-stadium",
+    "chichibunomiya-rugby-stadium"
+   ]
+  },
+  {
+   "id": "football-codes",
+   "ids": [
+    "croke-park",
+    "optus-stadium",
+    "marvel-stadium",
+    "the-gabba"
+   ]
+  },
+  {
+   "id": "budo-halls",
+   "ids": [
+    "ryogoku-kokugikan",
+    "nippon-budokan",
+    "kodokan",
+    "osaka-prefectural-gymnasium",
+    "aichi-international-arena",
+    "fukuoka-kokusai-center"
+   ]
+  },
+  {
+   "id": "olympic",
+   "ids": [
+    "beijing-national-stadium",
+    "london-stadium",
+    "los-angeles-memorial-coliseum",
+    "athens-olympic-stadium",
+    "estadi-olimpic-lluis-companys",
+    "hayward-field",
+    "letzigrund",
+    "bislett-stadium"
+   ]
+  },
+  {
+   "id": "college-football",
+   "ids": [
+    "michigan-stadium",
+    "beaver-stadium",
+    "ohio-stadium",
+    "kyle-field",
+    "neyland-stadium",
+    "tiger-stadium-lsu",
+    "rose-bowl"
+   ]
+  },
+  {
+   "id": "baseball-world",
+   "ids": [
+    "jamsil-baseball-stadium",
+    "gocheok-sky-dome",
+    "taipei-dome",
+    "estadio-latinoamericano"
+   ]
+  },
+  {
+   "id": "ice-and-water",
+   "ids": [
+    "thialf",
+    "olympic-oval-calgary",
+    "utah-olympic-oval",
+    "london-aquatics-centre",
+    "beijing-national-aquatics-center",
+    "tokyo-aquatics-centre",
+    "duna-arena"
+   ]
+  },
+  {
+   "id": "indoor",
+   "ids": [
+    "mgm-grand-garden-arena",
+    "maracanazinho",
+    "istora-gelora-bung-karno",
+    "lanxess-arena",
+    "ariake-arena"
+   ]
+  },
+  {
+   "id": "f1",
+   "needs": "circuit-surface",
+   "ids": [
+    "albert-park-circuit",
+    "shanghai-international-circuit",
+    "suzuka-circuit",
+    "miami-international-autodrome",
+    "circuit-gilles-villeneuve",
+    "circuit-de-monaco",
+    "circuit-de-barcelona-catalunya",
+    "red-bull-ring",
+    "silverstone-circuit",
+    "circuit-de-spa-francorchamps",
+    "hungaroring",
+    "circuit-zandvoort",
+    "monza-circuit",
+    "madring",
+    "baku-city-circuit",
+    "sepang-international-circuit",
+    "marina-bay-street-circuit",
+    "circuit-of-the-americas",
+    "autodromo-hermanos-rodriguez",
+    "interlagos-circuit",
+    "las-vegas-strip-circuit",
+    "lusail-international-circuit",
+    "yas-marina-circuit"
+   ]
+  },
+  {
+   "id": "motor-racing",
+   "needs": "circuit-surface",
+   "ids": [
+    "indianapolis-motor-speedway",
+    "circuit-de-la-sarthe",
+    "daytona-international-speedway",
+    "nurburgring",
+    "mount-panorama-circuit",
+    "talladega-superspeedway",
+    "bristol-motor-speedway",
+    "charlotte-motor-speedway",
+    "darlington-raceway",
+    "fuji-speedway",
+    "sebring-international-raceway",
+    "bahrain-international-circuit",
+    "jeddah-corniche-circuit",
+    "imola-circuit",
+    "mugello-circuit",
+    "misano-world-circuit",
+    "phillip-island-grand-prix-circuit",
+    "tt-circuit-assen",
+    "sachsenring",
+    "motegi-circuit",
+    "circuito-de-jerez",
+    "buriram-international-circuit",
+    "circuit-ricardo-tormo",
+    "motorland-aragon",
+    "mandalika-international-street-circuit",
+    "autodromo-internacional-do-algarve",
+    "balaton-park-circuit",
+    "brno-circuit",
+    "autodromo-internacional-ayrton-senna-goiania"
+   ]
+  }
+ ],
+ "venues": [
+  {
+   "id": "arthur-ashe-stadium",
+   "enwiki": "Arthur Ashe Stadium",
+   "city": "New York City",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "louis-armstrong-stadium",
+   "enwiki": "Louis Armstrong Stadium",
+   "city": "New York City",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "rod-laver-arena",
+   "enwiki": "Rod Laver Arena",
+   "city": "Melbourne",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "margaret-court-arena",
+   "enwiki": "Margaret Court Arena",
+   "city": "Melbourne",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "john-cain-arena",
+   "enwiki": "John Cain Arena",
+   "city": "Melbourne",
+   "sports": [
+    "tennis"
+   ],
+   "nameJa": "ジョン・ケイン・アリーナ"
+  },
+  {
+   "id": "court-philippe-chatrier",
+   "search": "Court Philippe-Chatrier",
+   "city": "Paris",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "court-suzanne-lenglen",
+   "search": "Court Suzanne-Lenglen",
+   "city": "Paris",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "centre-court",
+   "enwiki": "Centre Court",
+   "city": "London",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "no-1-court",
+   "enwiki": "No. 1 Court",
+   "city": "London",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "ariake-coliseum",
+   "enwiki": "Ariake Coliseum",
+   "city": "Tokyo",
+   "sports": [
+    "tennis"
+   ]
+  },
+  {
+   "id": "state-farm-stadium",
+   "enwiki": "State Farm Stadium",
+   "city": "Glendale",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Arizona Cardinals"
+   ]
+  },
+  {
+   "id": "mt-bank-stadium",
+   "enwiki": "M&T Bank Stadium",
+   "city": "Baltimore",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Baltimore Ravens"
+   ]
+  },
+  {
+   "id": "highmark-stadium",
+   "enwiki": "Highmark Stadium",
+   "city": "Orchard Park",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Buffalo Bills"
+   ],
+   "nameJa": "ハイマーク・スタジアム"
+  },
+  {
+   "id": "bank-of-america-stadium",
+   "enwiki": "Bank of America Stadium",
+   "city": "Charlotte",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Carolina Panthers"
+   ]
+  },
+  {
+   "id": "soldier-field",
+   "enwiki": "Soldier Field",
+   "city": "Chicago",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Chicago Bears"
+   ]
+  },
+  {
+   "id": "paycor-stadium",
+   "enwiki": "Paycor Stadium",
+   "city": "Cincinnati",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Cincinnati Bengals"
+   ]
+  },
+  {
+   "id": "huntington-bank-field",
+   "enwiki": "Huntington Bank Field",
+   "city": "Cleveland",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Cleveland Browns"
+   ],
+   "nameJa": "ハンティントン・バンク・フィールド"
+  },
+  {
+   "id": "empower-field-at-mile-high",
+   "enwiki": "Empower Field at Mile High",
+   "city": "Denver",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Denver Broncos"
+   ]
+  },
+  {
+   "id": "ford-field",
+   "enwiki": "Ford Field",
+   "city": "Detroit",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Detroit Lions"
+   ]
+  },
+  {
+   "id": "lambeau-field",
+   "enwiki": "Lambeau Field",
+   "city": "Green Bay",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Green Bay Packers"
+   ]
+  },
+  {
+   "id": "lucas-oil-stadium",
+   "enwiki": "Lucas Oil Stadium",
+   "city": "Indianapolis",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Indianapolis Colts"
+   ]
+  },
+  {
+   "id": "everbank-stadium",
+   "enwiki": "EverBank Stadium",
+   "city": "Jacksonville",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Jacksonville Jaguars"
+   ],
+   "nameJa": "エバーバンク・スタジアム"
+  },
+  {
+   "id": "allegiant-stadium",
+   "enwiki": "Allegiant Stadium",
+   "city": "Paradise",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Las Vegas Raiders"
+   ]
+  },
+  {
+   "id": "us-bank-stadium",
+   "enwiki": "U.S. Bank Stadium",
+   "city": "Minneapolis",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Minnesota Vikings"
+   ]
+  },
+  {
+   "id": "caesars-superdome",
+   "enwiki": "Caesars Superdome",
+   "city": "New Orleans",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "New Orleans Saints"
+   ]
+  },
+  {
+   "id": "acrisure-stadium",
+   "enwiki": "Acrisure Stadium",
+   "city": "Pittsburgh",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Pittsburgh Steelers"
+   ]
+  },
+  {
+   "id": "raymond-james-stadium",
+   "enwiki": "Raymond James Stadium",
+   "city": "Tampa",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Tampa Bay Buccaneers"
+   ]
+  },
+  {
+   "id": "nissan-stadium-nashville",
+   "enwiki": "Nissan Stadium (Nashville)",
+   "city": "Nashville",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Tennessee Titans"
+   ]
+  },
+  {
+   "id": "northwest-stadium",
+   "enwiki": "Northwest Stadium",
+   "city": "Landover",
+   "sports": [
+    "american-football"
+   ],
+   "league": "nfl",
+   "teams": [
+    "Washington Commanders"
+   ],
+   "nameJa": "ノースウェスト・スタジアム"
+  },
+  {
+   "id": "mcmahon-stadium",
+   "enwiki": "McMahon Stadium",
+   "city": "Calgary",
+   "sports": [
+    "canadian-football"
+   ],
+   "league": "cfl",
+   "teams": [
+    "Calgary Stampeders"
+   ]
+  },
+  {
+   "id": "commonwealth-stadium",
+   "enwiki": "Commonwealth Stadium",
+   "city": "Edmonton",
+   "sports": [
+    "canadian-football"
+   ],
+   "league": "cfl",
+   "teams": [
+    "Edmonton Elks"
+   ]
+  },
+  {
+   "id": "mosaic-stadium",
+   "enwiki": "Mosaic Stadium",
+   "city": "Regina",
+   "sports": [
+    "canadian-football"
+   ],
+   "league": "cfl",
+   "teams": [
+    "Saskatchewan Roughriders"
+   ],
+   "nameJa": "モザイク・スタジアム"
+  },
+  {
+   "id": "princess-auto-stadium",
+   "enwiki": "Princess Auto Stadium",
+   "city": "Winnipeg",
+   "sports": [
+    "canadian-football"
+   ],
+   "league": "cfl",
+   "teams": [
+    "Winnipeg Blue Bombers"
+   ],
+   "nameJa": "プリンセス・オート・スタジアム"
+  },
+  {
+   "id": "hamilton-stadium",
+   "enwiki": "Hamilton Stadium",
+   "city": "Hamilton",
+   "sports": [
+    "canadian-football"
+   ],
+   "league": "cfl",
+   "teams": [
+    "Hamilton Tiger-Cats"
+   ],
+   "nameJa": "ハミルトン・スタジアム"
+  },
+  {
+   "id": "td-place-stadium",
+   "enwiki": "TD Place Stadium",
+   "city": "Ottawa",
+   "sports": [
+    "canadian-football"
+   ],
+   "league": "cfl",
+   "teams": [
+    "Ottawa Redblacks"
+   ]
+  },
+  {
+   "id": "percival-molson-memorial-stadium",
+   "enwiki": "Percival Molson Memorial Stadium",
+   "city": "Montreal",
+   "sports": [
+    "canadian-football"
+   ],
+   "league": "cfl",
+   "teams": [
+    "Montreal Alouettes"
+   ],
+   "nameJa": "パーシバル・モルソン・メモリアル・スタジアム"
+  },
+  {
+   "id": "lords",
+   "enwiki": "Lord's",
+   "city": "London",
+   "sports": [
+    "cricket"
+   ]
+  },
+  {
+   "id": "melbourne-cricket-ground",
+   "enwiki": "Melbourne Cricket Ground",
+   "city": "Melbourne",
+   "sports": [
+    "cricket",
+    "australian-football"
+   ]
+  },
+  {
+   "id": "eden-gardens",
+   "enwiki": "Eden Gardens",
+   "city": "Kolkata",
+   "sports": [
+    "cricket"
+   ]
+  },
+  {
+   "id": "narendra-modi-stadium",
+   "enwiki": "Narendra Modi Stadium",
+   "city": "Ahmedabad",
+   "sports": [
+    "cricket"
+   ]
+  },
+  {
+   "id": "the-oval",
+   "enwiki": "The Oval",
+   "city": "London",
+   "sports": [
+    "cricket"
+   ]
+  },
+  {
+   "id": "wankhede-stadium",
+   "enwiki": "Wankhede Stadium",
+   "city": "Mumbai",
+   "sports": [
+    "cricket"
+   ]
+  },
+  {
+   "id": "sydney-cricket-ground",
+   "enwiki": "Sydney Cricket Ground",
+   "city": "Sydney",
+   "sports": [
+    "cricket",
+    "australian-football"
+   ]
+  },
+  {
+   "id": "adelaide-oval",
+   "enwiki": "Adelaide Oval",
+   "city": "Adelaide",
+   "sports": [
+    "cricket",
+    "australian-football"
+   ]
+  },
+  {
+   "id": "newlands-cricket-ground",
+   "enwiki": "Newlands Cricket Ground",
+   "city": "Cape Town",
+   "sports": [
+    "cricket"
+   ]
+  },
+  {
+   "id": "old-trafford-cricket-ground",
+   "enwiki": "Old Trafford Cricket Ground",
+   "city": "Manchester",
+   "sports": [
+    "cricket"
+   ]
+  },
+  {
+   "id": "twickenham-stadium",
+   "enwiki": "Twickenham Stadium",
+   "city": "London",
+   "sports": [
+    "rugby"
+   ]
+  },
+  {
+   "id": "eden-park",
+   "enwiki": "Eden Park",
+   "city": "Auckland",
+   "sports": [
+    "rugby",
+    "cricket"
+   ]
+  },
+  {
+   "id": "millennium-stadium",
+   "enwiki": "Millennium Stadium",
+   "city": "Cardiff",
+   "sports": [
+    "rugby"
+   ]
+  },
+  {
+   "id": "murrayfield-stadium",
+   "enwiki": "Murrayfield Stadium",
+   "city": "Edinburgh",
+   "sports": [
+    "rugby"
+   ],
+   "nameJa": "マレーフィールド・スタジアム"
+  },
+  {
+   "id": "aviva-stadium",
+   "enwiki": "Aviva Stadium",
+   "city": "Dublin",
+   "sports": [
+    "rugby",
+    "soccer"
+   ]
+  },
+  {
+   "id": "ellis-park-stadium",
+   "enwiki": "Ellis Park Stadium",
+   "city": "Johannesburg",
+   "sports": [
+    "rugby"
+   ]
+  },
+  {
+   "id": "hanazono-rugby-stadium",
+   "enwiki": "Hanazono Rugby Stadium",
+   "city": "Higashiōsaka",
+   "sports": [
+    "rugby"
+   ]
+  },
+  {
+   "id": "chichibunomiya-rugby-stadium",
+   "enwiki": "Chichibunomiya Rugby Stadium",
+   "city": "Tokyo",
+   "sports": [
+    "rugby"
+   ]
+  },
+  {
+   "id": "croke-park",
+   "enwiki": "Croke Park",
+   "city": "Dublin",
+   "sports": [
+    "gaelic-games"
+   ]
+  },
+  {
+   "id": "optus-stadium",
+   "enwiki": "Perth Stadium",
+   "city": "Perth",
+   "sports": [
+    "australian-football",
+    "cricket"
+   ]
+  },
+  {
+   "id": "marvel-stadium",
+   "enwiki": "Docklands Stadium",
+   "city": "Melbourne",
+   "sports": [
+    "australian-football"
+   ]
+  },
+  {
+   "id": "the-gabba",
+   "enwiki": "The Gabba",
+   "city": "Brisbane",
+   "sports": [
+    "cricket",
+    "australian-football"
+   ],
+   "nameJa": "ザ・ガバ"
+  },
+  {
+   "id": "osaka-prefectural-gymnasium",
+   "enwiki": "Osaka Prefectural Gymnasium",
+   "city": "Osaka",
+   "sports": [
+    "budo"
+   ]
+  },
+  {
+   "id": "aichi-international-arena",
+   "enwiki": "Aichi International Arena",
+   "city": "Nagoya",
+   "sports": [
+    "budo"
+   ]
+  },
+  {
+   "id": "fukuoka-kokusai-center",
+   "city": "Fukuoka",
+   "sports": [
+    "budo"
+   ],
+   "search": "Fukuoka Kokusai Center"
+  },
+  {
+   "id": "beijing-national-stadium",
+   "enwiki": "Beijing National Stadium",
+   "city": "Beijing",
+   "sports": [
+    "athletics",
+    "soccer"
+   ]
+  },
+  {
+   "id": "london-stadium",
+   "enwiki": "London Stadium",
+   "city": "London",
+   "sports": [
+    "athletics",
+    "soccer"
+   ]
+  },
+  {
+   "id": "los-angeles-memorial-coliseum",
+   "enwiki": "Los Angeles Memorial Coliseum",
+   "city": "Los Angeles",
+   "sports": [
+    "athletics",
+    "american-football"
+   ]
+  },
+  {
+   "id": "athens-olympic-stadium",
+   "enwiki": "Olympic Stadium (Athens)",
+   "city": "Marousi",
+   "sports": [
+    "athletics",
+    "soccer"
+   ],
+   "nameJa": "アテネ・オリンピック・スタジアム"
+  },
+  {
+   "id": "estadi-olimpic-lluis-companys",
+   "enwiki": "Estadi Olímpic Lluís Companys",
+   "city": "Barcelona",
+   "sports": [
+    "athletics",
+    "soccer"
+   ]
+  },
+  {
+   "id": "hayward-field",
+   "enwiki": "Hayward Field",
+   "city": "Eugene",
+   "sports": [
+    "athletics"
+   ]
+  },
+  {
+   "id": "letzigrund",
+   "enwiki": "Letzigrund",
+   "city": "Zürich",
+   "sports": [
+    "athletics",
+    "soccer"
+   ],
+   "nameJa": "レッツィグルント"
+  },
+  {
+   "id": "bislett-stadium",
+   "enwiki": "Bislett Stadium",
+   "city": "Oslo",
+   "sports": [
+    "athletics"
+   ],
+   "nameJa": "ビスレット・スタジアム"
+  },
+  {
+   "id": "michigan-stadium",
+   "enwiki": "Michigan Stadium",
+   "city": "Ann Arbor",
+   "sports": [
+    "american-football"
+   ]
+  },
+  {
+   "id": "beaver-stadium",
+   "enwiki": "Beaver Stadium",
+   "city": "State College",
+   "sports": [
+    "american-football"
+   ]
+  },
+  {
+   "id": "ohio-stadium",
+   "enwiki": "Ohio Stadium",
+   "city": "Columbus",
+   "sports": [
+    "american-football"
+   ]
+  },
+  {
+   "id": "kyle-field",
+   "enwiki": "Kyle Field",
+   "city": "College Station",
+   "sports": [
+    "american-football"
+   ],
+   "nameJa": "カイル・フィールド"
+  },
+  {
+   "id": "neyland-stadium",
+   "enwiki": "Neyland Stadium",
+   "city": "Knoxville",
+   "sports": [
+    "american-football"
+   ]
+  },
+  {
+   "id": "tiger-stadium-lsu",
+   "enwiki": "Tiger Stadium (Louisiana)",
+   "city": "Baton Rouge",
+   "sports": [
+    "american-football"
+   ]
+  },
+  {
+   "id": "jamsil-baseball-stadium",
+   "enwiki": "Jamsil Baseball Stadium",
+   "city": "Seoul",
+   "sports": [
+    "baseball"
+   ],
+   "nameJa": "蚕室野球場"
+  },
+  {
+   "id": "gocheok-sky-dome",
+   "enwiki": "Gocheok Sky Dome",
+   "city": "Seoul",
+   "sports": [
+    "baseball"
+   ]
+  },
+  {
+   "id": "taipei-dome",
+   "enwiki": "Taipei Dome",
+   "city": "Taipei",
+   "sports": [
+    "baseball"
+   ]
+  },
+  {
+   "id": "estadio-latinoamericano",
+   "enwiki": "Estadio Latinoamericano",
+   "city": "Havana",
+   "sports": [
+    "baseball"
+   ]
+  },
+  {
+   "id": "thialf",
+   "enwiki": "Thialf",
+   "city": "Heerenveen",
+   "sports": [
+    "skating"
+   ]
+  },
+  {
+   "id": "olympic-oval-calgary",
+   "enwiki": "Olympic Oval",
+   "city": "Calgary",
+   "sports": [
+    "skating"
+   ],
+   "nameJa": "オリンピック・オーバル"
+  },
+  {
+   "id": "utah-olympic-oval",
+   "enwiki": "Utah Olympic Oval",
+   "city": "Kearns",
+   "sports": [
+    "skating"
+   ],
+   "nameJa": "ユタ・オリンピック・オーバル"
+  },
+  {
+   "id": "london-aquatics-centre",
+   "enwiki": "London Aquatics Centre",
+   "city": "London",
+   "sports": [
+    "swimming"
+   ],
+   "nameJa": "ロンドン・アクアティクス・センター"
+  },
+  {
+   "id": "beijing-national-aquatics-center",
+   "enwiki": "Water Cube",
+   "city": "Beijing",
+   "sports": [
+    "swimming",
+    "curling"
+   ]
+  },
+  {
+   "id": "tokyo-aquatics-centre",
+   "enwiki": "Tokyo Aquatics Centre",
+   "city": "Tokyo",
+   "sports": [
+    "swimming"
+   ]
+  },
+  {
+   "id": "duna-arena",
+   "search": "Danube Arena",
+   "city": "Budapest",
+   "sports": [
+    "swimming"
+   ]
+  },
+  {
+   "id": "mgm-grand-garden-arena",
+   "enwiki": "MGM Grand Garden Arena",
+   "city": "Paradise",
+   "sports": [
+    "boxing"
+   ]
+  },
+  {
+   "id": "maracanazinho",
+   "enwiki": "Ginásio do Maracanãzinho",
+   "city": "Rio de Janeiro",
+   "sports": [
+    "volleyball"
+   ]
+  },
+  {
+   "id": "istora-gelora-bung-karno",
+   "enwiki": "Istora Gelora Bung Karno",
+   "city": "Jakarta",
+   "sports": [
+    "badminton"
+   ],
+   "nameJa": "イストラ・ゲロラ・ブン・カルノ"
+  },
+  {
+   "id": "lanxess-arena",
+   "enwiki": "Lanxess Arena",
+   "city": "Cologne",
+   "sports": [
+    "handball",
+    "hockey"
+   ]
+  },
+  {
+   "id": "ariake-arena",
+   "enwiki": "Ariake Arena",
+   "city": "Tokyo",
+   "sports": [
+    "volleyball"
+   ]
+  },
+  {
+   "id": "albert-park-circuit",
+   "enwiki": "Albert Park Circuit",
+   "city": "Melbourne",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "shanghai-international-circuit",
+   "enwiki": "Shanghai International Circuit",
+   "city": "Shanghai",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "suzuka-circuit",
+   "enwiki": "Suzuka Circuit",
+   "city": "Suzuka",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "bahrain-international-circuit",
+   "enwiki": "Bahrain International Circuit",
+   "city": "Sakhir",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "jeddah-corniche-circuit",
+   "enwiki": "Jeddah Corniche Circuit",
+   "city": "Jeddah",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "miami-international-autodrome",
+   "enwiki": "Miami International Autodrome",
+   "city": "Miami Gardens",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "circuit-gilles-villeneuve",
+   "enwiki": "Circuit Gilles Villeneuve",
+   "city": "Montreal",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "circuit-de-monaco",
+   "enwiki": "Circuit de Monaco",
+   "city": "Monaco",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "circuit-de-barcelona-catalunya",
+   "enwiki": "Circuit de Barcelona-Catalunya",
+   "city": "Montmeló",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "red-bull-ring",
+   "enwiki": "Red Bull Ring",
+   "city": "Spielberg",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "silverstone-circuit",
+   "enwiki": "Silverstone Circuit",
+   "city": "Silverstone",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "circuit-de-spa-francorchamps",
+   "enwiki": "Circuit de Spa-Francorchamps",
+   "city": "Stavelot",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "hungaroring",
+   "enwiki": "Hungaroring",
+   "city": "Mogyoród",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "circuit-zandvoort",
+   "enwiki": "Circuit Zandvoort",
+   "city": "Zandvoort",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "monza-circuit",
+   "enwiki": "Monza Circuit",
+   "city": "Monza",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "madring",
+   "enwiki": "Madring",
+   "city": "Madrid",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "baku-city-circuit",
+   "enwiki": "Baku City Circuit",
+   "city": "Baku",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "marina-bay-street-circuit",
+   "enwiki": "Marina Bay Street Circuit",
+   "city": "Singapore",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "circuit-of-the-americas",
+   "enwiki": "Circuit of the Americas",
+   "city": "Austin",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "autodromo-hermanos-rodriguez",
+   "enwiki": "Autódromo Hermanos Rodríguez",
+   "city": "Mexico City",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "interlagos-circuit",
+   "enwiki": "Interlagos Circuit",
+   "city": "São Paulo",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "las-vegas-strip-circuit",
+   "enwiki": "Las Vegas Strip Circuit",
+   "city": "Paradise",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "lusail-international-circuit",
+   "enwiki": "Lusail International Circuit",
+   "city": "Lusail",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "sepang-international-circuit",
+   "enwiki": "Sepang International Circuit",
+   "city": "Sepang",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "yas-marina-circuit",
+   "enwiki": "Yas Marina Circuit",
+   "city": "Abu Dhabi",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "indianapolis-motor-speedway",
+   "enwiki": "Indianapolis Motor Speedway",
+   "city": "Speedway",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "circuit-de-la-sarthe",
+   "enwiki": "Circuit de la Sarthe",
+   "city": "Le Mans",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "daytona-international-speedway",
+   "enwiki": "Daytona International Speedway",
+   "city": "Daytona Beach",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "nurburgring",
+   "enwiki": "Nürburgring",
+   "city": "Nürburg",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "mount-panorama-circuit",
+   "enwiki": "Mount Panorama Circuit",
+   "city": "Bathurst",
+   "sports": [
+    "motor-racing"
+   ],
+   "nameJa": "マウント・パノラマ・サーキット"
+  },
+  {
+   "id": "talladega-superspeedway",
+   "enwiki": "Talladega Superspeedway",
+   "city": "Lincoln",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "bristol-motor-speedway",
+   "enwiki": "Bristol Motor Speedway",
+   "city": "Bristol",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "charlotte-motor-speedway",
+   "enwiki": "Charlotte Motor Speedway",
+   "city": "Concord",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "darlington-raceway",
+   "enwiki": "Darlington Raceway",
+   "city": "Darlington",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "fuji-speedway",
+   "enwiki": "Fuji Speedway",
+   "city": "Oyama",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "sebring-international-raceway",
+   "enwiki": "Sebring International Raceway",
+   "city": "Sebring",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "imola-circuit",
+   "enwiki": "Imola Circuit",
+   "city": "Imola",
+   "sports": [
+    "motor-racing"
+   ]
+  },
+  {
+   "id": "mugello-circuit",
+   "enwiki": "Mugello Circuit",
+   "city": "Scarperia e San Piero",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "phillip-island-grand-prix-circuit",
+   "enwiki": "Phillip Island Grand Prix Circuit",
+   "city": "Phillip Island",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "tt-circuit-assen",
+   "enwiki": "TT Circuit Assen",
+   "city": "Assen",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "sachsenring",
+   "enwiki": "Sachsenring",
+   "city": "Hohenstein-Ernstthal",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "motegi-circuit",
+   "enwiki": "Motegi Circuit",
+   "city": "Motegi",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "circuito-de-jerez",
+   "enwiki": "Circuito de Jerez",
+   "city": "Jerez de la Frontera",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "buriram-international-circuit",
+   "enwiki": "Buriram International Circuit",
+   "city": "Buriram",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true,
+   "nameJa": "ブリーラム・インターナショナル・サーキット"
+  },
+  {
+   "id": "circuit-ricardo-tormo",
+   "enwiki": "Circuit Ricardo Tormo",
+   "city": "Cheste",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "motorland-aragon",
+   "enwiki": "MotorLand Aragón",
+   "city": "Alcañiz",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "mandalika-international-street-circuit",
+   "enwiki": "Mandalika International Street Circuit",
+   "city": "Central Lombok",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "autodromo-internacional-do-algarve",
+   "enwiki": "Algarve International Circuit",
+   "city": "Portimão",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "balaton-park-circuit",
+   "enwiki": "Balaton Park Circuit",
+   "city": "Balatonfőkajár",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "brno-circuit",
+   "enwiki": "Brno Circuit",
+   "city": "Brno",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  },
+  {
+   "id": "misano-world-circuit",
+   "enwiki": "Misano World Circuit",
+   "city": "Misano Adriatico",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true,
+   "nameJa": "ミサノ・ワールド・サーキット"
+  },
+  {
+   "id": "autodromo-internacional-ayrton-senna-goiania",
+   "enwiki": "Autódromo Internacional Ayrton Senna (Goiânia)",
+   "city": "Goiânia",
+   "sports": [
+    "motor-racing"
+   ],
+   "motogp": true
+  }
+ ],
+ "words": {
+  "sports": {
+   "baseball": {
+    "en": "Baseball",
+    "ja": "野球",
+    "surface": "mlb"
+   },
+   "basketball": {
+    "en": "Basketball",
+    "ja": "バスケットボール",
+    "surface": "nba"
+   },
+   "hockey": {
+    "en": "Ice hockey",
+    "ja": "アイスホッケー",
+    "surface": "nhl"
+   },
+   "american-football": {
+    "en": "American football",
+    "ja": "アメリカンフットボール",
+    "surface": "nfl"
+   },
+   "canadian-football": {
+    "en": "Canadian football",
+    "ja": "カナディアンフットボール",
+    "surface": "cfl"
+   },
+   "soccer": {
+    "en": "Soccer",
+    "ja": "サッカー",
+    "surface": "soccer"
+   },
+   "cricket": {
+    "en": "Cricket",
+    "ja": "クリケット",
+    "surface": "cricket"
+   },
+   "rugby": {
+    "en": "Rugby",
+    "ja": "ラグビー",
+    "surface": "rugby"
+   },
+   "australian-football": {
+    "en": "Australian football",
+    "ja": "オーストラリアンフットボール",
+    "surface": "afl"
+   },
+   "gaelic-games": {
+    "en": "Gaelic games",
+    "ja": "ゲーリック・ゲームズ",
+    "surface": "gaelic"
+   },
+   "tennis": {
+    "en": "Tennis",
+    "ja": "テニス",
+    "surface": "tennis"
+   },
+   "budo": {
+    "en": "Budō and sumo",
+    "ja": "相撲・武道",
+    "surface": "judo"
+   },
+   "athletics": {
+    "en": "Athletics",
+    "ja": "陸上競技",
+    "surface": "athletics"
+   },
+   "swimming": {
+    "en": "Swimming",
+    "ja": "水泳",
+    "surface": "swimming"
+   },
+   "skating": {
+    "en": "Speed skating",
+    "ja": "スピードスケート",
+    "surface": "skating"
+   },
+   "curling": {
+    "en": "Curling",
+    "ja": "カーリング",
+    "surface": "curling"
+   },
+   "volleyball": {
+    "en": "Volleyball",
+    "ja": "バレーボール",
+    "surface": "volleyball"
+   },
+   "badminton": {
+    "en": "Badminton",
+    "ja": "バドミントン",
+    "surface": "badminton"
+   },
+   "handball": {
+    "en": "Handball",
+    "ja": "ハンドボール",
+    "surface": "handball"
+   },
+   "boxing": {
+    "en": "Boxing",
+    "ja": "ボクシング",
+    "surface": "boxing"
+   },
+   "motor-racing": {
+    "en": "Motor racing",
+    "ja": "モータースポーツ",
+    "surface": null
+   }
+  },
+  "groups": {
+   "nba": {
+    "en": "NBA arenas",
+    "ja": "NBAのアリーナ"
+   },
+   "mlb": {
+    "en": "MLB ballparks",
+    "ja": "MLBの球場"
+   },
+   "nfl": {
+    "en": "NFL stadiums",
+    "ja": "NFLのスタジアム"
+   },
+   "cfl": {
+    "en": "CFL stadiums",
+    "ja": "CFLのスタジアム"
+   },
+   "nhl": {
+    "en": "NHL arenas",
+    "ja": "NHLのアリーナ"
+   },
+   "tennis": {
+    "en": "Grand Slam and Tokyo show courts",
+    "ja": "四大大会と東京の主要コート"
+   },
+   "soccer": {
+    "en": "World soccer",
+    "ja": "世界のサッカー場"
+   },
+   "cricket": {
+    "en": "Cricket grounds",
+    "ja": "クリケット場"
+   },
+   "rugby": {
+    "en": "Rugby",
+    "ja": "ラグビー場"
+   },
+   "football-codes": {
+    "en": "Gaelic and Australian football",
+    "ja": "ゲーリックフットボールとオーストラリアンフットボール"
+   },
+   "budo-halls": {
+    "en": "Sumo and budō halls of Japan",
+    "ja": "日本の相撲・武道の会場"
+   },
+   "olympic": {
+    "en": "Olympic stadiums and athletics",
+    "ja": "オリンピックスタジアムと陸上競技場"
+   },
+   "college-football": {
+    "en": "College football",
+    "ja": "カレッジフットボール"
+   },
+   "baseball-world": {
+    "en": "Baseball around the world",
+    "ja": "世界の野球場"
+   },
+   "ice-and-water": {
+    "en": "Ovals and pools",
+    "ja": "スケートリンクとプール"
+   },
+   "indoor": {
+    "en": "Great indoor halls",
+    "ja": "名だたる屋内会場"
+   },
+   "f1": {
+    "en": "Formula One, the 2026 calendar",
+    "ja": "F1 2026年カレンダー"
+   },
+   "motor-racing": {
+    "en": "More great circuits",
+    "ja": "ほかの名サーキット"
+   }
+  }
+ },
+ "cityJa": {
+  "Auburn Hills": "オーバーンヒルズ",
+  "Balatonfőkajár": "バラトンフェーカヤール",
+  "Baltimore": "ボルチモア",
+  "Baton Rouge": "バトンルージュ",
+  "Beijing": "北京",
+  "Boston": "ボストン",
+  "Bridgeport": "ブリッジポート",
+  "Brooklyn": "ブルックリン",
+  "Buriram": "ブリーラム",
+  "Calgary": "カルガリー",
+  "Cape Town": "ケープタウン",
+  "Cheste": "チェステ",
+  "Chiba": "千葉",
+  "Cumberland": "カンバーランド",
+  "Daly City": "デイリーシティ",
+  "Daytona Beach": "デイトナビーチ",
+  "East Rutherford": "イーストラザフォード",
+  "Edinburgh": "エディンバラ",
+  "Elmont": "エルモント",
+  "Fort Wayne": "フォートウェイン",
+  "Frankfurt": "フランクフルト",
+  "Fukuoka": "福岡",
+  "Glasgow": "グラスゴー",
+  "Green Bay": "グリーンベイ",
+  "Guadalupe": "グアダルーペ",
+  "Guangzhou": "広州",
+  "Hiroshima": "広島",
+  "Imola": "イモラ",
+  "Jacksonville": "ジャクソンビル",
+  "Johannesburg": "ヨハネスブルク",
+  "Kansas City": "カンザスシティ",
+  "Kashima": "鹿嶋",
+  "Kawasaki": "川崎",
+  "Kitahiroshima": "北広島",
+  "Kobe": "神戸",
+  "Kyoto": "京都",
+  "Landover": "ランドーバー",
+  "Las Vegas": "ラスベガス",
+  "Liverpool": "リバプール",
+  "Melbourne": "メルボルン",
+  "Miami Gardens": "マイアミ・ガーデンズ",
+  "Misano Adriatico": "ミサノ・アドリアーティコ",
+  "Moline": "モリーン",
+  "Montmeló": "モンメロ",
+  "Nagoya": "名古屋",
+  "Nashville": "ナッシュビル",
+  "Nishinomiya": "西宮",
+  "Orchard Park": "オーチャードパーク",
+  "Osaka": "大阪",
+  "Ottawa": "オタワ",
+  "Phillip Island": "フィリップ島",
+  "Piscataway": "ピスカタウェイ",
+  "Providence": "プロビデンス",
+  "Quebec City": "ケベック",
+  "Richfield": "リッチフィールド",
+  "Rochester": "ロチェスター",
+  "Rosemont": "ローズモント",
+  "Saint Paul": "セントポール",
+  "Saitama": "さいたま",
+  "San Antonio": "サンアントニオ",
+  "San Diego": "サンディエゴ",
+  "Santa Clara": "サンタクララ",
+  "Santiago": "サンティアゴ",
+  "Sapporo": "札幌",
+  "Sendai": "仙台",
+  "Seoul": "ソウル",
+  "Sepang": "セパン",
+  "Shanghai": "上海",
+  "Sheboygan": "シボイガン",
+  "Singapore": "シンガポール",
+  "Solna": "ソルナ",
+  "St. Louis": "セントルイス",
+  "Stavelot": "スタブロ",
+  "Suzuka": "鈴鹿",
+  "Taipei": "台北",
+  "Tokorozawa": "所沢",
+  "Tokyo": "東京",
+  "Tulsa": "タルサ",
+  "Uncasville": "アンカスビル",
+  "Uniondale": "ユニオンデール",
+  "University Park": "ユニバーシティパーク",
+  "Washington": "ワシントン",
+  "Waterloo": "ウォータールー",
+  "West Sacramento": "ウェストサクラメント",
+  "West Springfield": "ウェストスプリングフィールド",
+  "Westmount": "ウェストマウント",
+  "White Plains": "ホワイトプレーンズ",
+  "Windsor": "ウィンザー",
+  "Yokohama": "横浜"
+ }
+}
