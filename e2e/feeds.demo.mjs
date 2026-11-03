@@ -1,3 +1,4 @@
+/* global DataTransfer, File, DragEvent, Storage, DOMException */
 // Bring your own feed, in the demo's game section: our made-up sample from the list, an address the reader gives (answered here by a made-up server, never a real one), a file, a paste, the plain words for a
 // refusal, and a live follow that asks again every 15 seconds only while the page is shown and stops when the game is over or the server says no.
 import { expect, test } from "@playwright/test";
@@ -171,5 +172,105 @@ test.describe("bring your own feed", () => {
     await expect(page.locator(`${at("feed-sources")} li`).first()).toContainText("サンプルフィード（架空）");
     await page.locator(at("feed-load")).click();
     await expect(status(page)).toHaveText("先にフィードのアドレスを入力するか、下の一覧から選んでください。");
+  });
+});
+
+/** Drop files on an element as a reader dragging them from Finder would: a synthetic drop event carrying the files. */
+const drop = (page, selector, files) =>
+  page.locator(selector).evaluate((el, list) => {
+    const data = new DataTransfer();
+    for (const f of list) data.items.add(new File([f.text], f.name, { type: "application/json" }));
+    el.dispatchEvent(new DragEvent("dragover", { bubbles: true, cancelable: true, dataTransfer: data }));
+    el.dispatchEvent(new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer: data }));
+  }, files);
+const kept = (page) => page.locator(`${at("feed-kept")} li`);
+
+test.describe("feed files dropped on the demo", () => {
+  test.use({ reducedMotion: "no-preference" });
+
+  test("plays the first, keeps every feed with its game, refuses what is not a feed in words, and keeps them after a reload", async ({ page }) => {
+    const errors = await toFeed(page);
+    await expect(page.locator(at("feed-kept-note"))).toContainText("Nothing kept yet");
+    await drop(page, at("feed"), [
+      { name: "2099020001.json", text: JSON.stringify(stub("OFF", 5)) },
+      { name: "notes.txt", text: "hello" },
+      { name: "made-up.json", text: JSON.stringify({ from: "nhl-api", frames: [{ t: 0, objects: [{ id: "puck", team: "puck", x: 0, y: 0 }] }, { t: 30, objects: [{ id: "puck", team: "puck", x: 50, y: 0 }] }], teams: { home: { abbr: "AAA" }, away: { abbr: "BBB" } } }) },
+    ]);
+    await expect(status(page)).toHaveText("Playing MTH – OWL: 4 events. Not a feed this page reads, so not kept: notes.txt.");
+    await expect(page.locator("#game-stage .ky-turn-replay")).toBeVisible();
+    await expect(kept(page)).toHaveCount(2);
+    await expect(kept(page).nth(1)).toContainText("MTH – OWL");
+    await expect(kept(page).nth(0)).toContainText("AAA – BBB");
+    await expect(page.locator(at("feed-kept-note"))).toHaveText(/^2 kept, \d+ KB in all, in this browser only\.$/);
+    // A drop on the view itself is taken too.
+    await drop(page, "#game-stage", [{ name: "again.json", text: JSON.stringify(stub("OFF", 3)) }]);
+    await expect(kept(page)).toHaveCount(3);
+    await page.reload();
+    await page.locator(at("feed")).scrollIntoViewIfNeeded();
+    await expect(kept(page)).toHaveCount(3);
+    await kept(page).filter({ hasText: "2099020001.json" }).getByRole("button", { name: /^Play/ }).click();
+    await expect(status(page)).toHaveText("Playing MTH – OWL: 4 events.");
+    expect(errors).toEqual([]);
+  });
+
+  test("refuses more than 200 files at once, in words, and reads none of them", async ({ page }) => {
+    await toFeed(page);
+    const files = Array.from({ length: 201 }, (_, i) => ({ name: `g${i}.json`, text: JSON.stringify(stub("OFF", 3)) }));
+    await drop(page, at("feed"), files);
+    await expect(status(page)).toHaveText("Drop or choose at most 200 files at once: this was 201. Nothing was read.");
+    await expect(kept(page)).toHaveCount(0);
+  });
+
+  test("reads a folder's worth one at a time: forty files dropped together are all kept, and the first plays", async ({ page }) => {
+    await toFeed(page);
+    const files = Array.from({ length: 40 }, (_, i) => ({ name: `2099020${String(i).padStart(3, "0")}.json`, text: JSON.stringify(stub("OFF", 3 + (i % 3))) }));
+    await drop(page, at("feed"), files);
+    await expect(kept(page)).toHaveCount(40);
+    await expect(status(page)).toHaveText("Playing MTH – OWL: 2 events.");
+    await expect(page.locator(at("feed-kept-note"))).toHaveText(/^40 kept, /);
+  });
+
+  test("removes one, and then all", async ({ page }) => {
+    await toFeed(page);
+    await drop(page, at("feed"), [{ name: "a.json", text: JSON.stringify(stub("OFF", 3)) }, { name: "b.json", text: JSON.stringify(stub("OFF", 4)) }]);
+    await expect(kept(page)).toHaveCount(2);
+    await kept(page).filter({ hasText: "a.json" }).getByRole("button", { name: /^Remove/ }).click();
+    await expect(kept(page)).toHaveCount(1);
+    await expect(status(page)).toHaveText("Removed a.json from this browser.");
+    await page.locator(at("feed-remove-all")).click();
+    await expect(kept(page)).toHaveCount(0);
+    await expect(page.locator(at("feed-remove-all"))).toBeHidden();
+    await page.reload();
+    await page.locator(at("feed")).scrollIntoViewIfNeeded();
+    await expect(page.locator(at("feed-kept-note"))).toContainText("Nothing kept yet");
+    expect(await page.evaluate(() => Object.keys(localStorage).filter((k) => k.startsWith("kyogijo.feed")))).toEqual(["kyogijo.feeds"]);
+  });
+
+  test("keeps the feeds past about 4 MB in all in IndexedDB, not localStorage, and still plays them after a reload", async ({ page }) => {
+    await toFeed(page);
+    // Made-up feeds made large by a long note: three of 1.6 MB.
+    const big = (n) => ({ name: `big-${n}.json`, text: JSON.stringify({ ...stub("OFF", 5), note: "x".repeat(1_600_000) }) });
+    await drop(page, at("feed"), [big(1), big(2), big(3)]);
+    await expect(kept(page)).toHaveCount(3);
+    const where = await page.evaluate(() => JSON.parse(localStorage.getItem("kyogijo.feeds")).map((f) => f.where).sort());
+    expect(where).toEqual(["db", "local", "local"]);
+    await page.reload();
+    await page.locator(at("feed")).scrollIntoViewIfNeeded();
+    await kept(page).filter({ hasText: "big-3.json" }).getByRole("button", { name: /^Play/ }).click();
+    await expect(status(page)).toHaveText("Playing MTH – OWL: 4 events.");
+  });
+
+  test("plays a dropped feed where the browser keeps nothing, and says it was not kept", async ({ page }) => {
+    await page.addInitScript(() => {
+      Storage.prototype.setItem = () => {
+        throw new DOMException("blocked", "SecurityError");
+      };
+      Object.defineProperty(window, "indexedDB", { get: () => undefined });
+    });
+    const errors = await toFeed(page);
+    await drop(page, at("feed"), [{ name: "a.json", text: JSON.stringify(stub("OFF", 3)) }]);
+    await expect(status(page)).toHaveText("Playing MTH – OWL: 2 events. This browser could not keep it (storage is off or full): it plays now only.");
+    await expect(kept(page)).toHaveCount(0);
+    expect(errors).toEqual([]);
   });
 });

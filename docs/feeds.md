@@ -7,7 +7,7 @@ A feed is a game as data: the places of the players and the ball over time, and 
 ## The rules we keep
 
 - **No server or proxy of ours.** An address is fetched by the reader's browser, with no cookie and no referrer, and nothing goes anywhere else.
-- **Nothing is kept.** No cache beyond the open page, no storage, nothing copied into the repository.
+- **Nothing leaves the browser.** The package keeps nothing: no cache beyond the open page, no storage, nothing copied into the repository. The demo keeps the feed files you drop or choose in your own browser, and nowhere else.
 - **Names come from the feed, at run time.** The package ships no league's or team's names, logos or marks; whatever the feed names is shown as text while the page is open.
 - **The terms are the source's.** A note beside the address field says so: you are responsible for following the terms of the source you enter.
 - **Tests use answers we made up**, never a real request.
@@ -115,3 +115,5 @@ live.stop();
 ![The Bring your own feed panel of the demo after a made-up NHL-style play-by-play was pasted and played: the address field with Play this feed and Follow live, the file and paste controls, the note on the source's terms, and the list of where to find a feed, our made-up sample first](./pictures/feed-panel-desk-light.webp)
 
 [Bring your own feed](https://johnmorrisdotca.github.io/kyogijo-stadiums/#feed), in the game section of the demo, takes an address (with **Follow live**), a file or a paste, and lists [where to find a feed](./where-to-find-a-feed.md) beside the field, our made-up sample first; **Use** fills the field.
+
+**Feed files from your computer**: drop one or more feed files on the panel or on the view (from Finder, a download folder or a synced Dropbox folder), or choose them; an NHL play-by-play file is read exactly as the public play-by-play answers it, and a kyogijo timeline as it is. The first good one plays; a file that is not a feed is refused by name. Every feed is kept in this browser and listed with its game, its file, its sport, the date and its size, with **Play**, **Remove** and **Remove all**, and the space they take; they are still there after a reload. They go in localStorage while they add up to about 4 MB, and in IndexedDB past that. A whole folder can be dropped from a folder of your own: the files are read one at a time while the panel says how far it is, up to 200 files at once and 200 MB kept in all; more is refused in words. The browser is written to only when a file is dropped, chosen or removed, never on a timer, and nothing leaves it; where the browser keeps nothing (a private window, storage turned off or full) a dropped feed still plays, and the panel says it was not kept.

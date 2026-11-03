@@ -670,11 +670,16 @@ const page = `<!doctype html>
             <button type="button" class="fam-button" id="feed-live" data-testid="feed-live" aria-pressed="false" data-say="feedLive"></button>
           </div>
           <div class="feed-row">
-            <button type="button" class="fam-button" id="feed-file-pick" data-testid="feed-file-pick" data-say="feedFile"></button><input type="file" id="feed-file" data-testid="feed-file" accept="application/json,.json" hidden>
+            <button type="button" class="fam-button" id="feed-file-pick" data-testid="feed-file-pick" data-say="feedFile"></button><input type="file" id="feed-file" data-testid="feed-file" accept="application/json,.json" multiple hidden>
+            <span class="feed-drop" data-say="feedDrop"></span>
           </div>
           <label class="feed-paste"><span data-say="feedPaste"></span><textarea id="feed-paste" data-testid="feed-paste" rows="3" spellcheck="false"></textarea></label>
           <div class="feed-row"><button type="button" class="fam-button" id="feed-paste-play" data-testid="feed-paste-play" data-say="feedPastePlay"></button></div>
           <p class="feed-status" id="feed-status" data-testid="feed-status" role="status"></p>
+          <h4 data-say="feedKeptTitle"></h4>
+          <p class="feed-note" id="feed-kept-note" data-testid="feed-kept-note"></p>
+          <ul class="feed-sources" id="feed-kept" data-testid="feed-kept"></ul>
+          <div class="feed-row"><button type="button" class="fam-button" id="feed-remove-all" data-testid="feed-remove-all" data-say="feedRemoveAll" hidden></button></div>
           <p class="feed-note" data-testid="feed-note" data-say="feedNote"></p>
           <h4 data-say="feedWhere"></h4>
           <ul class="feed-sources" id="feed-sources" data-testid="feed-sources"></ul>
