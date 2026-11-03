@@ -5,8 +5,8 @@
     "dataKB": 1200
   },
   "venues": {
-    "totalKB": 3180,
-    "totalGzipKB": 912,
+    "totalKB": 3185,
+    "totalGzipKB": 915,
     "dataKB": 610
   },
   "district:pair": {
@@ -55,7 +55,7 @@
     "dataKB": 70
   },
   "stadiums": {
-    "totalKB": 3157,
+    "totalKB": 3160,
     "totalGzipKB": 905,
     "dataKB": 610
   },
@@ -75,12 +75,12 @@
     "dataKB": 610
   },
   "judging": {
-    "totalKB": 3158,
+    "totalKB": 3160,
     "totalGzipKB": 908,
     "dataKB": 610
   },
   "circuits": {
-    "totalKB": 2290,
+    "totalKB": 2295,
     "totalGzipKB": 725,
     "dataKB": 70
   }
