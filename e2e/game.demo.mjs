@@ -110,7 +110,7 @@ test.describe("Play a game on the real arenas", () => {
     await page.locator(at("game")).click();
     await expect(page.locator("#stage .ky-turn-replay")).toBeVisible();
     await pause(page, "#stage");
-    await seek(page, "#stage", 120);
+    await seek(page, "#stage", 160);
     await expect(face).toHaveAttribute("data-score", "1-1");
     await expect(face).toHaveAttribute("data-period", "1");
     await page.locator(at("game")).click();

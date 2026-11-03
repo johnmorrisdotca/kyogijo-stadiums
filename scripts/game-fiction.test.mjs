@@ -18,6 +18,7 @@ const plays = [
   play(2, "00:45", "missed-shot", TEAM_A, 70, -12, "right"),
   play(3, "00:00", "faceoff", TEAM_A, 0, 0),
   play(3, "01:00", "goal", TEAM_A, 75, 2),
+  play(3, "01:00", "faceoff", TEAM_B, 0, 0),
   play(3, "02:00", "goal", TEAM_B, -80, 0),
   play(4, "01:00", "goal", TEAM_A, 80, 0),
 ].map((p, i) => ({ ...p, sortOrder: i }));
@@ -31,28 +32,46 @@ describe("the made-up game", () => {
     expect(JSON.stringify(fictionGame(pbp, { seed: 7 }))).not.toBe(JSON.stringify(game));
   });
 
-  it("has three periods and no overtime, each opening at centre ice, and the frames run forward", () => {
+  it("has three periods and no overtime, each opening with the players lined up and the puck dropped at centre ice, and the frames run forward", () => {
     expect(game.periods.map((p) => p.number)).toEqual([1, 2, 3]);
     const times = game.timeline.frames.map((f) => f.t);
     expect(times.every((t, i) => i === 0 || t > times[i - 1])).toBe(true);
     for (const p of game.periods) {
+      // Lined up, the puck not yet dropped: the clock reads the period's full time.
       const first = game.timeline.frames.find((f) => f.t === p.start);
-      expect(first.objects.find((o) => o.id === "puck")).toMatchObject({ x: 0, y: 0 });
+      expect(first.objects.find((o) => o.id === "puck")).toBeUndefined();
+      const drop = game.timeline.events.find((e) => e.kind === "faceoff" && e.t > p.start);
+      expect(drop).toMatchObject({ x: 0, y: 0 });
+      expect(game.timeline.stoppages.find((s) => s.start === p.start)).toMatchObject({ reason: "period-start", end: drop.t });
+      expect(game.timeline.frames.find((f) => f.t === drop.t).objects.find((o) => o.id === "puck")).toMatchObject({ x: 0, y: 0 });
     }
+  });
+
+  it("stops play at the goal and at the save, and starts it again on the rules' spot: centre after the goal, the end-zone spot after the save", () => {
+    const { events, stoppages } = game.timeline;
+    const goal = stoppages.find((s) => s.reason === "goal");
+    expect(goal).toMatchObject({ x: 0, y: 0 });
+    // The away side's last goal in the third is a save: play stops, and the face-off after it is in that end, not at centre.
+    const save = stoppages.filter((s) => s.reason === "save").at(-1);
+    expect(save).toBeDefined();
+    expect(Math.abs(save.x)).toBe(69);
+    for (const s of stoppages.filter((one) => !["period-start", "period-end"].includes(one.reason))) expect(events.some((e) => e.kind === "faceoff" && e.t === s.end)).toBe(true);
   });
 
   it("keeps the kinds of the events, turns the last goal of the away side into a save, and leaves the overtime out", () => {
     const kinds = new Set(game.timeline.events.map((e) => e.kind));
-    for (const kind of kinds) expect(["pass", "shot", "goal", "whistle"]).toContain(kind);
+    for (const kind of kinds) expect(["pass", "shot", "goal", "whistle", "faceoff"]).toContain(kind);
     // The play-by-play's away side is the made-up home side; its goals stand, the other side's last one is saved, and the overtime goal is gone.
     expect(game.score).toMatchObject({ home: 2, away: 0 });
     expect(game.timeline.events.filter((e) => e.kind === "goal").map((e) => e.team)).toEqual(["home", "home"]);
   });
 
-  it("puts five skaters and a goaltender of each side on the ice in every frame, with numbers from the invented rosters, on the rink", () => {
+  it("puts five skaters and a goaltender of each side on the ice in every frame, with numbers from the invented rosters, on the rink, and the puck while it is in play", () => {
     const numbers = new Set([...rosterOf("home"), ...rosterOf("away")].map((p) => p.id));
+    const dead = (t) => game.timeline.stoppages.some((s) => t >= s.start && t < s.end);
     for (const frame of game.timeline.frames) {
-      expect(frame.objects).toHaveLength(13);
+      expect(frame.objects.filter((o) => o.id !== "puck")).toHaveLength(12);
+      if (!dead(frame.t)) expect(frame.objects.some((o) => o.id === "puck")).toBe(true);
       for (const o of frame.objects) {
         if (o.id !== "puck") expect(numbers.has(o.id)).toBe(true);
         expect(Math.abs(o.x)).toBeLessThanOrEqual(97);

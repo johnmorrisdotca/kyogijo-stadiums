@@ -345,29 +345,36 @@ test.describe("the demo's game", () => {
     const shows = async () => [await face.getAttribute("data-score"), await face.getAttribute("data-period"), await face.getAttribute("data-clock")];
     // At 0:07 of the game: 0-0, the first period, and a clock that has started.
     await seek(7);
-    expect(await shows()).toEqual(["0-0", "1", "19:21"]);
+    expect(await shows()).toEqual(["0-0", "1", "19:28"]);
     const early = await face.innerHTML();
     expect(early).not.toBe(plain);
-    // Past the first goal (home, 1:25) and past the second (away, 1:51): the score follows at once.
-    await seek(90);
+    // Past the first goal (home, 1:59) and past the second (away, 2:31): the score follows at once.
+    await seek(130);
     expect((await shows())[0]).toBe("1-0");
     const after = await face.innerHTML();
     expect(after).not.toBe(early);
-    await seek(120);
+    await seek(160);
     expect((await shows())[0]).toBe("1-1");
+    // The stoppage after the first goal (1:59.57 to 2:08.06): the board's clock stands still from the goal to the drop, the game clock of the timeline.
+    for (const t of [120, 124, 128]) {
+      await seek(t);
+      expect(await shows()).toEqual(["1-0", "1", "12:00"]);
+    }
+    await seek(130);
+    expect(await shows()).toEqual(["1-0", "1", "11:47"]);
     // The second period, and the clock begins again; the third at its start.
-    await seek(300);
+    await seek(400);
     expect((await shows()).slice(1)).toEqual(["2", expect.any(String)]);
-    await seek(470);
+    await seek(700);
     expect((await shows())[1]).toBe("3");
     // Back before the goals: the score is what it was, and the drawing is the very one from before.
     await seek(7);
-    expect(await shows()).toEqual(["0-0", "1", "19:21"]);
+    expect(await shows()).toEqual(["0-0", "1", "19:28"]);
     expect(await face.innerHTML()).toBe(early);
-    await seek(90);
+    await seek(130);
     expect(await face.innerHTML()).toBe(after);
-    // Stepping to the next moment and pausing set it at once too: a step across the goal at 84.76.
-    await seek(84.5);
+    // Stepping to the next moment and pausing set it at once too: a step across the goal at 119.22.
+    await seek(119);
     expect((await shows())[0]).toBe("0-0");
     for (let i = 0; i < 8 && (await shows())[0] === "0-0"; i += 1) await page.locator("#feature-stage").getByRole("button", { name: "Next frame" }).click();
     expect((await shows())[0]).toBe("1-0");
