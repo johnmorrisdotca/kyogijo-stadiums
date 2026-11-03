@@ -2,6 +2,7 @@
 // tips it, a pinch or Ctrl and the wheel zoom, the arrow keys step it, four viewpoints and a reset are a button or a number key away, a reader who prefers
 // reduced motion gets jumps for glides, and where the browser cannot draw in 3D the flat drawing stays. Nothing is polled and nothing runs while the view is
 // still: the elements' `transform`s are written when the view changes, and a glide between viewpoints is a short run of animation frames.
+import { displayProbe, frameBatch, type DisplayProbe } from "./turn.frames.ts";
 import { drawKyogijo } from "./draw.ts";
 import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, viewScale, wheelTip, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
@@ -288,31 +289,14 @@ export function mountTurn<O>(
   let lastStamp: number | undefined;
   let lastPaint = 0;
   /** The display's own interval, measured once with nothing else going on: an idle loop of frames a moment after the mount (the lower decile of their intervals, so that a busy moment does not count). */
-  let probe: number | undefined;
+  let probe: DisplayProbe | undefined;
   let displayMs: number | undefined;
   const probeDisplay = (): void => {
     if (win === null || probe !== undefined || displayMs !== undefined) return;
-    const found: number[] = [];
-    let before: number | undefined;
-    const step = (stamp: number): void => {
-      probe = undefined;
-      if (!alive || win === null) return;
-      if (doc.hidden === true) {
-        // Hidden: start over when it can be seen.
-        found.length = 0;
-        before = undefined;
-        probe = win.setTimeout(() => (probe = win.requestAnimationFrame(step)), 400);
-        return;
-      }
-      if (before !== undefined) found.push(stamp - before);
-      before = stamp;
-      if (found.length < 24) probe = win.requestAnimationFrame(step);
-      else {
-        displayMs = [...found].sort((a, b) => a - b)[Math.floor(found.length * 0.1)];
-        governor?.display(displayMs);
-      }
-    };
-    probe = win.setTimeout(() => (probe = win.requestAnimationFrame(step)), 350);
+    probe = displayProbe(win, () => doc.hidden === true, (ms) => {
+      displayMs = ms;
+      governor?.display(ms);
+    });
   };
   const stopMeter = (): void => {
     if (meterFrame !== undefined) win?.cancelAnimationFrame(meterFrame);
@@ -508,29 +492,9 @@ export function mountTurn<O>(
   };
 
   // ---- One frame request a frame: the auto-turn and a replay on the view ask through this, and share one animation frame when both run. ----
-  const queued = new Map<number, FrameRequestCallback>();
-  let queueId = 0;
-  let pendingFrame = 0;
-  const requestFrame = (callback: FrameRequestCallback): number => {
-    queueId += 1;
-    queued.set(queueId, callback);
-    if (pendingFrame === 0 && win !== null) {
-      pendingFrame = win.requestAnimationFrame((stamp) => {
-        pendingFrame = 0;
-        const run = [...queued.values()];
-        queued.clear();
-        for (const one of run) one(stamp);
-      });
-    }
-    return queueId;
-  };
-  const cancelFrame = (id: number): void => {
-    queued.delete(id);
-    if (queued.size === 0 && pendingFrame !== 0) {
-      win?.cancelAnimationFrame(pendingFrame);
-      pendingFrame = 0;
-    }
-  };
+  const frames = frameBatch(win);
+  const requestFrame = (callback: FrameRequestCallback): number => frames.request(callback);
+  const cancelFrame = (id: number): void => frames.cancel(id);
 
   // ---- The auto-turn: a trophy case's slow turn. It runs only when asked, holds while the pointer holds the view, and does nothing while the page is hidden. ----
   const hidden = (): boolean => doc.hidden === true;
@@ -891,6 +855,9 @@ export function mountTurn<O>(
       stop();
       stopTick();
       stopMeter();
+      // Nothing of the view asks for a frame once it is gone: the display's measure, and every callback of the shared frame (one asked for in this same tick too).
+      probe?.stop();
+      frames.clear();
       seen?.disconnect();
       doc.removeEventListener("visibilitychange", onVisible);
       clearTimeout(spoken);

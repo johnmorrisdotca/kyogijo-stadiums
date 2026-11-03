@@ -402,6 +402,7 @@ src/
 ├── turn.markup.ts      a 3D view as markup: every element carries its place in one `matrix3d`, stacked far to near; the buttons
 ├── turn.style.ts       the 3D view's colours, light and dark, and its rules
 ├── turn.dom.ts         the 3D view in a page: the pointer, the touch, the wheel, the keys, the glide, the live region, and the flat fallback
+├── turn.frames.ts    the frames of a 3D view: one window frame shared by everything that moves (`frameBatch`) and the one-time measure of the display, each stopped at once with nothing left asking
 ├── turn.replay.ts      a replay on the 3D view, as data: the floor at a time and the players standing up as discs that face the eye
 ├── turn.replay.board.ts the scoreboard hung over a 3D view following a replay: its faces drawn again with the score and the clock, written when they change
 ├── turn.replay.dom.ts  a replay on the 3D view in a page: its controls under the view's, the floor's marks and the discs moved each frame
