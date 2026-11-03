@@ -380,7 +380,10 @@ test.describe("the demo's game", () => {
     expect(await face.innerHTML()).toBe(early);
     await seek(133);
     expect(await face.innerHTML()).toBe(after);
-    // Stepping to the next moment and pausing set it at once too: a step across the goal at 122.54.
+    // Stepping to the next moment and pausing set it at once too: a step across the goal at 122.54. The hero's game plays by itself, so it is paused first: playing on a slow machine, it could cross the
+    // goal between the seek and the first look.
+    const pauseButton = page.locator("#feature-stage .ky-turn-replay").getByRole("button", { name: "Pause" });
+    if ((await pauseButton.count()) > 0) await pauseButton.click();
     await seek(122.3);
     expect((await shows())[0]).toBe("0-0");
     for (let i = 0; i < 8 && (await shows())[0] === "0-0"; i += 1) await page.locator("#feature-stage").getByRole("button", { name: "Next frame" }).click();
