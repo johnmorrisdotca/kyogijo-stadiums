@@ -30,7 +30,7 @@ import {
   turnMarkup,
   uprightsFor,
 } from "./turn-entry.ts";
-import { nearest, wheelTip, wrap } from "./turn.camera.ts";
+import { nearest, STEP, WHEEL_GESTURE_MS, wheelZoom, wrap } from "./turn.camera.ts";
 import { facing, fadeOf } from "./turn.kit.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
 import type { Upright } from "./turn.kit.ts";
@@ -632,14 +632,21 @@ describe("the eye", () => {
     expect(nudge(nudge(v, "up", 4), "down", 4)).toEqual(v);
   });
 
-  it("the wheel tips as a drag does: the wheel up lifts the near edge like a drag up, the wheel down lowers it", () => {
-    const v = { yaw: 0, pitch: 50, zoom: 1 };
-    expect(wheelTip(v, -100).pitch).toBeGreaterThan(v.pitch);
-    expect(wheelTip(v, 100).pitch).toBeLessThan(v.pitch);
-    expect(Math.sign(wheelTip(v, -100).pitch - v.pitch)).toBe(Math.sign(drag(v, 0, -40).pitch - v.pitch));
-    expect(Math.sign(wheelTip(v, 100).pitch - v.pitch)).toBe(Math.sign(drag(v, 0, 40).pitch - v.pitch));
-    expect(wheelTip(v, 100).yaw).toBe(v.yaw);
-    expect(wheelTip(v, -100000).pitch).toBe(PITCH_MAX);
+  it("the wheel zooms about the middle and never tips or turns: up zooms in, down out, a notch about as much as the + key", () => {
+    const v = { yaw: 10, pitch: 50, zoom: 1 };
+    const up = wheelZoom(v, -100);
+    expect(up.zoom).toBeGreaterThan(1.15);
+    expect(up.zoom).toBeLessThan(STEP.zoom + 0.05);
+    expect(wheelZoom(v, 100).zoom).toBeLessThan(1);
+    expect(wheelZoom(up, 100).zoom).toBeCloseTo(1, 9);
+    expect([up.yaw, up.pitch]).toEqual([v.yaw, v.pitch]);
+    // Three lines (Firefox's notch) zoom about as much as 100 pixels; one step never more than twice; a pinch's small steps count for more.
+    expect(wheelZoom(v, -3, 1).zoom).toBeCloseTo(up.zoom, 1);
+    expect(wheelZoom(v, -100000).zoom).toBe(2);
+    expect(wheelZoom(v, -10, 0, true).zoom).toBeGreaterThan(wheelZoom(v, -10).zoom);
+    expect(wheelZoom(v, -100000, 0, true).zoom).toBe(ZOOM_MAX);
+    expect(wheelZoom(v, 100000, 0, true).zoom).toBe(ZOOM_MIN);
+    expect(WHEEL_GESTURE_MS).toBe(300);
   });
 
   it("turns with a drag and steps with a key: across turns it, up and down tips it, and a touch that only turns leaves the tip", () => {

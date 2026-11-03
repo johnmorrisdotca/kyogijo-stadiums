@@ -8,7 +8,7 @@ A surface drawn flat hides what stands on it: a net, a basket, a goal, the posts
 
 ## How it works
 
-The floor is the flat drawing itself, with its score and layers. It is tipped and turned by the mouse, a finger, the wheel or the keys, and each part that stands on it is one `matrix3d`. It is plain DOM and CSS: no canvas, no WebGL, no dependency. That means the 3D view prints, can be styled with your CSS, and costs no more than the flat drawing's elements.
+The floor is the flat drawing itself, with its score and layers. It is tipped and turned by the mouse, a finger or the keys, and zoomed by the wheel or a pinch, and each part that stands on it is one `matrix3d`. It is plain DOM and CSS: no canvas, no WebGL, no dependency. That means the 3D view prints, can be styled with your CSS, and costs no more than the flat drawing's elements.
 
 ## In a page
 

@@ -145,11 +145,19 @@ export function drag(view: TurnView, dx: number, dy: number, tilt = true, degree
   return clampView({ ...view, yaw: view.yaw - dx * degreesPerPixel, pitch: tilt ? view.pitch - dy * degreesPerPixel * 0.75 : view.pitch });
 }
 
+/** Wheel steps closer together than this, in milliseconds, are one turn of the wheel or one swipe (with its glide). */
+export const WHEEL_GESTURE_MS = 300;
+
 /**
- * The view after the wheel turns by `deltaY` (positive is down, as `WheelEvent.deltaY` says) while the view has focus: the wheel up tips the surface as a drag up does (the near edge goes up, the
- * front is lifted: the pitch rises) and the wheel down as a drag down does.
+ * The view after the wheel turns by `deltaY` (positive is down, as `WheelEvent.deltaY` says; `deltaMode` 1 is lines and 2 is pages): the wheel up zooms in and the wheel down zooms out,
+ * about the view's middle, as the pinch and the buttons do (the view has no pan). A trackpad's pinch (`pinch`: it arrives as Ctrl and the wheel) comes in small steps; a plain wheel's
+ * notch is about 100 pixels and zooms about 1.2 times, as the + key does, and one step of it never zooms more than twice either way.
  */
-export const wheelTip = (view: TurnView, deltaY: number): TurnView => clampView({ ...view, pitch: view.pitch - deltaY * 0.15 });
+export function wheelZoom(view: TurnView, deltaY: number, deltaMode = 0, pinch = false): TurnView {
+  const pixels = deltaMode === 1 ? deltaY * (pinch ? 5 : 33) : deltaMode === 2 ? deltaY * 800 : deltaY;
+  const factor = pinch ? Math.exp(clamp(-pixels * 0.01, -10, 10)) : clamp(Math.exp(-pixels * 0.002), 0.5, 2);
+  return clampView({ ...view, zoom: view.zoom * factor });
+}
 
 /** A box in the scene, in pixels from the scene's middle, the floor at `z0` and the highest thing at `z1`. */
 export interface Box3 {

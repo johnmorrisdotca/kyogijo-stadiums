@@ -99,7 +99,7 @@ test("turns by the keys: arrows turn and tip, plus and minus zoom, a number pick
   await expect(page.locator(`${STAGE} .ky-turn-live`)).toHaveText("Reset the view");
 });
 
-test("turns by a drag of the pointer, and a plain wheel leaves the page to scroll", async ({ page }) => {
+test("turns by a drag of the pointer, and Ctrl and the wheel zoom", async ({ page }) => {
   await open(page, "?sport=nhl&view=3d&lang=en&help=off");
   const view = page.locator(`${STAGE} .ky-turn-view`);
   await view.scrollIntoViewIfNeeded();
@@ -111,14 +111,6 @@ test("turns by a drag of the pointer, and a plain wheel leaves the page to scrol
   await page.mouse.up();
   expect(await floorMatrix(page)).not.toBe(before);
   await expect(turn(page)).toHaveAttribute("data-preset", "custom");
-  // Not focused: the wheel is the page's.
-  await page.evaluate(() => document.activeElement?.blur?.());
-  const stopped = await page.evaluate(() => {
-    const event = new window.WheelEvent("wheel", { deltaY: 120, bubbles: true, cancelable: true });
-    document.querySelector('[data-testid="stage"] .ky-turn-view').dispatchEvent(event);
-    return event.defaultPrevented;
-  });
-  expect(stopped).toBe(false);
   // Ctrl and the wheel is a zoom.
   const zoomed = await page.evaluate(() => {
     const event = new window.WheelEvent("wheel", { deltaY: -120, ctrlKey: true, bubbles: true, cancelable: true });
@@ -195,18 +187,62 @@ test("a drag up lifts the near edge toward the viewer (it goes up the screen) an
   expect(await nearBelow(page), "a drag down: the near edge comes down").toBeGreaterThan(up + 1);
 });
 
-test("the wheel over a focused view tips it as a drag does: the wheel up lifts the near edge, the wheel down lowers it", async ({ page }) => {
+test("the wheel over the view zooms it and never tips it, Shift and the wheel turns it, and elsewhere the page scrolls", async ({ page }) => {
   await open(page, "?sport=nhl&view=3d&lang=en&help=off&viewpoint=broadcast");
+  // Make the page taller than the window, so it has somewhere to scroll.
+  await page.evaluate(() => { document.body.style.minHeight = "400vh"; });
   const view = page.locator(`${STAGE} .ky-turn-view`);
-  await view.focus();
+  await view.scrollIntoViewIfNeeded();
   const box = await view.boundingBox();
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 3);
-  const start = await nearBelow(page);
+  const width = () => page.locator(`${STAGE} .ky-turn-floor`).evaluate((el) => el.getBoundingClientRect().width);
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  const top = await page.evaluate(() => window.scrollY);
+  const start = await width();
+  const tip = await nearBelow(page);
   await page.mouse.wheel(0, -100);
-  const up = await nearBelow(page);
-  expect(up, "the wheel up lifts the near edge, like a drag up").toBeLessThan(start - 1);
+  await expect.poll(width, { message: "the wheel up zooms in" }).toBeGreaterThan(start * 1.1);
+  expect(await page.evaluate(() => window.scrollY), "the page stays where it was").toBe(top);
+  const zoomed = await width();
+  expect(Math.abs((await nearBelow(page)) / zoomed - tip / start), "the wheel does not tip").toBeLessThan(0.02);
+  await page.mouse.wheel(0, 100);
+  await expect.poll(width, { message: "the wheel down zooms out" }).toBeLessThan(zoomed * 0.95);
+  // Shift and the wheel turns it.
+  const before = await floorMatrix(page);
+  await page.keyboard.down("Shift");
+  await page.mouse.wheel(0, 100);
+  await page.keyboard.up("Shift");
+  await expect.poll(() => floorMatrix(page)).not.toBe(before);
+  // With the pointer off the view, the wheel scrolls the page and leaves the view alone.
+  const off = await page.evaluate((stage) => {
+    const view = document.querySelector(`${stage} .ky-turn-view`);
+    for (let y = window.innerHeight - 4; y > 0; y -= 20) {
+      for (const x of [4, window.innerWidth / 2, window.innerWidth - 4]) {
+        const hit = document.elementFromPoint(x, y);
+        if (hit !== null && !view.contains(hit)) return { x, y };
+      }
+    }
+    return null;
+  }, STAGE);
+  expect(off).not.toBeNull();
+  await page.mouse.move(off.x, off.y);
+  const still = await floorMatrix(page);
   await page.mouse.wheel(0, 200);
-  expect(await nearBelow(page), "the wheel down lowers it, like a drag down").toBeGreaterThan(up + 1);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(top);
+  expect(await floorMatrix(page)).toBe(still);
+});
+
+test("a wheel at the end of the zoom scrolls the page, so the page is never trapped", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off");
+  const send = (deltaY) => page.evaluate((dy) => {
+    const event = new window.WheelEvent("wheel", { deltaY: dy, bubbles: true, cancelable: true });
+    document.querySelector('[data-testid="stage"] .ky-turn-view').dispatchEvent(event);
+    return event.defaultPrevented;
+  }, deltaY);
+  // Zoomed out as far as it goes (one big step at a time, each at least a gesture apart), a wheel down is the page's.
+  for (let i = 0; i < 4; i++) await page.locator(`${STAGE} .ky-turn-controls button[data-act="zoom-out"]`).click();
+  await page.waitForTimeout(400);
+  expect(await send(120), "zooming out at the least zoom scrolls the page").toBe(false);
+  expect(await send(-120), "zooming in is the view's").toBe(true);
 });
 
 test("an arrow up and the Tip the surface away button lift the near edge, as a drag up does", async ({ page }) => {

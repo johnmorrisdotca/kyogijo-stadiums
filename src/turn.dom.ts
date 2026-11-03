@@ -1,10 +1,10 @@
 // The 3D view in a page: `mountKyogijoTurn` writes the scene (`turn.markup.ts`) into a container and makes it turn, as the cube of kyuubu turns: a drag turns and
-// tips it, a pinch or Ctrl and the wheel zoom, the arrow keys step it, four viewpoints and a reset are a button or a number key away, a reader who prefers
+// tips it, the wheel or a pinch zooms, the arrow keys step it, four viewpoints and a reset are a button or a number key away, a reader who prefers
 // reduced motion gets jumps for glides, and where the browser cannot draw in 3D the flat drawing stays. Nothing is polled and nothing runs while the view is
 // still: the elements' `transform`s are written when the view changes, and a glide between viewpoints is a short run of animation frames.
 import { displayProbe, frameBatch, type DisplayProbe } from "./turn.frames.ts";
 import { drawKyogijo } from "./draw.ts";
-import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, viewScale, wheelTip, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
+import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, viewScale, wheelZoom, WHEEL_GESTURE_MS, ZOOM_MAX, ZOOM_MIN, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout, type Raster } from "./turn.markup.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
@@ -685,17 +685,30 @@ export function mountTurn<O>(
   stage.addEventListener("pointercancel", onUp);
   stage.addEventListener("dblclick", toOpening);
 
-  // ---- The wheel: Ctrl and the wheel (a pinch on a trackpad) zoom; with the view focused the wheel tips and turns it; otherwise the page scrolls as ever. ----
+  // ---- The wheel over the view zooms it, as a map does; with the pointer anywhere else the page scrolls. Ctrl or Command and the wheel (a pinch on a trackpad) zoom too. Shift and the
+  // wheel, or a sideways swipe, turn it. Tipping is a drag, the keys and the buttons. A wheel that starts while the zoom is already at its end that way goes on to scroll the page, so the page is
+  // never trapped; one that reaches the end part-way through stops there rather than flinging the page. ----
+  let wheelTaken = Number.NEGATIVE_INFINITY;
   const onWheel = (event: WheelEvent): void => {
-    if (event.ctrlKey) {
+    const pinch = event.ctrlKey || event.metaKey;
+    const now = Number.isFinite(event.timeStamp) ? event.timeStamp : 0;
+    const continuing = now >= wheelTaken && now - wheelTaken < WHEEL_GESTURE_MS;
+    if (!pinch && (event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY))) {
       event.preventDefault();
+      wheelTaken = now;
       grab();
-      view = clampView({ ...view, zoom: view.zoom * Math.exp(-event.deltaY * 0.01) });
-    } else if (doc.activeElement === stage) {
+      view = clampView({ ...view, yaw: view.yaw + (event.deltaX || event.deltaY) * 0.25 });
+    } else {
+      const next = wheelZoom(view, event.deltaY, event.deltaMode, pinch);
+      const atEnd = event.deltaY <= 0 ? view.zoom >= ZOOM_MAX : view.zoom <= ZOOM_MIN;
+      // Ctrl and the wheel is always the view's, or the browser would zoom the whole page.
+      if (!pinch && atEnd && !continuing) return;
       event.preventDefault();
+      wheelTaken = now;
+      if (next.zoom === view.zoom) return;
       grab();
-      view = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) ? clampView({ ...view, yaw: view.yaw + (event.deltaX || event.deltaY) * 0.25 }) : wheelTip(view, event.deltaY);
-    } else return;
+      view = next;
+    }
     shown = view;
     paint(shown);
     label();
