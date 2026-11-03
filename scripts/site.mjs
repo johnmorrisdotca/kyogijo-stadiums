@@ -14,6 +14,7 @@ import { buildDocs } from "./docs-pages.mjs";
 import { framesBlockHtml, framesFiles, galleryData, galleryPageHtml, libraryFrom } from "./docs-gallery.mjs";
 import { galleryIndexBlock, homeBlock } from "./docs-hub.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
+import { publishThumbnails, thumbnailHead } from "./family-thumbnail.mjs";
 import { iconLinks } from "./icon-links.mjs";
 import { firstPaintHead, sayEnglish } from "./first-paint.mjs";
 import { addModulePreloads } from "./module-preload.mjs";
@@ -218,6 +219,15 @@ const team = (role) => `<div class="team" data-role="${role}">
           <input class="fam-field logo-url" id="${role}-logo-url" data-testid="${role}-logo-url" data-say-label="logoUrl" data-say-placeholder="logoUrl" autocomplete="off" value="${escapeAttr(fieldValue[`${role}-logo-url`])}"${hid(`${role}-logo-url`)} />
         </div>`;
 
+/** What the family's card shows, for a reader who cannot see it (the README's top picture says the same). */
+const THUMBNAIL_ALT = "Kyogijo Stadiums: a ballpark, an NHL rink and an NBA court, each drawn to scale as SVG.";
+// The family's head lines for the card (og:image, twitter:image). Every page here keeps its own apple-touch-icon.png (icon-links.mjs, and the demo test holds
+// each page to its two icon files), so the family's apple-touch-icon line is left out; icon.png is still published beside the demo.
+const THUMBNAIL_HEAD = thumbnailHead(JSON.parse(readFileSync("package.json", "utf8")), { alt: THUMBNAIL_ALT })
+  .split("\n")
+  .filter((line) => !line.includes('rel="apple-touch-icon"'))
+  .join("\n");
+
 const page = `<!doctype html>
 <html lang="en">
   <head>
@@ -229,6 +239,7 @@ const page = `<!doctype html>
       ogDescription: "Fields, rinks, courts and ballparks drawn to scale as SVG, with the score on them: wide or tall, light or dark.",
     })}
     ${iconLinks("")}
+    ${THUMBNAIL_HEAD}
     ${firstPaintHead(id, { theme: true })}
     <link rel="stylesheet" href="family.css" />
     <link rel="stylesheet" href="kyogijo.css" />
@@ -675,6 +686,8 @@ const picture = atlasMapSvg({ places: PLACES, world: (await load("world-entry.js
 writeFileSync("site/atlas-map.svg", picture);
 writeFileSync("docs/atlas-map.svg", picture);
 writeFileSync("site/index.html", sayEnglish(page, WORDS.en));
+// The family's card, dark card and icon, at <site>/thumbnail.png, thumbnail-dark.png and icon.png.
+publishThumbnails(".", "site");
 writeFileSync("site/family-backgrounds.js", backgroundsModule());
 writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo Stadiums" }));

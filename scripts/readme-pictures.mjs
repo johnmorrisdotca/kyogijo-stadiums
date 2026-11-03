@@ -293,6 +293,28 @@ await takePictures({
       }, { name: "midnight", scheme }),
     },
   ],
+  // The family's thumbnail, dark thumbnail and icon (scripts/family-thumbnail.mjs): a ballpark beside a rink over a court, each drawn
+  // to scale by the package's own drawSurface on the demo's page (which carries their stylesheet); the icon is the ballpark alone.
+  thumbnail: {
+    url: address("sport=nhl&orientation=landscape"),
+    ready: READY,
+    target: "#thumbnail-stage",
+    icon: { target: "#thumbnail-icon" },
+    label: "Kyogijo Stadiums 競技場",
+    async prepare(page, { scheme }) {
+      await page.evaluate(async (theme) => {
+        const { drawSurface } = await import("/dist/index.js");
+        // Each drawing has its own id, so the ballpark drawn twice keeps its own patterns.
+        let drawn = 0;
+        const draw = (options, style) => drawSurface({ orientation: "landscape", theme, id: `thumbnail-${(drawn += 1)}`, ...options }).replace("<svg ", `<svg style="${style};display:block" `);
+        const rink = draw({ sport: "nhl" }, "width:520px;height:auto");
+        const stage = `<div id="thumbnail-stage" style="display:flex;gap:24px;align-items:center;padding:12px;width:max-content">${draw({ sport: "mlb", park: "hanshin-koshien-stadium" }, "height:540px;width:auto")}<div style="display:flex;flex-direction:column;gap:24px">${rink}${draw({ sport: "nba" }, "width:520px;height:auto")}</div></div>`;
+        const icon = `<div id="thumbnail-icon" style="padding:8px;width:max-content">${draw({ sport: "mlb", park: "hanshin-koshien-stadium" }, "height:540px;width:auto")}</div>`;
+        document.body.replaceChildren();
+        document.body.insertAdjacentHTML("beforeend", stage + icon);
+      }, scheme);
+    },
+  },
 });
 
 // The pictures that only a page of docs/ shows are taken with the rest and then moved to docs/pictures: docs/images holds the README's pictures (the family's lint counts every file there against the README's 2 MB, and wants each one used in the README),
