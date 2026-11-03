@@ -168,7 +168,7 @@ test.describe("bring your own feed", () => {
 
   test("speaks Japanese", async ({ page }) => {
     await toFeed(page, "?lang=ja&help=off");
-    await expect(page.locator(`${at("feed")} h3`)).toHaveText("自分のフィードを再生");
+    await expect(page.locator(`${at("feed")} h3`)).toHaveText("自分のフィードの再生");
     await expect(page.locator(`${at("feed-sources")} li`).first()).toContainText("サンプルフィード（架空）");
     await page.locator(at("feed-load")).click();
     await expect(status(page)).toHaveText("先にフィードのアドレスを入力するか、下の一覧から選んでください。");

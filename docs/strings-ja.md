@@ -2082,7 +2082,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `gamePlay` | Play a game | 試合を再生 |
 | `gamePlayTip` | Play {title} on this surface. Press again to take it away. | 「{title}」をこの競技面で再生します。もう一度押すと、元の表示に戻ります。 |
 | `soundButton` | Sound | サウンド |
-| `feedDrop` | or drop feed files here or on the view (several at once) | またはフィードのファイルをここかビューにドロップ（複数可） |
+| `feedDrop` | or drop feed files here or on the view (several at once) | またはフィードのファイルをここか競技面にドロップ（複数可） |
 | `feedKeptTitle` | Kept in this browser | このブラウザーに保存したフィード |
 | `feedTooMany` | Drop or choose at most {most} files at once: this was {count}. Nothing was read. | 一度にドロップまたは選択できるファイルは{most}件までです（今回は{count}件）。何も読み込んでいません。 |
 | `feedReadingOf` | Reading file {n} of {count}… | {count}件中{n}件目のファイルを読み込んでいます… |
@@ -2094,20 +2094,20 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `feedPlay` | Play | 再生 |
 | `feedRemove` | Remove | 削除 |
 | `feedRemoveAll` | Remove all | すべて削除 |
-| `feedRemoved` | Removed {name} from this browser. | {name} をこのブラウザーから削除しました。 |
+| `feedRemoved` | Removed {name} from this browser. | 「{name}」をこのブラウザーから削除しました。 |
 | `feedRemovedAll` | Removed every kept feed from this browser. | 保存したフィードをすべてこのブラウザーから削除しました。 |
 | `feedGone` | That feed is no longer kept in this browser. | そのフィードは、このブラウザーにはもう保存されていません。 |
-| `feedTitle` | Bring your own feed | 自分のフィードを再生 |
+| `feedTitle` | Bring your own feed | 自分のフィードの再生 |
 | `feedHome` | Home | ホーム |
 | `feedAway` | Away | アウェイ |
-| `feedText` | Play a real game from a feed: an address, a file or pasted text. Your browser fetches it and this page plays it here, flat or in 3D, with the score, the period and the clock on the arena's board. Nothing is sent to us; the files you drop or choose are kept in this browser only. | フィードを使って実際の試合を再生します。アドレス、ファイル、貼り付けたテキストのいずれかを指定してください。フィードは閲覧者のブラウザーが取得し、このページで平面表示または3D表示で再生します。アリーナのスコアボードにはスコア、ピリオド、試合時間が表示されます。当サイトに送信されるデータはありません。ドロップまたは選択したファイルは、このブラウザーにだけ保存されます。 |
+| `feedText` | Play a real game from a feed: an address, a file or pasted text. Your browser fetches it and this page plays it here, flat or in 3D, with the score, the period and the clock on the arena's board. Nothing is sent to us; the files you drop or choose are kept in this browser only. | フィードを使って、実際の試合を再生します。アドレス、ファイル、貼り付けたテキストのどれかで指定できます。お使いのブラウザーがフィードを取得し、このページで平面表示または3D表示で再生します。アリーナのスコアボードには、スコア、ピリオド、ゲームクロックが表示されます。データがkyogijoに送信されることはありません。ドロップまたは選択したファイルは、このブラウザーにだけ保存されます。 |
 | `feedUrl` | Feed address | フィードのアドレス |
 | `feedLoad` | Play this feed | このフィードを再生 |
 | `feedLive` | Follow live | ライブで追う |
-| `feedFile` | Choose a file… | ファイルを選択… |
+| `feedFile` | Choose a file… | ファイルを選ぶ… |
 | `feedPaste` | Or paste a feed (JSON) | またはフィード（JSON）を貼り付け |
 | `feedPastePlay` | Play the pasted feed | 貼り付けたフィードを再生 |
-| `feedNote` | You are responsible for the terms of the source you enter. Your browser fetches it directly; we run no server or relay, and nothing is sent to us. | 入力した提供元の利用規約の遵守は、閲覧者の責任です。フィードは閲覧者のブラウザーが直接取得します。当サイトはサーバーも中継サーバーも運用せず、データが送信されることもありません。 |
+| `feedNote` | You are responsible for the terms of the source you enter. Your browser fetches it directly; we run no server or relay, and nothing is sent to us. | 入力した提供元の利用条件を守る責任は、利用者にあります。フィードはお使いのブラウザーが直接取得します。kyogijoはサーバーも中継サーバーも運用しておらず、データは一切送信されません。 |
 | `feedWhere` | Where to find a feed | フィードの探し方 |
 | `feedUse` | Use | 使う |
 | `feedMayRefuse` | May refuse a page of another site (CORS): if so, save the answer and choose it as a file, or paste it. | ほかのサイトのページからの読み取りを拒否される場合があります（CORS）。その場合は、取得した内容を保存してファイルとして選ぶか、貼り付けてください。 |
@@ -2115,14 +2115,14 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `feedDocs` | The feed format and the code | フィードの形式とコード |
 | `feedGameNote` | A feed you chose: the names and results are the source's. | 選択したフィードです。名前や結果は提供元のデータによるものです。 |
 | `feedReading` | Reading the feed… | フィードを読み込んでいます… |
-| `feedPlayed` | Playing {home} – {away}: {events} events. | {home} 対 {away} を再生しています（イベント{events}件）。 |
-| `feedLiveShown` | Live: {home} – {away}, {events} events. Asked again every 15 seconds while this page is shown. | ライブ：{home} 対 {away}（イベント{events}件）。このページを表示している間、15秒ごとに再取得します。 |
+| `feedPlayed` | Playing {home} – {away}: {events} events. | {home} 対 {away} を再生しています（プレー{events}件）。 |
+| `feedLiveShown` | Live: {home} – {away}, {events} events. Asked again every 15 seconds while this page is shown. | ライブ：{home} 対 {away}（プレー{events}件）。このページを表示している間、15秒ごとに再取得します。 |
 | `feedLiveOff` | Stopped following. | ライブの更新を停止しました。 |
 | `feedLiveEnded` | The game is over: following stopped. | 試合が終了したため、ライブの更新を停止しました。 |
-| `feedLiveRefused` | The server asked us to stop (403 or 429): following stopped. | サーバーから停止を求められたため（403または429）、ライブの更新を停止しました。 |
+| `feedLiveRefused` | The server asked us to stop (403 or 429): following stopped. | サーバーに拒否されたため（403または429）、ライブの更新を停止しました。 |
 | `feedNoUrl` | Give a feed address first, or use one from the list below. | 先にフィードのアドレスを入力するか、下の一覧から選んでください。 |
 | `feedPasteEmpty` | Paste a feed first. | 先にフィードを貼り付けてください。 |
-| `feedCors` | Your browser could not read the answer: the server does not let a page of another site read it (CORS), or it could not be reached. Save the answer and choose it as a file, or paste it. | ブラウザーで応答を読み取れませんでした。サーバーがほかのサイトのページからの読み取りを許可していない（CORS）か、サーバーに接続できませんでした。取得した内容を保存してファイルとして選ぶか、貼り付けてください。 |
+| `feedCors` | Your browser could not read the answer: the server does not let a page of another site read it (CORS), or it could not be reached. Save the answer and choose it as a file, or paste it. | ブラウザーで応答を読み取れませんでした。サーバーがほかのサイトのページからの読み取りを許可していない（CORS）か、サーバーに接続できなかった可能性があります。取得した内容を保存してファイルとして選ぶか、貼り付けてください。 |
 | `feedHttp` | The server answered {status}. | サーバーが {status} を返しました。 |
 | `feedAddress` | That is not an address this page can read: give one that starts with https://. | このページで読み込めるアドレスではありません。https:// で始まるアドレスを入力してください。 |
 | `feedLarge` | The answer is larger than this page reads. | 応答が大きすぎて、このページでは読み込めません。 |

@@ -49,7 +49,7 @@
         "adapter": "kyogijo",
         "browser": "yes",
         "gives": { "en": "A whole made-up game in kyogijo's open timeline format: both sides, the players, the puck twice a second, the shots, goals and whistles, the stoppages and penalties, and the three periods.", "ja": "kyogijoのオープンなタイムライン形式で記述した、架空の1試合分です。両チーム、選手、0.5秒ごとのパックの位置、シュート、ゴール、笛、プレーの中断とペナルティ、3つのピリオドを含みます。" },
-        "id_help": { "en": "One game, at this address. It is served from this site, the same as any feed of your own would be.", "ja": "このアドレスにある1試合だけです。当サイトから配信していて、自分で用意したフィードと同じように読み込めます。" },
+        "id_help": { "en": "One game, at this address. It is served from this site, the same as any feed of your own would be.", "ja": "このアドレスにある1試合だけです。デモのサイトから配信していて、自分で用意したフィードと同じように読み込めます。" },
         "docs": "docs/example-games.md",
         "docs_name": { "en": "The example game", "ja": "サンプルの試合" },
         "terms": "https://github.com/johnmorrisdotca/kyogijo-stadiums/blob/main/LICENSE",
