@@ -1,7 +1,7 @@
 // The Atlas of the demo: the map with a marker on every place, the filters, the list, and the surface drawn for the chosen place.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, serve, tap } from "./demo.mjs";
+import { at, noSidewaysScroll, serve, tap, chosenSurface } from "./demo.mjs";
 
 /** Open the demo and wait until the atlas has drawn its markers; returns what the page complains of. */
 async function openAtlas(page, query = "?lang=en&help=off") {
@@ -144,13 +144,13 @@ test("an arena is drawn as a rink and a court, at its own size where an article 
   await expect(page.locator(at("atlas-detail"))).toContainText("Boston Bruins");
   // Boston Garden was the Celtics' too: the court is offered beside the rink.
   await tap(page, at("atlas-try-nba"), testInfo);
-  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveText("NBA");
+  await expect(chosenSurface(page)).toHaveAttribute("data-value", "nba");
   expect(new URL(page.url()).searchParams.get("arena")).toBe("boston-garden");
   await tap(page, `${at("atlas-list")} .atlas-item[data-id="td-garden"]`, testInfo);
   await expect(page.locator(at("atlas-detail"))).toContainText("the NHL's, 200 × 85 ft");
   await expect(page.locator(at("atlas-detail"))).toContainText("hockey");
   await tap(page, at("atlas-try"), testInfo);
-  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveText("NHL");
+  await expect(chosenSurface(page)).toHaveAttribute("data-value", "nhl");
   // The year picks the Boston Arena's ice and its name of the time.
   await page.locator(at("atlas-year-on")).click();
   await page.locator(at("atlas-year")).fill("1926");
@@ -224,7 +224,7 @@ test("the chosen place can be tried in the playground above", async ({ page }, t
   await tap(page, `${at("atlas-list")} .atlas-item[data-id="maracana"]`, testInfo);
   await tap(page, at("atlas-try"), testInfo);
   await expect(page.locator(at("ground"))).toHaveValue("maracana");
-  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveText("Soccer");
+  await expect(chosenSurface(page)).toHaveAttribute("data-value", "soccer");
   await tap(page, `${at("atlas-list")} .atlas-item[data-id="polo-grounds"]`, testInfo);
   await tap(page, at("atlas-try"), testInfo);
   await expect(page.locator(at("park"))).toHaveValue("polo-grounds");
@@ -282,9 +282,9 @@ test("a place lists the clubs that played in it, with their league and years, an
   // The place offers the CFL field as well as the soccer pitch; trying it opens the playground on that sport.
   await expect(page.locator(at("atlas-also"))).toContainText("CFL field");
   await tap(page, at("atlas-try-cfl"), testInfo);
-  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveAttribute("data-value", "cfl");
+  await expect(chosenSurface(page)).toHaveAttribute("data-value", "cfl");
   await tap(page, at("atlas-try"), testInfo);
-  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveAttribute("data-value", "soccer");
+  await expect(chosenSurface(page)).toHaveAttribute("data-value", "soccer");
   await expect(page.locator(at("ground"))).toHaveValue("bc-place");
   // A park of one club has no other surface to offer.
   await tap(page, `${at("atlas-list")} .atlas-item[data-id="oriole-park-at-camden-yards"]`, testInfo);
@@ -295,7 +295,7 @@ test("a place lists the clubs that played in it, with their league and years, an
   await expect(page.locator(at("atlas-also"))).toContainText("CFL field");
   await expect(page.locator(`${at("atlas-tenants")} li`).first()).toContainText("Montreal Expos");
   await tap(page, at("atlas-try-cfl"), testInfo);
-  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveAttribute("data-value", "cfl");
+  await expect(chosenSurface(page)).toHaveAttribute("data-value", "cfl");
   expect(errors).toEqual([]);
 });
 

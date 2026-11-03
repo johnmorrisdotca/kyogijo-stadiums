@@ -1585,6 +1585,19 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `sport_boxing` | Boxing ring | ボクシング |
 | `sport_wrestling` | Wrestling mat | レスリング |
 | `sport_prowrestling` | Pro wrestling ring | プロレス |
+| `surfaceKinds` | Kind of surface | 競技場の種類 |
+| `surfaceKind_field` | Field | フィールド |
+| `surfaceKind_court` | Court | コート |
+| `surfaceKind_ice` | Ice | アイスリンク |
+| `surfaceKind_pool` | Pool | プール |
+| `surfaceKind_track` | Track | 陸上競技場 |
+| `surfaceKind_budo` | Budō | 武道 |
+| `surfaceKind_ring` | Mat and ring | マット・リング |
+| `surfaceSport_football` | Gridiron football | アメリカンフットボール |
+| `surfaceSport_nhl` | Ice hockey | アイスホッケー |
+| `surfaceSport_nba` | Basketball | バスケットボール |
+| `surfaceVariant` | Rulebook | ルール |
+| `surfaceGame` | Has an example game | 再生できる架空の試合あり |
 | `pitchLabel` | Pitch | ピッチ |
 | `pitch_fifa` | International, 105 × 68 m | 国際標準 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |

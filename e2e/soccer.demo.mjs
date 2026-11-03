@@ -1,7 +1,7 @@
 // The soccer part of the demo: the pitch's controls, the pitches and the providers' pitches, and the converter between them.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, openGroups, svg } from "./demo.mjs";
+import { at, noSidewaysScroll, open, openGroups, svg, pickSurface } from "./demo.mjs";
 
 test("soccer shows its own controls, and the other sports hide them", async ({ page }) => {
   const errors = await open(page, "?sport=soccer&lang=en&help=off&orientation=landscape");
@@ -14,7 +14,7 @@ test("soccer shows its own controls, and the other sports hide them", async ({ p
   expect(await page.locator(`${at("pitch")} option`).count()).toBe(10);
   await expect(page.locator(at("ground"))).toBeVisible();
   expect(await page.locator(`${at("pitch-type")} option`).count()).toBe(11);
-  await page.locator(`${at("sport")} button[data-value="nhl"]`).click();
+  await pickSurface(page, "nhl");
   await expect(page.locator(at("pitch"))).toBeHidden();
   await expect(page.locator(at("ground"))).toBeHidden();
   await expect(page.locator("#soccer-group")).toBeHidden();

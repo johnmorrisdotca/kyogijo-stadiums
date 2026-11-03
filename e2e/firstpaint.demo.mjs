@@ -109,8 +109,12 @@ test.describe("with JavaScript off", () => {
     await expect(page.locator("details.group > summary").first()).toHaveText("Surface");
     await expect(page.locator("footer")).toContainText("Every dimension is from a rulebook");
     // The controls: every choice has its buttons, the one that is on is pressed, and the fields hold their values.
-    await expect(page.locator(`${at("sport")} button`)).toHaveCount(43);
-    await expect(page.locator(`${at("sport")} button[aria-pressed="true"]`)).toHaveText("NHL");
+    // The surface: its kind (the ice), that kind's three sports only, ice hockey chosen, and no row of a sport's own surfaces.
+    await expect(page.locator(`${at("surface-kinds")} [role="radio"]`)).toHaveCount(7);
+    await expect(page.locator(`${at("surface-kinds")} [aria-checked="true"]`)).toHaveText("Ice");
+    await expect(page.locator(`${at("surface-sports")} [role="radio"]:visible`)).toHaveText([/^Curling/, /^Ice hockey/, /^Ice skating/]);
+    await expect(page.locator(`${at("surface-sports")} [aria-checked="true"]`)).toHaveAttribute("data-value", "nhl");
+    await expect(page.locator(at("surface-variants"))).toBeHidden();
     await expect(page.locator(`${at("orientation")} button[aria-pressed="true"]`)).toHaveText("Fit the box");
     await expect(page.locator(`${at("size")} button[aria-pressed="true"]`)).toHaveText("On the surface");
     await expect(page.locator(at("away-name"))).toHaveValue("USA");

@@ -54,5 +54,21 @@ export async function tap(page, selector, testInfo) {
   else await target.click();
 }
 
+/**
+ * Choose a surface in the playground's picker as a reader does: its kind, then its sport, then (for a sport of several surfaces, such as the
+ * football fields) the surface itself. `testInfo` taps as a finger would on a touch screen.
+ */
+export async function pickSurface(page, sport, testInfo) {
+  const picker = page.locator(at("sport"));
+  const chip = picker.locator(`${at("surface-sports")} [data-surfaces~="${sport}"]`);
+  const press = (target) => (testInfo === undefined ? target.click() : tap(page, target, testInfo));
+  const kind = picker.locator(`${at("surface-kinds")} [data-kind="${await chip.getAttribute("data-kind")}"]`);
+  if ((await kind.getAttribute("aria-checked")) !== "true") await press(kind);
+  await press(chip);
+  if ((await chip.getAttribute("data-surfaces")).includes(" ")) await press(picker.locator(`${at("surface-variants")} [data-value="${sport}"]`));
+}
+/** The surface the picker has chosen: the sport's chip, or for a sport of several surfaces the surface's own in the row under it (its `data-value` is the key). */
+export const chosenSurface = (page) => page.locator(`${at("sport")} [role="radio"][aria-checked="true"][data-value]`);
+
 /** Open every group of controls (two are shut when the page opens). */
 export const openGroups = (page) => page.locator("details.group").evaluateAll((all) => all.forEach((d) => { d.open = true; }));

@@ -28,6 +28,7 @@ import { fenceAt } from "./dist/geometry-entry.js";
 import { FIELDS, MAX_SHOTS, SEGS, applyParams, budoFromSurface, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, urlPairs, usesEmblems, usesFlags, flagCodes } from "./model.js";
 import { WORDS } from "./words.js";
 import { replaceAddress } from "./address.js";
+import { mountSurfacePicker } from "./surface-kinds.js";
 
 // No box with the drawing's words over the mat when the pointer rests on it (the title stays, for screen readers).
 quietTitles();
@@ -122,12 +123,19 @@ function refreshSegs() {
       button.setAttribute("aria-pressed", String(seg.get() === button.dataset.value));
     }
   }
+  surfacePicker.paint();
   // Baseball says ビジター for the away team in Japanese; the other sports say アウェイ.
   document.querySelector('.team[data-role="away"] h3').textContent = say(state.sport === "mlb" ? "awayBaseball" : "away");
   applyRows();
 }
 
-makeSeg("sport", (v) => { state.sport = v; state.league = null; state.budoBase = null; loadGame(v); fillFields(); fillLeagues(); });
+// The surface: a kind, then its sports, then a sport's own surfaces (demo/surface-kinds.js); the address names the surface.
+const surfacePicker = mountSurfacePicker($("sport"), {
+  get: () => state.sport,
+  choose: (v) => { state.sport = v; state.league = null; state.budoBase = null; loadGame(v); fillFields(); fillLeagues(); refreshSegs(); change(); },
+  say,
+  lang: () => language.lang,
+});
 makeSeg("era", (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
 makeSeg("size", (v) => { state.size = v; });
 makeSeg("orientation", (v) => { state.orientation = v; });

@@ -2,7 +2,7 @@
 // the demo draws is blank.
 import { expect, test } from "@playwright/test";
 
-import { at, open, openGroups, svg, tap } from "./demo.mjs";
+import { at, open, openGroups, svg, tap, pickSurface } from "./demo.mjs";
 
 // A wide court is a strip on a phone, and a court has fewer parts than a ballpark or a pitch.
 const NET = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "athletics", "skating", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
@@ -52,7 +52,7 @@ for (const sport of SPORTS) {
 test("the sport buttons change the drawing, and the address follows", async ({ page }) => {
   await open(page, "?lang=en&help=off");
   for (const sport of SPORTS) {
-    await page.locator(`${at("sport")} button[data-value="${sport}"]`).click();
+    await pickSurface(page, sport);
     await expect(svg(page)).toHaveAttribute("data-sport", sport);
     expect(new URL(page.url()).searchParams.get("sport")).toBe(sport);
   }
@@ -76,9 +76,9 @@ test("the park picker appears for baseball only, and the court's looks for baske
   await open(page, "?sport=nhl&lang=en&help=off");
   await expect(page.locator("#park-row")).toBeHidden();
   await expect(page.locator("#court-group")).toBeHidden();
-  await page.locator(`${at("sport")} button[data-value="mlb"]`).click();
+  await pickSurface(page, "mlb");
   await expect(page.locator("#park-row")).toBeVisible();
-  await page.locator(`${at("sport")} button[data-value="nba"]`).click();
+  await pickSurface(page, "nba");
   await expect(page.locator("#court-group")).toBeHidden();
   await openGroups(page);
   await expect(page.locator("#court-group")).toBeVisible();
@@ -131,7 +131,7 @@ test("the crowd chip draws the stands on any sport, its slider sets how full the
   expect(packed).not.toContain("ky-cr-seat");
   expect(await page.locator(at("embed-code")).textContent()).toContain("crowd");
   // It is for every sport: the rink has stands too.
-  await page.locator(`${at("sport")} button[data-value="nhl"]`).click();
+  await pickSurface(page, "nhl");
   await expect(svg(page).locator("g.ky-crowd")).toHaveCount(1);
   await tap(page, chip, testInfo);
   await expect(svg(page).locator("g.ky-crowd")).toHaveCount(0);
@@ -164,7 +164,7 @@ test("the situation's controls are a finger wide, draw a power play, the lit bas
   await expect(svg(page).locator("g.ky-sit-strip")).toHaveCount(1);
   expect(new URL(page.url()).searchParams.get("sithockey")).toBe("shootout");
   // Baseball: the bases are chips, a finger wide, and the ones that are on are lit.
-  await page.locator(`${at("sport")} button[data-value="mlb"]`).click();
+  await pickSurface(page, "mlb");
   await expect(page.locator("#sit-baseball-row")).toBeVisible();
   await expect(svg(page).locator("path.ky-sit-lit")).toHaveCount(2);
   for (const id of ["sit-b1", "sit-b2", "sit-b3"]) await finger(page.locator(at(id)));
@@ -172,7 +172,7 @@ test("the situation's controls are a finger wide, draw a power play, the lit bas
   await expect(svg(page).locator("path.ky-sit-lit")).toHaveCount(3);
   await expect(svg(page).locator("g.ky-sit-bug")).toHaveCount(1);
   // Football: the line of scrimmage and the red zone follow the slider, a finger tall, and a drive chart is a chip.
-  await page.locator(`${at("sport")} button[data-value="nfl"]`).click();
+  await pickSurface(page, "nfl");
   await expect(page.locator("#sit-football-row")).toBeVisible();
   await expect(svg(page).locator("path.ky-sit-los")).toHaveCount(1);
   await expect(svg(page).locator("rect.ky-sit-red")).toHaveCount(1);
@@ -186,7 +186,7 @@ test("the situation's controls are a finger wide, draw a power play, the lit bas
   await expect(svg(page).locator("path.ky-sit-dr")).toHaveCount(3);
   for (const button of await page.locator(`${at("sit-down")} button, ${at("sit-togo")} button`).all()) await finger(button);
   // The sports that have none do not show the group, and the address can ask for a situation.
-  await page.locator(`${at("sport")} button[data-value="nba"]`).click();
+  await pickSurface(page, "nba");
   await expect(page.locator("#situation-group")).toBeHidden();
   await open(page, "?sport=mlb&lang=en&help=off&size=surface&situation=1&sitbases=111&sitouts=1&sitcount=1-1");
   await expect(svg(page).locator("path.ky-sit-lit")).toHaveCount(3);
@@ -239,7 +239,7 @@ test("the page speaks Japanese when asked, and the drawing with it", async ({ pa
   expect(await svg(page).locator("title").textContent()).toContain("試合終了");
   expect(await page.locator("#try-title").textContent()).toBe("試してみる");
   expect(await page.locator(`${at("away-name")}`).inputValue()).toBe("アメリカ");
-  await page.locator(`${at("sport")} button[data-value="mlb"]`).click();
+  await pickSurface(page, "mlb");
   await page.locator(at("park")).selectOption("tokyo-dome");
   expect(await svg(page).locator("desc").textContent()).toContain("東京ドーム");
   await page.locator('[data-lang="en"]').click();

@@ -1,7 +1,7 @@
 // The mowing pattern of the demo: a football field, a ballpark and a soccer pitch choose it, and the ballpark's diamonds (the crosshatch of an outfield) are drawn, kept in the address and in the code.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, openGroups } from "./demo.mjs";
+import { at, noSidewaysScroll, open, openGroups, pickSurface } from "./demo.mjs";
 
 test("a ballpark, a football field and a soccer pitch have the mowing choice, and a surface with no grass does not", async ({ page }) => {
   const errors = await open(page, "?sport=mlb&park=t-mobile-park&lang=en&help=off&orientation=landscape");
@@ -11,10 +11,10 @@ test("a ballpark, a football field and a soccer pitch have the mowing choice, an
   await expect(page.locator("#pattern button[data-value='diamonds']")).toHaveText("Diamonds");
   await expect(page.locator("#soccer-group")).toBeHidden();
   for (const sport of ["nfl", "soccer"]) {
-    await page.locator(`${at("sport")} button[data-value="${sport}"]`).click();
+    await pickSurface(page, sport);
     await expect(page.locator("#mow-group")).toBeVisible();
   }
-  await page.locator(`${at("sport")} button[data-value="nhl"]`).click();
+  await pickSurface(page, "nhl");
   await expect(page.locator("#mow-group")).toBeHidden();
 });
 

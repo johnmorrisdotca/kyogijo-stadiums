@@ -1,7 +1,7 @@
 // How the demo looks and holds still: no sideways scroll, finger-sized buttons, light and dark, tall and wide.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, openGroups, svg } from "./demo.mjs";
+import { at, noSidewaysScroll, open, openGroups, svg, pickSurface } from "./demo.mjs";
 
 const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "athletics", "skating", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "swimming", "waterpolo", "diving", "artisticswimming"];
 
@@ -71,7 +71,7 @@ test("every sport's surface differs from every other's", async ({ page }) => {
   await open(page, "?lang=en&help=off&orientation=landscape&size=surface");
   const shots = [];
   for (const sport of SPORTS) {
-    await page.locator(`${at("sport")} button[data-value="${sport}"]`).click();
+    await pickSurface(page, sport);
     await expect(svg(page)).toHaveAttribute("data-sport", sport);
     shots.push((await page.locator(at("stage")).screenshot()).toString("base64"));
   }
@@ -129,7 +129,7 @@ test("a curling sheet has its own choice of the top house, the bottom house or f
   await page.locator('[data-lang="ja"]').click();
   await expect(page.locator(`${at("sheet")} button`)).toHaveText(["シート全体", "上のハウス", "下のハウス", "折りたたみ"]);
   // Another sport has no such choice.
-  await page.locator(`${at("sport")} button[data-value="nhl"]`).click();
+  await pickSurface(page, "nhl");
   await expect(page.locator("#curling-group")).toBeHidden();
   expect(new URL(page.url()).searchParams.has("sheet")).toBe(false);
 });

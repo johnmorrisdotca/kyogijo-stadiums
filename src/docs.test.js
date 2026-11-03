@@ -239,8 +239,8 @@ describe("the package's own numbers", () => {
 
   it("have a help text for the demo's sport selector that names all the sports, in both languages", () => {
     const page = readFileSync("scripts/site.mjs", "utf8");
-    const line = page.split("\n").find((text) => text.includes('seg("sport", "sport"')) ?? "";
-    const en = ["football fields", "hockey rink", "basketball court", "baseball field", "soccer pitch", "curling sheet", "tennis", "volleyball", "badminton", "pickleball", "table tennis", "athletics", "ice skating", "padel", "squash", "racquetball", "sepak takraw", "teqball", "roundnet", "netball", "lacrosse", "rugby", "Australian football", "Gaelic", "cricket", "field hockey", "handball", "swimming", "water polo", "diving", "artistic swimming", "judo", "karate", "kendo", "sumo", "kyudo", "dojo", "mixed martial arts", "boxing", "wrestling", "professional wrestling"];
+    const line = page.split("\n").find((text) => text.includes("${surfacePicker(")) ?? "";
+    const en = ["football fields", "hockey rink", "basketball", "baseball", "soccer", "curling sheet", "tennis", "volleyball", "badminton", "pickleball", "table tennis", "athletics", "ice skating", "padel", "squash", "racquetball", "sepak takraw", "teqball", "roundnet", "netball", "lacrosse", "rugby", "Australian football", "Gaelic", "cricket", "field hockey", "handball", "swimming", "water polo", "diving", "artistic swimming", "judo", "karate", "kendo", "sumo", "kyudo", "dojo", "mixed martial arts", "boxing", "wrestling", "professional wrestling"];
     const ja = ["アメリカンフットボール", "アイスホッケー", "バスケットボール", "野球", "サッカー", "カーリング", "テニス", "バレーボール", "バドミントン", "ピックルボール", "パデル", "スカッシュ", "ラケットボール", "セパタクロー", "テックボール", "ラウンドネット", "ネットボール", "卓球", "陸上競技", "スケート", "ラクロス", "ラグビー", "オーストラリアンフットボール", "ゲーリック", "クリケット", "フィールドホッケー", "ハンドボール", "競泳", "水球", "飛込", "アーティスティックスイミング", "柔道", "空手", "剣道", "相撲", "弓道", "道場", "総合格闘技", "ボクシング", "レスリング", "プロレス"];
     for (const word of en) expect(line, word).toContain(word);
     for (const word of ja) expect(line, word).toContain(word);

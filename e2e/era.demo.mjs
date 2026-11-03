@@ -1,7 +1,7 @@
 // The season control: a surface as it was in a past season, with the markings the rules put on it then.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, svg } from "./demo.mjs";
+import { at, noSidewaysScroll, open, svg, pickSurface } from "./demo.mjs";
 
 const past = (page) => page.locator(`${at("era")} button[data-value="past"]`).click();
 const season = async (page, year) => {
@@ -14,9 +14,9 @@ test("the season control is for the sports that have a history, and starts on to
   await open(page, "?sport=nhl&lang=en&help=off");
   await expect(page.locator(at("era-year"))).toBeHidden();
   await expect(page.locator(`${at("era")} button[data-value="today"]`)).toHaveAttribute("aria-pressed", "true");
-  await page.locator(`${at("sport")} button[data-value="ifaf"]`).click();
+  await pickSurface(page, "ifaf");
   await expect(page.locator(at("era"))).toBeHidden();
-  await page.locator(`${at("sport")} button[data-value="nba"]`).click();
+  await pickSurface(page, "nba");
   await expect(page.locator(at("era"))).toBeVisible();
 });
 

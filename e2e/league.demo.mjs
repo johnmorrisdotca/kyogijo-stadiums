@@ -1,7 +1,7 @@
 // The league picker: a variant of each family, drawn from its own rulebook, and the address that follows it.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, svg } from "./demo.mjs";
+import { at, noSidewaysScroll, open, svg, pickSurface } from "./demo.mjs";
 
 const pick = (page, id) => page.locator(at("league")).selectOption(id);
 const width = (page) => svg(page).evaluate((n) => n.viewBox.baseVal.width);
@@ -10,7 +10,7 @@ test("the league row is for the sports that have leagues, and starts on the spor
   await open(page, "?sport=nba&lang=en&help=off&orientation=landscape");
   await expect(page.locator(at("league"))).toBeVisible();
   await expect(page.locator(at("league"))).toHaveValue("nba");
-  await page.locator(`${at("sport")} button[data-value="soccer"]`).click();
+  await pickSurface(page, "soccer");
   await expect(page.locator(at("league"))).toBeHidden();
 });
 

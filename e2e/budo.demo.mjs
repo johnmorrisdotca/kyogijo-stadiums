@@ -1,7 +1,7 @@
 // The budo in the playground: the six sports, the controls that belong to each (shown for one and hidden for the rest), the drawing that follows them, a finger-wide tap, and the Kodokan in the atlas.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, openGroups, svg, tap } from "./demo.mjs";
+import { at, noSidewaysScroll, open, openGroups, svg, tap, pickSurface, chosenSurface } from "./demo.mjs";
 
 const drawn = (page) => svg(page).evaluate((node) => node.outerHTML.length);
 
@@ -14,15 +14,15 @@ test("each budo sport shows its own controls and hides the others'", async ({ pa
   await expect(page.locator(at("budo-officials"))).toBeVisible();
   await expect(page.locator(at("dojo-jo"))).toBeHidden();
   await expect(page.locator(at("budo-tassels"))).toBeHidden();
-  await page.locator(`${at("sport")} button[data-value="dojo"]`).click();
+  await pickSurface(page, "dojo");
   await expect(page.locator(at("dojo-jo"))).toBeVisible();
   await expect(page.locator(at("dojo-shinzen"))).toBeVisible();
   await expect(page.locator(at("budo-areas"))).toBeHidden();
   await expect(page.locator(at("budo-hall"))).toBeHidden();
-  await page.locator(`${at("sport")} button[data-value="sumo"]`).click();
+  await pickSurface(page, "sumo");
   await expect(page.locator(at("budo-tassels"))).toBeVisible();
   await expect(page.locator(at("budo-look"))).toBeHidden();
-  await page.locator(`${at("sport")} button[data-value="kyudo"]`).click();
+  await pickSurface(page, "kyudo");
   await expect(page.locator(at("budo-chips"))).toBeHidden();
   expect(errors).toEqual([]);
 });
@@ -51,7 +51,7 @@ test("the Kodokan is on the atlas with its floors, and tries its main dojo in th
   await expect(page.locator(`${at("atlas-floors")} li`)).toHaveCount(6);
   await expect(page.locator(at("atlas-try-main-dojo-earlier"))).toBeVisible();
   await tap(page, at("atlas-try"), testInfo);
-  await expect(page.locator(`${at("sport")} button[data-value="dojo"]`)).toHaveAttribute("aria-pressed", "true");
+  await expect(chosenSurface(page)).toHaveAttribute("data-value", "dojo");
   expect(await svg(page).evaluate((node) => node.querySelectorAll(".ky-bud-banner").length)).toBe(1);
   expect(errors).toEqual([]);
 });

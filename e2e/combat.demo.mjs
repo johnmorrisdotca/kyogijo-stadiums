@@ -2,7 +2,7 @@
 // and its mesh fence.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, openGroups, svg, tap } from "./demo.mjs";
+import { at, noSidewaysScroll, open, openGroups, svg, tap, pickSurface } from "./demo.mjs";
 
 const drawn = (page) => svg(page).evaluate((node) => node.outerHTML.length);
 
@@ -15,7 +15,7 @@ test("the cage shows the look and the width, and hides the controls of the other
   await expect(page.locator(at("budo-hall"))).toBeHidden();
   await expect(page.locator(at("budo-tassels"))).toBeHidden();
   await expect(page.locator(at("dojo-jo"))).toBeHidden();
-  await page.locator(`${at("sport")} button[data-value="judo"]`).click();
+  await pickSurface(page, "judo");
   await expect(page.locator(at("cage-size"))).toBeHidden();
   await expect(page.locator(at("budo-areas"))).toBeVisible();
   expect(errors).toEqual([]);

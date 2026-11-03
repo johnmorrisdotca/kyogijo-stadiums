@@ -466,7 +466,6 @@ export const hiddenStatus = (sport, value) => (sport === "soccer" ? value === "f
 
 /** Every segmented choice: its element, the kind of words it takes, its values, and the one that is on. */
 export const SEGS = [
-  { id: "sport", kind: "sport", values: SPORTS, get: (s) => s.sport },
   { id: "era", kind: "era", values: ["today", "past"], get: (s) => (s.year === null ? "today" : "past") },
   { id: "size", kind: "size", values: SIZES, get: (s) => s.size },
   { id: "orientation", kind: "orientation", values: ORIENTATIONS, get: (s) => s.orientation },

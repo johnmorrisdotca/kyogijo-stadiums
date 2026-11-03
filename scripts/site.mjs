@@ -30,6 +30,8 @@ const seg = (name, label, en, ja) => {
   const buttons = values.map((value) => `<button type="button" data-value="${value}" aria-pressed="${get(first) === value}"${kind === "status" && model.hiddenStatus(first.sport, value) ? " hidden" : ""}>${escape(labels[kind](value))}</button>`).join("");
   return `<div class="setup fam-row" ${help(en, ja)}><span class="fam-label" data-say="${label}"></span><div class="fam-seg" role="group" data-say-label="${label}" id="${name}" data-testid="${name}">${buttons}</div></div>`;
 };
+/** The surface picker (demo/surface-kinds.js): a row of kinds, the sports of the kind, and a row of a sport's own surfaces, with the address's surface chosen by the first script. */
+const surfacePicker = (en, ja) => `<div class="setup fam-row sk-setup" ${help(en, ja)}><span class="fam-label" data-say="sport"></span>${pickerHtml(SPORTS, first.sport, say, GAME_SURFACES)}</div>`;
 const field = (name, label, attrs = "") => `<label class="setup fam-row"><span class="fam-label" data-say="${label}"></span><input class="fam-field" id="${name}" data-testid="${name}" data-say-label="${label}" autocomplete="off" ${attrs} value="${escapeAttr(fieldValue[name])}" /></label>`;
 /** A picker of ready-made emblems: a grid of tiles, each the emblem itself in the style that is on, named for a screen reader. `rowId` is the row that hides it. */
 const tiles = (name, rowId, label, en, ja) => {
@@ -89,6 +91,10 @@ const { emblemName, renderEmblem } = await here("emblems.js");
 await here("flags.js");
 const model = await here("model.js");
 const places = await here("place-grid.js");
+const { pickerHtml } = await here("surface-kinds.js");
+const { readIndex } = await here("game.js");
+// The surfaces that have an example game, from the same index the page fetches: the picker's marks are in the first view, and the page's script only checks them.
+const GAME_SURFACES = [...new Set(readIndex(JSON.parse(readFileSync("examples/games/index.json", "utf8"))).map((game) => game.sport))];
 const { FIELDS, SEGS, TOGGLES, SIZES } = model;
 const say = (key) => {
   if (!(key in WORDS.en)) throw new Error(`demo/words.js has no English word for "${key}"`);
@@ -191,7 +197,23 @@ const FIRST_SCRIPT = `(function () {
   var off = F.statuses[sport];
   if (off) Array.prototype.forEach.call($("status").children, function (button) { button.hidden = off.indexOf(button.dataset.value) >= 0; });
   var view = q.get("view") === "3d" ? "3d" : "flat";
-  [["sport", sport], ["size", size], ["orientation", way === "landscape" || way === "portrait" ? way : "auto"], ["view", view]].forEach(function (one) {
+  // The surface picker: the kind of the address's surface, its sports, and its chip (and the surface's own, for a group) checked.
+  var chip = $("surface-sports").querySelector('[data-surfaces~="' + sport + '"]');
+  var kind = chip.dataset.kind;
+  var group = chip.dataset.surfaces.indexOf(" ") >= 0 ? chip.dataset.chip : null;
+  var check = function (row, on) {
+    var stop = null;
+    Array.prototype.forEach.call(row.children, function (b) { var yes = !b.hidden && on(b); b.setAttribute("aria-checked", String(yes)); if (yes) stop = b; });
+    Array.prototype.forEach.call(row.children, function (b) { b.tabIndex = b === stop ? 0 : -1; });
+  };
+  Array.prototype.forEach.call($("surface-kinds").children, function (b) { b.dataset.current = String(b.dataset.kind === kind); });
+  check($("surface-kinds"), function (b) { return b.dataset.kind === kind; });
+  Array.prototype.forEach.call($("surface-sports").children, function (b) { b.hidden = b.dataset.kind !== kind; });
+  check($("surface-sports"), function (b) { return b === chip; });
+  Array.prototype.forEach.call($("surface-variants").children, function (b) { b.hidden = b.dataset.group !== group; });
+  $("surface-variants").hidden = group === null;
+  check($("surface-variants"), function (b) { return b.dataset.value === sport; });
+  [["size", size], ["orientation", way === "landscape" || way === "portrait" ? way : "auto"], ["view", view]].forEach(function (one) {
     Array.prototype.forEach.call($(one[0]).children, function (button) { button.setAttribute("aria-pressed", String(button.dataset.value === one[1])); });
   });
   stage.dataset.orientation = shape[1] ? "portrait" : "landscape";
@@ -276,7 +298,7 @@ const page = `<!doctype html>
           <div class="try-controls">
             <details class="fam-fold group" open>
               <summary data-say="groupSurface"></summary>
-              ${seg("sport", "sport", "Choose the surface: three football fields (NFL, CFL, IFAF), a hockey rink, a basketball court, a baseball field, a soccer pitch, a curling sheet, the court of tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet or netball, an athletics stadium, an ice skating rink, or the field of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball, or the pool of swimming, water polo, diving or artistic swimming, or the contest area of judo, karate, kendo, sumo or kyudo, a dojo, the eight-sided cage of mixed martial arts, the boxing ring, the wrestling mat, or the professional wrestling ring.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシート、テニス・バレーボール・バドミントン・ピックルボール・パデル・スカッシュ・ラケットボール・セパタクロー・テックボール・ラウンドネット・ネットボールのコート、卓球台、陸上競技場、スケートリンクのほか、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーのフィールド、ハンドボールのコート、競泳・水球・飛込・アーティスティックスイミングのプール、柔道・空手・剣道の試合場、相撲の土俵、弓道場、道場、総合格闘技のケージ、ボクシングのリング、レスリングのマット、プロレスのリングから選べます。")}
+              ${surfacePicker("Choose the kind of surface, then the sport. Field: gridiron football, baseball, soccer, lacrosse, rugby, Australian football, Gaelic games, cricket and field hockey. Court: basketball, tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet, netball and handball. Ice: the hockey rink, the curling sheet and ice skating. Pool: swimming, water polo, diving and artistic swimming. Track: the athletics stadium. Budō: judo, karate, kendo, sumo, kyudo and the dojo. Mat and ring: the cage of mixed martial arts, the boxing ring, the wrestling mat and the professional wrestling ring. The sports of each kind are in alphabetical order. Gridiron football has three football fields, the NFL's, the CFL's and the IFAF's, in the row under it. A play mark says the surface has a made-up game to play.", "競技場の種類を選び、続けて競技を選びます。フィールドは、アメリカンフットボール、野球、サッカー、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーです。コートは、バスケットボール、テニス、バレーボール、バドミントン、ピックルボール、卓球、パデル、スカッシュ、ラケットボール、セパタクロー、テックボール、ラウンドネット、ネットボール、ハンドボールです。アイスリンクは、アイスホッケー、カーリング、スケートです。プールは、競泳、水球、飛込、アーティスティックスイミングです。陸上競技場は、陸上競技のスタジアムです。武道は、柔道、空手、剣道、相撲、弓道、道場です。マット・リングは、総合格闘技のケージ、ボクシングのリング、レスリングのマット、プロレスのリングです。競技は種類ごとに五十音順に並びます。アメリカンフットボールは、NFL・CFL・IFAFの3つのフィールドを、すぐ下の段から選べます。再生マークの付いた競技場には、再生できる架空の試合があります。")}
               <div class="setup fam-row" id="league-row"${hid("league-row")} ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond; World Curling or Curling Canada for the sheet; beach volleyball for the volleyball court. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボール、カーリングのシートならワールドカーリングやカーリング・カナダ、バレーボールのコートならビーチバレーボールなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
                 <span class="fam-label" data-say="leagueLabel"></span>
                 <select class="fam-field" id="league" data-testid="league" data-say-label="leagueLabel"></select>

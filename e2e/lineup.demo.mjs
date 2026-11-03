@@ -1,7 +1,7 @@
 // The address holds every control and restores it; the link button copies it; a click drops a point and reads its place; a lineup is a layer; the pages have an icon file.
 import { expect, test } from "@playwright/test";
 
-import { at, open, openGroups, serve, svg, tap } from "./demo.mjs";
+import { at, open, openGroups, serve, svg, tap, pickSurface } from "./demo.mjs";
 
 const query = (page) => new URL(page.url()).searchParams;
 
@@ -62,7 +62,7 @@ test("a lineup is a layer of each side, and has no row where the sport has none"
   await expect(page.locator(`${at("stage")} svg.kyogijo`)).toContainText("Lineup in 4-2-3-1");
   await openGroups(page);
   await expect(page.locator("#lineup-group")).toBeVisible();
-  await tap(page, `${at("sport")} button[data-value="curling"]`, testInfo);
+  await pickSurface(page, "curling", testInfo);
   await expect(page.locator("#lineup-group")).toBeHidden();
   await expect(page.locator(`${at("stage")} svg g[data-kind="lineup"]`)).toHaveCount(0);
 });
