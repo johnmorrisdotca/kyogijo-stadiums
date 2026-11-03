@@ -3,7 +3,7 @@
 // and a name is only ever text. Nothing here fetches: `feeds.fetch.ts` is the page's side.
 import { FEED_LIMITS, FeedError, feedText, type FeedFormat, type FeedGame, type FeedPlayer, type FeedSide } from "./feeds.core.ts";
 import { nhlPlayByPlay } from "./feeds.nhl.ts";
-import type { ReplayEvent, ReplayFrame, ReplayObject, ReplayPeriod, ReplayTeam, ReplayTimeline } from "./replay.types.ts";
+import type { ReplayEvent, ReplayFrame, ReplayObject, ReplayPenalty, ReplayPeriod, ReplayStoppage, ReplayTeam, ReplayTimeline } from "./replay.types.ts";
 
 export { FEED_FORMATS, FEED_LIMITS, FeedError, feedText } from "./feeds.core.ts";
 export type { FeedFormat, FeedGame, FeedPlayer, FeedSide } from "./feeds.core.ts";
@@ -60,11 +60,37 @@ function periodOf(value: unknown): ReplayPeriod | undefined {
   return { start: value.start, end: value.end, ...(isNum(value.number) ? { number: value.number } : {}), ...(isNum(value.length) && value.length > 0 ? { length: value.length } : {}) };
 }
 
+/** A stoppage, checked: a start and an end no earlier than it, and its reason, the place of its restart and the side it was called against when they are of the right type. */
+function stoppageOf(value: unknown): ReplayStoppage | undefined {
+  if (!isObj(value) || !isNum(value.start) || !isNum(value.end) || value.end < value.start) return undefined;
+  const s: ReplayStoppage = { start: value.start, end: value.end };
+  const reason = feedText(value.reason, 24);
+  if (reason !== undefined) s.reason = reason;
+  if (isNum(value.x)) s.x = value.x;
+  if (isNum(value.y)) s.y = value.y;
+  if (value.team === "home" || value.team === "away") s.team = value.team;
+  return s;
+}
+
+/** A penalty, checked: a side, a start and its minutes on the game clock, and who serves it, when he leaves the box, its kind, whether his side plays short and whether a goal ended it, when they are of the right type. */
+function penaltyOf(value: unknown): ReplayPenalty | undefined {
+  if (!isObj(value) || (value.team !== "home" && value.team !== "away") || !isNum(value.start) || !isNum(value.minutes) || value.minutes <= 0) return undefined;
+  const p: ReplayPenalty = { team: value.team, start: value.start, minutes: value.minutes };
+  if (isNum(value.end) && value.end >= value.start) p.end = value.end;
+  const by = feedText(value.by, 40);
+  if (by !== undefined) p.by = by;
+  const kind = feedText(value.kind, 24);
+  if (kind !== undefined) p.kind = kind;
+  if (typeof value.short === "boolean") p.short = value.short;
+  if (value.endedBy === "goal") p.endedBy = "goal";
+  return p;
+}
+
 const FROM = /^[a-z0-9-]{1,32}$/;
 
 /**
- * Read kyogijo's own open timeline: a bare timeline (`{ frames, events?, periods?, teams?, from? }`) or a game file (`{ kind: "kyogijo-game", sport, teams, periods, timeline }`, as `examples/games` has them).
- * Every frame, object, event and period is checked; what is not of the format is left out, and a timeline with no frame is an error.
+ * Read kyogijo's own open timeline: a bare timeline (`{ frames, events?, periods?, stoppages?, penalties?, teams?, from? }`) or a game file (`{ kind: "kyogijo-game", sport, teams, periods, timeline }`, as
+ * `examples/games` has them). Every frame, object, event, period, stoppage and penalty is checked; what is not of the format is left out, and a timeline with no frame is an error.
  */
 export function kyogijoFeed(json: unknown): FeedGame {
   if (!isObj(json)) throw new FeedError("format", "not a kyogijo timeline: the answer is not a JSON object");
@@ -83,6 +109,14 @@ export function kyogijoFeed(json: unknown): FeedGame {
   const events = (Array.isArray(source.events) ? source.events.slice(0, FEED_LIMITS.events) : []).map(eventOf).filter((e): e is ReplayEvent => e !== undefined);
   const periodsIn = game ? json.periods : source.periods;
   const periods = (Array.isArray(periodsIn) ? periodsIn.slice(0, FEED_LIMITS.periods) : []).map(periodOf).filter((p): p is ReplayPeriod => p !== undefined);
+  const stoppages = (Array.isArray(source.stoppages) ? source.stoppages.slice(0, FEED_LIMITS.stoppages) : [])
+    .map(stoppageOf)
+    .filter((s): s is ReplayStoppage => s !== undefined)
+    .sort((a, b) => a.start - b.start);
+  const penalties = (Array.isArray(source.penalties) ? source.penalties.slice(0, FEED_LIMITS.penalties) : [])
+    .map(penaltyOf)
+    .filter((p): p is ReplayPenalty => p !== undefined)
+    .sort((a, b) => a.start - b.start);
   const teamsIn = game ? json.teams : source.teams;
   const home = isObj(teamsIn) ? sideOf(teamsIn.home) : undefined;
   const away = isObj(teamsIn) ? sideOf(teamsIn.away) : undefined;
@@ -92,6 +126,8 @@ export function kyogijoFeed(json: unknown): FeedGame {
     ...(typeof source.from === "string" && FROM.test(source.from) ? { from: source.from } : {}),
     ...(periods.length > 0 ? { periods } : {}),
     ...(source.clock === "up" || source.clock === "down" ? { clock: source.clock } : {}),
+    ...(stoppages.length > 0 ? { stoppages } : {}),
+    ...(penalties.length > 0 ? { penalties } : {}),
   };
   const players: Record<string, FeedPlayer> = {};
   const rosters = game && isObj(json.rosters) ? json.rosters : {};

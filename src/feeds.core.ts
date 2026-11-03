@@ -52,7 +52,7 @@ export class FeedError extends Error {
 }
 
 /** The most a feed may hold: more is cut off, so that a hostile or broken answer cannot hold the page. */
-export const FEED_LIMITS = { frames: 200_000, objects: 64, events: 50_000, periods: 20, text: 80 } as const;
+export const FEED_LIMITS = { frames: 200_000, objects: 64, events: 50_000, periods: 20, stoppages: 5_000, penalties: 1_000, text: 80 } as const;
 
 /** Text from a feed: a string, without control characters, cut to a length. */
 export const feedText = (value: unknown, most: number = FEED_LIMITS.text): string | undefined => {

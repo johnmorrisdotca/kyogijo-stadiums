@@ -69,9 +69,47 @@ describe("kyogijo's own open timeline", () => {
     expect(game.teams).toEqual({ home: { abbr: "AB<C>" }, away: {} });
   });
 
+  it("reads the stoppages and the penalties, in order, each checked, and leaves out what is not of the format", () => {
+    const frames = [{ t: 0, objects: [{ id: "puck", team: "puck", x: 0, y: 0 }] }];
+    const game = kyogijoFeed({
+      frames,
+      stoppages: [
+        { start: 40, end: 46, reason: "icing", x: 69, y: -22, team: "away" },
+        { start: 10, end: 16, reason: "goal\u0007", x: 0, y: 0, extra: "<script>" },
+        { start: 30, end: 20 },
+        { start: "50", end: 60 },
+        "whistle",
+        { start: 70, end: 71, x: "far", team: "visitors", reason: 5 },
+      ],
+      penalties: [
+        { team: "home", by: "c4", start: 50, end: 80, minutes: 2, kind: "minor", endedBy: "goal", short: true },
+        { team: "away", start: 20, minutes: 10, kind: "misconduct", short: false, end: 10, endedBy: "time" },
+        { team: "both", start: 5, minutes: 2 },
+        { team: "home", start: 5, minutes: 0 },
+        { team: "home", start: 5 },
+      ],
+    });
+    expect(game.timeline.stoppages).toEqual([
+      { start: 10, end: 16, reason: "goal", x: 0, y: 0 },
+      { start: 40, end: 46, reason: "icing", x: 69, y: -22, team: "away" },
+      { start: 70, end: 71 },
+    ]);
+    expect(game.timeline.penalties).toEqual([
+      { team: "away", start: 20, minutes: 10, kind: "misconduct", short: false },
+      { team: "home", by: "c4", start: 50, end: 80, minutes: 2, kind: "minor", endedBy: "goal", short: true },
+    ]);
+    expect(kyogijoFeed({ frames }).timeline).not.toHaveProperty("stoppages");
+    expect(kyogijoFeed({ frames, penalties: "none" }).timeline).not.toHaveProperty("penalties");
+  });
+
   it("caps every list, so that a hostile answer cannot hold the page", () => {
     const frames = Array.from({ length: 3 }, (_, t) => ({ t, objects: Array.from({ length: FEED_LIMITS.objects + 10 }, (_, i) => ({ id: `p${i}`, team: "home", x: i, y: 0 })) }));
     expect(kyogijoFeed({ frames }).timeline.frames[0].objects).toHaveLength(FEED_LIMITS.objects);
+    const many = Array.from({ length: FEED_LIMITS.stoppages + 10 }, (_, i) => ({ start: i, end: i + 0.5 }));
+    const calls = Array.from({ length: FEED_LIMITS.penalties + 10 }, (_, i) => ({ team: "home", start: i, minutes: 2 }));
+    const capped = kyogijoFeed({ frames, stoppages: many, penalties: calls }).timeline;
+    expect(capped.stoppages).toHaveLength(FEED_LIMITS.stoppages);
+    expect(capped.penalties).toHaveLength(FEED_LIMITS.penalties);
   });
 
   it("says what was wrong in plain words", () => {

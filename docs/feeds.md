@@ -14,7 +14,7 @@ A feed is a game as data: the places of the players and the ball over time, and 
 
 ## The open timeline
 
-kyogijo's own format is the [replay timeline](./replay.md#the-timeline), as JSON: `frames` (each a time `t` and its `objects`, every one an `id`, a `team` of `home`, `away`, `ball`, `puck` or `official`, and `x`, `y`), `events` (a `t`, a `kind` such as `pass`, `shot`, `goal` or `whistle`, a `team` and a place), and for a scoreboard `periods` (each a `number`, a `start`, an `end`, and a `length` on the board's clock when the replay is re-timed) and `clock` (`down`, the time left, or `up`, the time gone). The sides go in `teams` (`home` and `away`, each an `abbr`, a `name` and a `color`), which `readFeed` gives back as the game's `teams`. `from` names the frame the places are in (`nhl-api`, `opta`: [frames](./frames.md)). A game file, as the [example game](./example-games.md) is, wraps a timeline with its sides, rosters and periods (`kind: "kyogijo-game"`); both read.
+kyogijo's own format is the [replay timeline](./replay.md#the-timeline), as JSON: `frames` (each a time `t` and its `objects`, every one an `id`, a `team` of `home`, `away`, `ball`, `puck` or `official`, and `x`, `y`), `events` (a `t`, a `kind` such as `pass`, `shot`, `goal` or `whistle`, a `team` and a place), and for a scoreboard `periods` (each a `number`, a `start`, an `end`, and a `length` on the board's clock when the replay is re-timed) and `clock` (`down`, the time left, or `up`, the time gone). `stoppages` (each a `start`, an `end`, a `reason` and the place of the restart: the game clock stands still in each) and `penalties` (each a `team`, a `start`, its `minutes` and who serves it, `by`) are read as the replay has them ([stoppages](./replay.md#stoppages-the-clock-stops-the-players-line-up), [penalties](./replay.md#penalties-and-the-power-play)). The sides go in `teams` (`home` and `away`, each an `abbr`, a `name` and a `color`), which `readFeed` gives back as the game's `teams`. `from` names the frame the places are in (`nhl-api`, `opta`: [frames](./frames.md)). A game file, as the [example game](./example-games.md) is, wraps a timeline with its sides, rosters and periods (`kind: "kyogijo-game"`); both read.
 
 ```json
 {
@@ -26,7 +26,7 @@ kyogijo's own format is the [replay timeline](./replay.md#the-timeline), as JSON
 }
 ```
 
-Every value is checked as it is read: a frame without a time, an object without a place or of an unknown team, an event without a time is left out; text is only ever text, cut short; every list is capped (`FEED_LIMITS`), so that a broken or hostile answer cannot hold the page.
+Every value is checked as it is read: a frame without a time, an object without a place or of an unknown team, an event without a time, a stoppage that ends before it starts and a penalty without a side or its minutes are left out; text is only ever text, cut short; every list is capped (`FEED_LIMITS`), so that a broken or hostile answer cannot hold the page.
 
 ## Read a feed
 

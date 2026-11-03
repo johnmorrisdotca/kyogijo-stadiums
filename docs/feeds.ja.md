@@ -14,7 +14,7 @@
 
 ## オープンなタイムライン
 
-kyogijo独自の形式は、JSONで書いた[リプレイのタイムライン](./replay.md#the-timeline)です。`frames`（それぞれ時刻 `t` と `objects` を持ち、各オブジェクトは `id`、`home`・`away`・`ball`・`puck`・`official` のいずれかの `team`、`x` と `y` を持ちます）、`events`（`t`、`pass`・`shot`・`goal`・`whistle` などの `kind`、`team`、位置）、スコアボード用の `periods`（それぞれ `number`、`start`、`end`、そしてリプレイの時間を実際の試合時間と変えている場合に、スコアボードの時計で数えるピリオドの長さ `length`）と `clock`（残り時間を数える `down` か、経過時間を数える `up`）から成ります。両チームは `teams`（`home` と `away`、それぞれ `abbr`、`name`、`color`）に書き、`readFeed` はそれを試合の `teams` として返します。`from` は位置の座標系を指定します（`nhl-api`、`opta` など。[座標系](./frames.md)を参照）。[サンプルの試合](./example-games.md)のような試合ファイル（`kind: "kyogijo-game"`）は、タイムラインに両チーム、ロースター、ピリオドを加えたもので、どちらの形でも読み込めます。
+kyogijo独自の形式は、JSONで書いた[リプレイのタイムライン](./replay.md#the-timeline)です。`frames`（それぞれ時刻 `t` と `objects` を持ち、各オブジェクトは `id`、`home`・`away`・`ball`・`puck`・`official` のいずれかの `team`、`x` と `y` を持ちます）、`events`（`t`、`pass`・`shot`・`goal`・`whistle` などの `kind`、`team`、位置）、スコアボード用の `periods`（それぞれ `number`、`start`、`end`、そしてリプレイの時間を実際の試合時間と変えている場合に、スコアボードの時計で数えるピリオドの長さ `length`）と `clock`（残り時間を数える `down` か、経過時間を数える `up`）から成ります。`stoppages`（それぞれ `start`、`end`、`reason`、再開の位置。その間はゲームクロックが止まります）と `penalties`（それぞれ `team`、`start`、`minutes`、ペナルティを受けた選手の `by`）も、リプレイと同じ形で読み込みます（[プレーの中断](./replay.md#stoppages-the-clock-stops-the-players-line-up)、[ペナルティ](./replay.md#penalties-and-the-power-play)）。両チームは `teams`（`home` と `away`、それぞれ `abbr`、`name`、`color`）に書き、`readFeed` はそれを試合の `teams` として返します。`from` は位置の座標系を指定します（`nhl-api`、`opta` など。[座標系](./frames.md)を参照）。[サンプルの試合](./example-games.md)のような試合ファイル（`kind: "kyogijo-game"`）は、タイムラインに両チーム、ロースター、ピリオドを加えたもので、どちらの形でも読み込めます。
 
 ```json
 {
@@ -26,7 +26,7 @@ kyogijo独自の形式は、JSONで書いた[リプレイのタイムライン](
 }
 ```
 
-値はすべて読み込み時に検査します。時刻のないフレーム、位置のないオブジェクトや不明なチームのオブジェクト、時刻のないイベントは取り除きます。テキストはあくまでテキストとして扱い、長すぎる部分は切り詰めます。リストの件数にはすべて上限（`FEED_LIMITS`）があるため、壊れた応答や悪意のある応答でページが動かなくなることはありません。
+値はすべて読み込み時に検査します。時刻のないフレーム、位置のないオブジェクトや不明なチームのオブジェクト、時刻のないイベント、始まる前に終わるプレーの中断、チームや時間（`minutes`）のないペナルティは取り除きます。テキストはあくまでテキストとして扱い、長すぎる部分は切り詰めます。リストの件数にはすべて上限（`FEED_LIMITS`）があるため、壊れた応答や悪意のある応答でページが動かなくなることはありません。
 
 ## フィードを読み込む
 
