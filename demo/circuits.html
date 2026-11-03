@@ -34,6 +34,16 @@
       .table-wrap { overflow-x: auto; }
       .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
       #error { color: #c0392b; font-weight: 700; }
+      #feed-box { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+      #feed-box h2 { font-size: 1.05rem; margin: 4px 0 8px; }
+      .feed-pick, .feed-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+      .feed-pick button, .feed-btn { font: inherit; font-weight: 700; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+      .feed-pick button[aria-pressed="true"] { border-color: var(--tab); background: var(--tab); color: var(--tab-ink); }
+      .feed-url { flex: 1 1 260px; }
+      .feed-url input, #feed-text { font: 14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; width: 100%; box-sizing: border-box; }
+      #feed-more { margin-top: 8px; }
+      #feed-status { margin: 8px 0 0; font-weight: 700; }
+      #feed-status[data-kind="error"] { color: #c0392b; }
     </style>
     <link rel="stylesheet" href="./check-pill.css" />
   </head>
@@ -45,6 +55,23 @@
       <p id="error" role="alert" hidden data-first></p>
       <div id="bar" data-testid="bar" role="group" data-first></div>
       <div id="stage" data-testid="stage" data-first></div>
+      <section id="feed-box" data-testid="feed-box" hidden>
+        <h2 id="l-feed"></h2>
+        <div class="feed-pick" id="feed-pick" role="group" data-testid="feed-pick"></div>
+        <p class="note" id="feed-gives" data-testid="feed-gives"></p>
+        <div class="feed-row">
+          <label class="feed-url"><span id="l-feed-url"></span><input id="feed-url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://" data-testid="feed-url" /></label>
+          <button type="button" class="feed-btn" id="feed-load" data-testid="feed-load"></button>
+          <label class="check"><input id="feed-follow" type="checkbox" data-testid="feed-follow" /><span id="l-feed-follow"></span></label>
+        </div>
+        <details id="feed-more">
+          <summary id="l-feed-more"></summary>
+          <textarea id="feed-text" rows="4" spellcheck="false" data-testid="feed-text"></textarea>
+          <div class="feed-row"><button type="button" class="feed-btn" id="feed-paste" data-testid="feed-paste"></button><label class="feed-file"><span id="l-feed-file"></span><input id="feed-file" type="file" accept=".json,application/json" data-testid="feed-file" /></label></div>
+        </details>
+        <p id="feed-status" role="status" data-testid="feed-status"></p>
+        <p class="note"><span id="feed-terms"></span> <a href="./docs/race-feed.html" id="feed-docs"></a> · <a href="./docs/where-to-find-a-feed.html" id="feed-where"></a></p>
+      </section>
       <div hidden>
         <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option></select></label>
         <label><span id="l-circuit"></span><select id="circuit"></select></label>
@@ -67,7 +94,7 @@
     <script type="module">
       // A famous race track drawn from OpenStreetMap, in 2D and in 3D: choose the view, the language and the theme, read the facts and where each comes from, and copy the code that draws what is shown. Everything is
       // in this page and its address: nothing is sent anywhere and nothing is stored.
-      import { CIRCUITS, CIRCUIT_ATTRIBUTION, RACE_SPEEDS, circuitTable, drawCircuit, mountCircuitRace, mountCircuitTurn } from "./dist/circuits-entry.js";
+      import { CIRCUITS, CIRCUIT_ATTRIBUTION, RACE_SPEEDS, circuitTable, drawCircuit, feedFromText, followRaceFeed, loadRaceFeed, mountCircuitRace, mountCircuitTurn, raceFromFeed } from "./dist/circuits-entry.js";
       import { replaceAddress } from "./address.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
@@ -81,6 +108,10 @@
           lede: "A race track as OpenStreetMap maps it: the lap at the track's width, the pit lane and the pit building, the start and the finish, and each turn's number. Turn it in 3D, or turn on Race to watch a simulated race of made-up cars, with its clock and timing board.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The circuits page of the docs", view: "View", circuit: "Circuit", language: "Language", theme: "Theme", auto: "As the device", light: "Light", dark: "Dark",
           code: "Code", table: "Facts", copy: "Copy the code", copied: "Copied.", race: "Race",
+          feed: "What the race plays", simulation: "Simulation", feedUrl: "A feed's address", load: "Play the feed", follow: "Follow live", feedMore: "Paste a feed, or choose a file", paste: "Play what is pasted", file: "Choose a file",
+          terms: "Your browser reads the address you give: nothing goes through a server of ours and nothing is kept. You are responsible for following the terms of the source you use.", feedDocs: "The race feed's format", where: "Where to find a feed",
+          reading: "Reading the feed…", playing: "Playing {cars} cars over {laps} laps from the feed.", following: "Following: asked again every 15 seconds while this page is visible.", over: "The race is over: no longer following.", stopped: "The source refused or is busy: no longer following.",
+          docsLink: "docs", termsLink: "terms", sampleUrl: "Sample address", idHelp: "Finding a race:", noAdapter: "kyogijo cannot read this one's shape yet: see Where to find a feed.",
           credit: `Map data: ${CIRCUIT_ATTRIBUTION}. Length, turns and opening day: Wikidata (CC0) and the English and Japanese Wikipedia articles, in our own words. The track's width is ours: no source gives it. Nothing of a race's, a series' or a team's marks is drawn.`,
         },
         ja: {
@@ -89,6 +120,10 @@
           lede: "OpenStreetMapに登録されたレーストラックを描きます。コース幅で描いた周回路、ピットレーンとピットビル、スタートとフィニッシュ、各コーナーの番号を表示し、3Dで回転させて見られます。「レース」をオンにすると、架空のマシンによるシミュレーションレースを、レース時計とタイミングボード付きで見られます。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「サーキット」ページ", view: "表示", circuit: "サーキット", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           code: "コード", table: "データ", copy: "コードをコピー", copied: "コピーしました。", race: "レース",
+          feed: "レースの再生元", simulation: "シミュレーション", feedUrl: "フィードのアドレス", load: "フィードを再生", follow: "ライブで追う", feedMore: "フィードを貼り付けるか、ファイルを選ぶ", paste: "貼り付けたものを再生", file: "ファイルを選ぶ",
+          terms: "入力したアドレスは、お使いのブラウザが直接読み込みます。kyogijoのサーバーは経由せず、何も保存しません。使うフィードの提供元が定める利用条件を守る責任は、利用者にあります。", feedDocs: "レースフィードの形式", where: "フィードの探し方",
+          reading: "フィードを読み込んでいます…", playing: "フィードから{cars}台のマシン、{laps}周のレースを再生しています。", following: "ライブで追っています。このページが表示されている間、15秒ごとに読み込み直します。", over: "レースが終わったので、追うのをやめました。", stopped: "提供元に拒否されたか混み合っているため、追うのをやめました。",
+          docsLink: "ドキュメント", termsLink: "利用条件", sampleUrl: "サンプルのアドレス", idHelp: "レースの見つけ方：", noAdapter: "kyogijoはまだこの形式を読み込めません。「フィードの探し方」を参照してください。",
           credit: `地図データ：${CIRCUIT_ATTRIBUTION}。全長・コーナー数・開業日：Wikidata（CC0）と、英語版・日本語版ウィキペディアの記事（内容は独自の言葉でまとめ直しています）。コース幅は独自の値で、出典はありません。レース、シリーズ、チームのマークは一切描いていません。`,
         },
       };
@@ -105,6 +140,14 @@
       let raceTime = Number.isFinite(Number(params.get("t"))) ? Math.max(0, Number(params.get("t"))) : 0;
       let race;
       let raceKey = "";
+      // The race's feed: none (the simulation), the sample, an address the reader typed, or text the reader pasted or chose (kept in the page only). The suggestions come from one data file.
+      let feedRace;
+      let lastFeed;
+      let feedId = "";
+      let feedAddressNow = params.get("feed") ?? "";
+      let follower;
+      let suggestions;
+      let pickedSource = feedAddressNow === "" ? "simulation" : feedAddressNow === "sample" ? "sample" : "";
       let viewpoint = ["overhead", "broadcast", "end", "corner"].includes(params.get("viewpoint")) ? params.get("viewpoint") : "broadcast";
       let turn;
       let turnKey = "";
@@ -117,7 +160,17 @@
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').content = w.pageDescription;
         for (const key of ["title", "lede", "back", "docs", "credit"]) $(key).textContent = w[key];
-        for (const key of ["view", "circuit", "language", "theme", "code", "table", "race"]) $(`l-${key}`).textContent = w[key];
+        for (const key of ["view", "circuit", "language", "theme", "code", "table", "race", "feed"]) $(`l-${key}`).textContent = w[key];
+        $("l-feed-url").textContent = w.feedUrl;
+        $("feed-load").textContent = w.load;
+        $("l-feed-follow").textContent = w.follow;
+        $("l-feed-more").textContent = w.feedMore;
+        $("feed-paste").textContent = w.paste;
+        $("l-feed-file").textContent = w.file;
+        $("feed-terms").textContent = w.terms;
+        $("feed-docs").textContent = w.feedDocs;
+        $("feed-where").textContent = w.where;
+        drawPicks();
         $("copy").textContent = w.copy;
         for (const option of $("theme").options) option.textContent = w[option.value];
         for (const option of $("circuit").options) option.textContent = CIRCUITS.find((c) => c.id === option.value).names[language];
@@ -131,6 +184,10 @@
       /** The code that draws what is shown: the same options, as a reader would write them. */
       function code(o) {
         const literal = `{ ${Object.entries(o).map(([key, value]) => `${key}: ${JSON.stringify(value)}`).join(", ")} }`;
+        if ($("race").checked && feedRace !== undefined && feedAddressNow !== "" && feedAddressNow !== "pasted") {
+          const address = feedAddressNow === "sample" ? new URL("examples/races/las-vegas-sample.json", location.href).href : feedAddressNow;
+          return `import { loadRaceFeed, mountCircuitRace, raceFromFeed } from "@johnmorrisdotca/kyogijo-stadiums/circuits";\n\nconst feed = await loadRaceFeed(${JSON.stringify(address)});\nconst race = mountCircuitRace(document.querySelector("#race"), ${literal}, { race: raceFromFeed(feed, ${JSON.stringify(o.circuit)}) });\nrace.play();`;
+        }
         if ($("race").checked) {
           const view = $("view").value === "3d" ? [`view: "3d"`, `turn: { preset: ${JSON.stringify(viewpoint)} }`] : [];
           const speed = raceSpeed === 1 ? [] : [`speed: ${raceSpeed}`];
@@ -156,10 +213,149 @@
           next.set("race", "1");
           if (raceSpeed !== 1) next.set("speed", String(raceSpeed));
           if (Math.round(raceTime) > 0) next.set("t", String(Math.round(raceTime)));
+          if (feedRace !== undefined && feedAddressNow !== "" && feedAddressNow !== "pasted") next.set("feed", feedAddressNow);
         }
         writeWay(next);
         replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
+
+      const say = (text, kind = "") => {
+        $("feed-status").textContent = text;
+        if (kind === "") delete $("feed-status").dataset.kind;
+        else $("feed-status").dataset.kind = kind;
+      };
+      const fillIn = (template, values) => template.replace(/\{(\w+)\}/g, (_, k) => String(values[k]));
+      function stopFollowing() {
+        follower?.stop();
+        follower = undefined;
+      }
+      /** The suggestions: the simulation, then the data file's sources for racing, the sample first. Read once, when the race is first shown. */
+      async function loadSuggestions() {
+        if (suggestions !== undefined) return;
+        suggestions = [];
+        try {
+          const data = await (await fetch("./examples/feeds/where-to-find.json")).json();
+          suggestions = data.sports.racing;
+        } catch {
+          suggestions = [];
+        }
+        drawPicks();
+        if (feedAddressNow !== "" && feedRace === undefined) playAddress(feedAddressNow);
+      }
+      function drawPicks() {
+        const w = words();
+        const lang = $("language").value;
+        const pick = $("feed-pick");
+        const buttons = [{ id: "simulation", name: { en: w.simulation, ja: w.simulation } }, ...(suggestions ?? [])].map((s) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.dataset.source = s.id;
+          b.textContent = s.name[lang];
+          b.setAttribute("aria-pressed", String(pickedSource === s.id));
+          b.addEventListener("click", () => choose(s));
+          return b;
+        });
+        pick.replaceChildren(...buttons);
+        const chosen = (suggestions ?? []).find((s) => s.id === pickedSource);
+        const gives = $("feed-gives");
+        gives.replaceChildren();
+        if (chosen !== undefined) {
+          // Japanese runs on after a full stop or a colon with no space.
+          const gap = lang === "ja" ? "" : " ";
+          gives.append(`${chosen.gives[lang]}${gap}`, `${w.idHelp}${gap}${chosen.id_help[lang]}${gap}`);
+          if (chosen.adapter === null) gives.append(`${w.noAdapter}${gap}`);
+          const link = (href, text) => {
+            const a = document.createElement("a");
+            a.href = href.startsWith("http") ? href : `./${href.replace(/\.md$/, ".html")}`;
+            a.textContent = text;
+            if (href.startsWith("http")) a.rel = "noopener noreferrer";
+            return a;
+          };
+          gives.append(link(chosen.docs, w.docsLink));
+          if (chosen.terms) gives.append(" · ", link(chosen.terms, w.termsLink), lang === "ja" ? `（${chosen.licence[lang]}）` : ` (${chosen.licence[lang]})`);
+        }
+      }
+      /** A suggestion fills the address; the simulation and the sample play at once. */
+      function choose(source) {
+        pickedSource = source.id;
+        if (source.id === "simulation") {
+          stopFollowing();
+          feedRace = undefined;
+          feedId = "";
+          feedAddressNow = "";
+          say("");
+          drawPicks();
+          draw();
+          return;
+        }
+        $("feed-url").value = source.id === "sample" ? new URL(source.url, location.href).href : source.url;
+        drawPicks();
+        if (source.id === "sample") playAddress("sample");
+      }
+      /** Play a feed that was read: a new race in the same view, the clock at the start (or where it was, when the same race came in again). */
+      function playFeed(feed, address, again = false) {
+        lastFeed = feed;
+        feedRace = raceFromFeed(feed, $("circuit").value);
+        say(fillIn(words().playing, { cars: feedRace.cars.length, laps: feedRace.laps }));
+        if (again && race !== undefined) {
+          race.replace(feedRace);
+          return;
+        }
+        feedAddressNow = address;
+        feedId = `${address}|${Date.now()}`;
+        raceTime = 0;
+        draw();
+      }
+      async function playAddress(address) {
+        stopFollowing();
+        const href = address === "sample" ? new URL("examples/races/las-vegas-sample.json", location.href).href : address;
+        if (address === "sample") pickedSource = "sample";
+        $("feed-url").value = href;
+        say(words().reading);
+        try {
+          const feed = await loadRaceFeed(href);
+          playFeed(feed, address);
+          if ($("feed-follow").checked && feed.live === true) follow(href, address);
+          else if ($("feed-follow").checked) say(words().over);
+        } catch (error) {
+          say(String(error.message), "error");
+        }
+      }
+      function follow(href, address) {
+        follower = followRaceFeed(href, (feed) => playFeed(feed, address, true), {
+          onError: (error) => say(String(error.message), "error"),
+          onStop: (why) => { if (why !== "stopped") say(why === "over" ? words().over : words().stopped); },
+        });
+        say(words().following);
+      }
+      $("feed-load").addEventListener("click", () => {
+        const address = $("feed-url").value.trim();
+        if (address === "") return;
+        pickedSource = (suggestions ?? []).find((s) => s.url === address)?.id ?? "";
+        drawPicks();
+        playAddress(address);
+      });
+      $("feed-paste").addEventListener("click", () => {
+        stopFollowing();
+        const read = feedFromText($("feed-text").value);
+        if (!read.ok) return say(read.error, "error");
+        pickedSource = "";
+        drawPicks();
+        playFeed(read.feed, "pasted");
+      });
+      $("feed-file").addEventListener("change", async () => {
+        const file = $("feed-file").files?.[0];
+        if (file === undefined) return;
+        stopFollowing();
+        const read = feedFromText(await file.text());
+        if (!read.ok) return say(read.error, "error");
+        pickedSource = "";
+        drawPicks();
+        playFeed(read.feed, "pasted");
+      });
+      $("feed-follow").addEventListener("change", () => {
+        if (!$("feed-follow").checked) stopFollowing();
+      });
 
       function draw() {
         const theme = $("theme").value;
@@ -172,7 +368,9 @@
           if ($("race").checked) {
             // The race: mounted again for a new circuit or view, drawn again in place for a new language or theme, so that the clock stays where it is.
             if (turn !== undefined) { turn.destroy(); turn = undefined; }
-            const key = `${o.circuit}|${$("view").value}`;
+            // A feed is drawn on the circuit shown: another circuit lays the same feed on its own lap.
+            if (feedRace !== undefined && feedRace.circuit.id !== o.circuit) feedRace = raceFromFeed(lastFeed, o.circuit);
+            const key = `${o.circuit}|${$("view").value}|${feedId}`;
             if (race !== undefined && raceKey !== key) { raceTime = race.state().t; race.destroy(); race = undefined; }
             if (race === undefined) {
               stage.innerHTML = '<div id="race-view" data-testid="race-view"></div>';
@@ -183,6 +381,7 @@
                 turn: turnSettings,
                 speed: raceSpeed,
                 start: raceTime,
+                ...(feedRace === undefined ? {} : { race: feedRace }),
                 onChange: (state) => {
                   raceSpeed = state.speed;
                   if (!state.playing) raceTime = state.t;
@@ -216,6 +415,9 @@
         syncUrl();
         stage.classList.toggle("rv-fit", $("view").value === "3d");
         stage.classList.toggle("racing", $("race").checked);
+        $("feed-box").hidden = !$("race").checked;
+        if ($("race").checked) loadSuggestions();
+        else stopFollowing();
         fitStage();
         const back = new URLSearchParams();
         if ($("language").value === "ja") back.set("lang", "ja");
