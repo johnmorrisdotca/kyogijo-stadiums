@@ -74,7 +74,11 @@ const follow = followRaceFeed("https://example.org/live-race.json", (feed) => {
 
 ## デモでは
 
+**[フィードを試す：circuits.html?race=1&feed=sample](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1&feed=sample)**（デモでサンプルフィードを実際に再生できます）
+
 ![サーキットのページのレースの欄。シミュレーション、サンプルフィード（架空、選択中）、OpenF1、Jolpica F1のボタン、サンプルの提供内容、「フィードを再生」と「ライブで追う」のあるフィードのアドレス欄、フィードを貼り付けるかファイルを選ぶための折りたたみ、フィードを再生中であることを示す行、提供元の利用条件についての注意](./pictures/circuits-race-feed-desk-light.webp)
+
+[フィードを試す：circuits.html?race=1&feed=sample](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1&feed=sample)
 
 サーキットのページで「レース」をオンにすると、レースが再生するものを選べます。シミュレーション、「サンプルフィード（架空）」、または[フィードの探し方](./where-to-find-a-feed.ja.md)の候補です。候補を選ぶとアドレス欄に入り、その横に提供内容、レースのIDの見つけ方、ドキュメントと利用条件を表示します。「フィードを再生」でアドレスを読み込み、「ライブで追う」でレースが続く間は読み込み直し、「フィードを貼り付けるか、ファイルを選ぶ」で、ブラウザから読み込めない提供元のテキストやファイルを読み込みます。アドレスはページ自身のアドレス（`feed=`）に残し、貼り付けたテキストはどこにも保存しません。
 

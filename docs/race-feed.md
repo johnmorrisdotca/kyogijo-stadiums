@@ -74,7 +74,11 @@ const follow = followRaceFeed("https://example.org/live-race.json", (feed) => {
 
 ## In the demo
 
+**[Try a feed: circuits.html?race=1&feed=sample](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1&feed=sample)**, the sample feed playing live in the demo.
+
 ![The circuits page's race panel: buttons for the simulation, the sample feed (made up, chosen), OpenF1 and Jolpica F1, what the sample gives, the feed's address field with Play the feed and Follow live, the fold to paste a feed or choose a file, the line that says the feed is playing and the note on the source's terms](./pictures/circuits-race-feed-desk-light.webp)
+
+[Try a feed: circuits.html?race=1&feed=sample](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1&feed=sample)
 
 The circuits page's **Race** shows what the race plays: the simulation, *Sample feed (made up)*, or a suggestion from [Where to find a feed](./where-to-find-a-feed.md), which fills the address field (with what it gives, how to find a race's id, its docs and its terms beside it). **Play the feed** reads the address; **Follow live** keeps asking while the race is live; **Paste a feed, or choose a file** reads text or a file for a source the browser cannot reach. The address is kept in the page's own address (`feed=`); pasted text is not kept anywhere.
 
