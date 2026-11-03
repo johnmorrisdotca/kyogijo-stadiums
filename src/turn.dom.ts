@@ -15,6 +15,10 @@ import { attachOutside3d, type OutsideLayer } from "./outside.dom.ts";
 import { TIER_PROFILES, createGovernor, handheld, layerBudget, qualityOf, rasterOf, rasterShares, tierOf, viewShare, FLOOR_SHARE, type Governor, type Quality, type QualityTier } from "./quality.ts";
 import { size } from "./turn.kit.ts";
 import type { OutsideLevel } from "./outside.paint.ts";
+import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
+import type { KyogijoReplay } from "./mount.ts";
+import { attachTurnReplay, type TurnInternals } from "./turn.replay.dom.ts";
+import { createReplayView } from "./replay.dom.ts";
 
 /** What `mountKyogijoTurn` gives back. `O` is what `update` takes: the options of a drawing, or (for `mountMultiTurn`) of a tournament layout. */
 export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
@@ -57,6 +61,12 @@ export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
   setQuality(quality: Quality): void;
   /** The flat drawing that is the floor, or `null` after `destroy`. */
   svg(): SVGSVGElement | null;
+  /**
+   * Play tracking data on the view: the players stand up on the surface as discs that face the eye (home circles, away squares, numbers), the ball or the puck runs on the floor with its trail, and the passes, shots and
+   * goals are drawn on the floor as in the flat replay. The replay's controls go under the view's; the view still turns, tips and zooms while it plays. Space on the view plays and pauses, comma and full stop step; the
+   * arrow keys still turn the view. `destroy` on what it gives takes the replay away and leaves the view. A tournament layout has no replay. Where the browser cannot draw the 3D view, the flat replay plays instead.
+   */
+  replay(timeline: ReplayTimeline, settings?: ReplaySettings): KyogijoReplay;
   /** Stop listening and empty the container. */
   destroy(): void;
 }
@@ -85,14 +95,14 @@ const between = (from: TurnView, to: TurnView, t: number): TurnView => ({ yaw: f
  * ```
  */
 export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | ScoreOptions, settings: TurnSettings = {}): KyogijoTurn {
-  return mountTurn(host, options, settings, buildTurn);
+  return mountTurn(host, options, settings, buildTurn, true);
 }
 
 /**
  * Mount any 3D model (`mountKyogijoTurn` is this with the model of one surface; `mountMultiTurn` with a tournament layout's): `build` makes the model from what `update` is given, and the rest, the controls, the pointer, the keys
  * and the auto-turn, is the same.
  */
-export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettings, build: (options: O, settings: TurnSettings) => TurnModel): KyogijoTurn<O> {
+export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettings, build: (options: O, settings: TurnSettings) => TurnModel, replayable = false): KyogijoTurn<O> {
   const doc = host.ownerDocument;
   const win = doc.defaultView;
   /** The venue's settings as they are now: the mounted ones, altered by `update`. */
@@ -121,6 +131,10 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   };
   const sameRaster = (a: Raster, b: Raster): boolean => (typeof a === "number" || typeof b === "number" ? a === b : a.length === b.length && a.every((x, i) => x === b[i]));
   let current = options;
+  /** What a replay lays on a model (its floor at the replay's time, and the players standing on it), and what it does once the world is drawn again: both unset without a replay. */
+  let decorate: ((model: TurnModel) => TurnModel) | undefined;
+  let rendered: (() => void) | undefined;
+  let replaying: KyogijoReplay | undefined;
   let model: TurnModel = build(options, { ...settings, quality: tier });
   if (model.tiered !== true) tier = "high";
   // (The container is not written yet: its width is the host's and its height the one the stylesheet gives it, 16 by 10 or 5 by 4 on a phone; `settleRaster` corrects it once the view is in the page.)
@@ -139,7 +153,12 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
 
   if (!supported) {
     // The flat drawing, with a sentence that says why it does not turn when the browser is the reason.
+    let flatReplay: { view: ReturnType<typeof createReplayView>; timeline: ReplayTimeline; settings: ReplaySettings } | undefined;
     const flat = (next: O): void => {
+      if (flatReplay !== undefined) {
+        flatReplay.view.draw(floorOptions(next as SurfaceOptions | ScoreOptions));
+        return;
+      }
       host.innerHTML = `<div class="ky-turn" data-mode="flat"><style>${KYOGIJO_TURN_STYLE}</style>${model.flat ?? drawKyogijo({ ...floorOptions(next as SurfaceOptions | ScoreOptions), board: (next as SurfaceOptions).board })}${model.turnable ? `<p class="ky-turn-flat">${esc(turnWords(model).flat)}</p>` : ""}</div>`;
     };
     flat(options);
@@ -160,12 +179,31 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       setQuality: () => undefined,
       update: (next, change) => {
         if (change?.venue !== undefined) venue = { ...(typeof venue === "object" ? venue : {}), ...change.venue };
+        current = next;
         model = build(next, { ...settings, id: settings.id ?? model.id, venue });
         flat(next);
       },
       svg: () => (alive ? host.querySelector<SVGSVGElement>("svg.kyogijo") : null),
+      // The flat replay, where the 3D view cannot be drawn.
+      replay(timeline, replaySettings = {}) {
+        if (!replayable) throw new Error("a replay plays on one surface, not on a layout");
+        flatReplay?.view.destroy();
+        const view = createReplayView(host, timeline, replaySettings, floorOptions(current as SurfaceOptions | ScoreOptions));
+        const mine = { view, timeline, settings: replaySettings };
+        flatReplay = mine;
+        return {
+          ...view.controller,
+          destroy() {
+            if (flatReplay !== mine) return;
+            view.destroy();
+            flatReplay = undefined;
+            flat(current);
+          },
+        };
+      },
       destroy: () => {
         alive = false;
+        flatReplay?.view.destroy();
         host.replaceChildren();
       },
     };
@@ -282,9 +320,11 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   };
   /** Draw the world again, from the model of the tier and the options now: the camera, the auto-turn and the pointer are not touched (the elements are the only thing replaced). */
   const renderWorld = (): void => {
-    const known = made.get(tier);
-    model = known ?? build(current, { ...settings, quality: tier, id: settings.id ?? baseId, venue, preset: undefined, view });
-    made.set(tier, model);
+    // A model with a replay on it is made fresh each time, at the replay's time: only a plain one is kept.
+    const known = decorate === undefined ? made.get(tier) : undefined;
+    const plain = known ?? (decorate === undefined ? undefined : made.get(tier)) ?? build(current, { ...settings, quality: tier, id: settings.id ?? baseId, venue, preset: undefined, view });
+    made.set(tier, plain);
+    model = decorate === undefined ? plain : decorate(plain);
     ceiling = ceilingFor(model, stage.clientWidth || 960, stage.clientHeight || 600, shown.zoom);
     raster = rasterFor(model);
     const layout = layoutOf(model, shown, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens, false, raster);
@@ -304,6 +344,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     root.dataset.quality = quality;
     root.dataset.tier = tier;
     root.dataset.share = String(ceiling);
+    rendered?.();
   };
   /** The governor stepped: draw at the new tier. */
   const retier = (next: QualityTier): void => {
@@ -443,10 +484,35 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     say(turnWords(model).reset);
   };
 
+  // ---- One frame request a frame: the auto-turn and a replay on the view ask through this, and share one animation frame when both run. ----
+  const queued = new Map<number, FrameRequestCallback>();
+  let queueId = 0;
+  let pendingFrame = 0;
+  const requestFrame = (callback: FrameRequestCallback): number => {
+    queueId += 1;
+    queued.set(queueId, callback);
+    if (pendingFrame === 0 && win !== null) {
+      pendingFrame = win.requestAnimationFrame((stamp) => {
+        pendingFrame = 0;
+        const run = [...queued.values()];
+        queued.clear();
+        for (const one of run) one(stamp);
+      });
+    }
+    return queueId;
+  };
+  const cancelFrame = (id: number): void => {
+    queued.delete(id);
+    if (queued.size === 0 && pendingFrame !== 0) {
+      win?.cancelAnimationFrame(pendingFrame);
+      pendingFrame = 0;
+    }
+  };
+
   // ---- The auto-turn: a trophy case's slow turn. It runs only when asked, holds while the pointer holds the view, and does nothing while the page is hidden. ----
   const hidden = (): boolean => doc.hidden === true;
   const stopTick = (): void => {
-    if (tickFrame !== undefined) win?.cancelAnimationFrame(tickFrame);
+    if (tickFrame !== undefined) cancelFrame(tickFrame);
     tickFrame = undefined;
     lastTick = undefined;
   };
@@ -476,7 +542,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     loop();
   };
   const loop = (): void => {
-    if (tickFrame === undefined && playing && alive && win !== null) tickFrame = win.requestAnimationFrame(tick);
+    if (tickFrame === undefined && playing && alive && win !== null) tickFrame = requestFrame(tick);
   };
   /** Start or stop the auto-turn. `quiet` leaves the live region alone (a key or a drag stopped it, and says its own thing). */
   const setPlaying = (next: boolean, quiet = false): void => {
@@ -547,7 +613,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
 
   // ---- Keys. ----
   const onKey = (event: KeyboardEvent): void => {
-    if (event.ctrlKey || event.metaKey || event.altKey || KEYS[event.key] !== true) return;
+    if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || KEYS[event.key] !== true) return;
     const big = event.shiftKey;
     const yaw = big ? STEP.yawBig : STEP.yaw;
     const pitch = big ? STEP.pitchBig : STEP.pitch;
@@ -756,9 +822,45 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       return last === undefined ? undefined : { ms: last.ms, people: last.stats.people, mode: last.stats.mode, pixels: last.pixels };
     },
     svg: () => (alive ? root.querySelector<SVGSVGElement>(".ky-turn-floor svg.kyogijo") : null),
+    replay(timeline, replaySettings = {}) {
+      if (!alive) throw new Error("this view was destroyed");
+      if (!replayable) throw new Error("a replay plays on one surface, not on a layout");
+      replaying?.destroy();
+      const internals: TurnInternals = {
+        doc,
+        root,
+        stage,
+        model: () => model,
+        setDecorate(next, after) {
+          decorate = next;
+          rendered = after;
+          // (A view that is going away is not drawn again.)
+          if (!alive) return;
+          renderWorld();
+          paint(shown);
+        },
+        repaint: () => {
+          if (alive) paint(shown);
+        },
+        requestFrame,
+        cancelFrame,
+      };
+      const mine = attachTurnReplay(internals, timeline, replaySettings);
+      replaying = mine;
+      return {
+        ...mine,
+        destroy() {
+          if (replaying !== mine) return;
+          replaying = undefined;
+          mine.destroy();
+        },
+      };
+    },
     destroy() {
       if (!alive) return;
       alive = false;
+      replaying?.destroy();
+      replaying = undefined;
       clearTimeout(settling);
       outside?.destroy();
       stop();

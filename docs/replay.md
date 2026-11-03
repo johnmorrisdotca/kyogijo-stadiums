@@ -138,6 +138,67 @@ How it moves: the drawing is written once. Each animation frame moves only the m
 
 The keys work with the focus on the drawing or on a button; the slider and the speed keep their own.
 
+## In 3D
+
+The same replay plays on [the 3D view](./turn.md): the rink can be tipped and turned by the mouse, a finger, the wheel or the keys while the game goes on. `view.replay(timeline, settings?)` on the handle `mountKyogijoTurn` gives back is the whole of it, and gives the same controller as `mount.replay`.
+
+![A made-up game on the 3D rink from the main camera: the players standing as discs with their numbers, the puck's trail and a pass on the ice, and the score hung over centre ice](./images/replay-game-3d-desk-light.webp)
+
+```ts no-run
+import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+
+declare const timeline: ReplayTimeline;
+const view = mountKyogijoTurn(document.querySelector("#rink")!, { sport: "nhl" }, { preset: "broadcast" });
+const replay = view.replay(timeline, { speed: 2, loop: true });
+replay.play();
+view.preset("corner"); // the view still turns while the game plays
+replay.destroy();      // takes the replay away; the view stays
+```
+
+How it is drawn, and why:
+
+- **The players stand up.** Each player and official is a disc that stands on the floor and faces the eye, as a scoreboard does: the flat replay's own marks (a circle for the home side, a square for the away side, a triangle for an official, the number over it, in the same colours, light and dark), turned up. On a flat floor seen from low down a circle is a sliver; standing up, a mark reads from any angle, and its number is always the right way round. A disc is about 6.5 feet across on a rink and 12 on a pitch (3 per cent of the playing surface's diagonal, times `scale`): a mark, not a person. `stand: false` keeps them flat on the floor, as the flat replay draws them.
+- **The puck stays on the ice.** The ball or the puck, its trail, the passes, the shots and the goals are the floor's own replay layer, drawn and moved as the flat replay moves them: they are where they happened, on the surface.
+- **Only what moves is touched.** Each frame moves the marks on the floor that moved (a `transform` or a `d`) and writes the `matrix3d` of the discs that moved; a disc goes up and down the stack of the view's parts when a player passes in front of a goal or behind one. The rest of the view (the boards, the glass, the goals, the stands, the floor's drawing) is not written while the camera is still. A disc that is not on the ice at the time (a line on the bench) is hidden, not taken away, so that the elements stay the same for the whole game.
+
+![The same game playing on while the rink turns once round, slowly: the players skate after the puck, pass and shoot](./pictures/turning-game-desk-light.webp)
+
+The controls are the flat replay's, under the view's: play, pause, step, speed, loop, the position and the time. The keys do not fight the view's:
+
+| Where the focus is | Space | Comma and full stop | The arrow keys | Home and End |
+| --- | --- | --- | --- | --- |
+| On the view | Play or pause the replay | A frame back or on (with Shift, 5 seconds) | Turn and tip the view, as always | Home puts the view back; End goes to the end |
+| On the replay's controls | Play or pause | | A frame back or on (with Shift, 5 seconds) | The first and the last moment |
+
+The view's Auto-turn button still turns it, and the auto-turn and the replay share one animation frame. A reader who prefers reduced motion gets steps, as on the flat replay. The element does it too: `<kyogijo-field turn>` with a `timeline` plays the replay on its 3D view.
+
+What it costs: nothing runs while the replay is paused, while the page is hidden or while the view is out of sight (no animation frame is asked for), one frame is asked for at a time while it plays, with the auto-turn on or off, and the elements of the view are the same ones after ten times round a looping game: a browser test holds each of these. `destroy` on the replay (or on the view) takes its controls, its listeners and its frame away. Where the browser cannot draw the 3D view, `view.replay` plays the flat replay instead.
+
+The model of a frame is pure, as `drawFrame` is: `replayTurnModel(model, timeline, t, look)` lays the replay on a 3D view's model at a time (its floor, and a disc for every one tracked), so the same options and time give the same picture.
+
+```ts
+import { buildTurn, replayTurnModel } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const frames = [0, 1, 2].map((t) => ({
+  t,
+  objects: [
+    { id: "h9", team: "home" as const, number: 9, x: 10 + t * 12, y: 5 },
+    { id: "a4", team: "away" as const, number: 4, x: 40 - t * 5, y: -8 },
+    { id: "puck", team: "puck" as const, x: 10 + t * 12, y: 5 },
+  ],
+}));
+const timeline = { from: "nhl-api", frames };
+const model = buildTurn({ sport: "nhl" });
+const laid = replayTurnModel(model, timeline, 1.5);
+console.log(laid.discs.size, laid.model.planes.length - model.planes.length, Math.round(laid.size * 10) / 10);
+console.log(JSON.stringify(laid.model) === JSON.stringify(replayTurnModel(model, timeline, 1.5).model));
+// 2 2 6.5
+// true
+```
+
+The demo plays [a whole made-up game](./example-games.md) this way, and lets the hero's arena play it in front of its crowd.
+
 ## A swimming race
 
 `raceTimeline` makes a timeline of a swimming race from the splits of its swimmers: each goes down the first length and back the next at the speed of each split, and the events are the turns and the finishes. It is described with the pool in [a race replay](./pools.md#a-race-replay); the timeline it gives is in the `swimming` frame, in metres, and every function of this page plays it.

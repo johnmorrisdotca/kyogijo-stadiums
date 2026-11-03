@@ -297,7 +297,8 @@ export class KyogijoField extends Base {
 
   /** Put the replay on the mount: new when the timeline is new or `again` says its look changed (it goes on from where it was), else only the speed and the loop are changed. */
   #attach(again: boolean): void {
-    if (this.#mount === undefined || this.#timeline === undefined) return;
+    const on = this.#turn ?? this.#mount;
+    if (on === undefined || this.#timeline === undefined) return;
     const settings = replaySettingsFromAttributes((name) => this.getAttribute(name), this.#replaySettings);
     if (this.#replay !== undefined && this.#replayOf === this.#timeline && !again) {
       if (settings.speed !== undefined) this.#replay.setSpeed(settings.speed);
@@ -307,7 +308,7 @@ export class KyogijoField extends Base {
     const from = this.#replay === undefined || this.#replayOf !== this.#timeline ? undefined : this.#replay.state();
     this.#replay?.destroy();
     this.#replayOf = this.#timeline;
-    this.#replay = this.#mount.replay(this.#timeline, from === undefined ? settings : { ...settings, start: from.t - from.start });
+    this.#replay = on.replay(this.#timeline, from === undefined ? settings : { ...settings, start: from.t - from.start });
   }
 
   #draw(): void {
@@ -316,7 +317,7 @@ export class KyogijoField extends Base {
     const page = document.documentElement.getAttribute("data-theme");
     if (options.theme === undefined && (page === "light" || page === "dark")) options.theme = page;
     if (turnWanted((name) => this.getAttribute(name))) {
-      // The 3D view takes the container over from the flat drawing; a replay does not play on it.
+      // The 3D view takes the container over from the flat drawing; a replay plays on it, the players standing up.
       if (this.#mount !== undefined) {
         this.#mount.destroy();
         this.#mount = undefined;
@@ -324,16 +325,27 @@ export class KyogijoField extends Base {
         this.#replayOf = undefined;
       }
       const settings = turnSettingsFromAttributes((name) => this.getAttribute(name), this.#turnSettings);
-      if (this.#turn === undefined) this.#turn = mountKyogijoTurn(this.#host, options, settings);
-      else this.#turn.update(options);
+      if (this.#turn === undefined) {
+        this.#turn = mountKyogijoTurn(this.#host, options, settings);
+        this.#replay = undefined;
+        this.#replayOf = undefined;
+      } else this.#turn.update(options);
+      this.#follow();
       return;
     }
     if (this.#turn !== undefined) {
       this.#turn.destroy();
       this.#turn = undefined;
+      this.#replay = undefined;
+      this.#replayOf = undefined;
     }
     if (this.#mount === undefined) this.#mount = mountKyogijo(this.#host, options);
     else this.#mount.update(options);
+    this.#follow();
+  }
+
+  /** The replay follows the timeline: taken away when there is none, put on when it is new. */
+  #follow(): void {
     if (this.#timeline === undefined) {
       this.#replay?.destroy();
       this.#replay = undefined;

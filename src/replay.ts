@@ -195,6 +195,12 @@ export function replayInfo(timeline: ReplayTimeline): { start: number; end: numb
   return { start: p.start, end: p.end, duration: p.end - p.start, frames: p.frames.length, objects: p.ids.length, events: p.events.length, step: p.step };
 }
 
+/** Everything a timeline tracks, each as it first appears (its id, team, number and label), in that order. */
+export function replayCast(timeline: ReplayTimeline): readonly ReplayObject[] {
+  const p = prepare(timeline);
+  return p.ids.map((id) => p.first.get(id) as ReplayObject);
+}
+
 /** The times of the frames, and of the events, in order: the moments a step can land on. */
 export function replayTimes(timeline: ReplayTimeline): readonly number[] {
   return prepare(timeline).times;
@@ -589,10 +595,15 @@ export function replayPlacer(options: SurfaceOptions | ScoreOptions, timeline: R
  * ```
  */
 export function drawFrame(options: SurfaceOptions | ScoreOptions, timeline: ReplayTimeline, t: number, look: ReplayLook = {}): string {
+  return drawFrameOf(options, timeline, t, look);
+}
+
+/** `drawFrame` with only the groups `keep` says yes to: a 3D view keeps the players off its floor, where they stand up instead. */
+export function drawFrameOf(options: SurfaceOptions | ScoreOptions, timeline: ReplayTimeline, t: number, look: ReplayLook = {}, keep: (group: ReplayGroup) => boolean = () => true): string {
   const language: Language = options.language === "ja" ? "ja" : "en";
   const id = options.id ?? replayId(options, timeline);
   const withId = { ...options, id } as SurfaceOptions | ScoreOptions;
-  const layers = replayLayers(timeline, t, look, language);
+  const layers = replayGroups(timeline, replaySnapshot(timeline, t, look), look, language).filter(keep).map((group) => group.layer);
   let description = options.description;
   if (description === undefined) {
     // The drawing's own description is made from its layers' summaries; a replay's layers change with the time, so its sentence is fixed.

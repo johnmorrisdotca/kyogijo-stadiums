@@ -800,6 +800,9 @@ export interface KyogijoWords {
     /** What the replay is and the keys it answers to, in smooth motion and in steps. */
     keys: string;
     keysStep: string;
+    /** The same on a 3D view, where the arrow keys turn the view: in smooth motion and in steps. */
+    keysTurn: string;
+    keysTurnStep: string;
     region: string;
   };
   /** The words of the 3D view: its name, the keys, the viewpoints, the controls, what is announced, and the names of what stands on the surface. */

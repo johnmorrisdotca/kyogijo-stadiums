@@ -203,7 +203,7 @@ src/
 ├── charts-entry.ts     the charts' entry
 ├── replay.ts           a replay's frame and its pure functions: interpolate, trails, possession, events, drawFrame
 ├── replay.control.ts   the replay's clock as a state machine: play, seek, step, speed, loop, reduced motion
-├── replay.dom.ts       the replay's controls, keyboard, live region and the painter that moves only the marks that move
+├── replay.dom.ts       the replay's painter (it moves only the marks that move), its driver (the clock on animation frames, the controls, the keys, the live region) and the flat replay made of them
 ├── replay.types.ts     the replay's types
 ├── replay-entry.ts     the replay's entry
 ├── scene.ts            sceneOf and sceneFromSvg: the drawing as plain data, read from the markup that writes the SVG
@@ -394,6 +394,8 @@ src/
 ├── turn.markup.ts      a 3D view as markup: every element carries its place in one `matrix3d`, stacked far to near; the buttons
 ├── turn.style.ts       the 3D view's colours, light and dark, and its rules
 ├── turn.dom.ts         the 3D view in a page: the pointer, the touch, the wheel, the keys, the glide, the live region, and the flat fallback
+├── turn.replay.ts      a replay on the 3D view, as data: the floor at a time and the players standing up as discs that face the eye
+├── turn.replay.dom.ts  a replay on the 3D view in a page: its controls under the view's, the floor's marks and the discs moved each frame
 ├── quality.ts          how much a 3D view draws: the three tiers and what each leaves out, the pixel ratio a layer is made at, and the governor that steps a tier down and up by the frames the view makes
 ├── turn-entry.ts       the 3D view's entry
 ├── uprights.ts         what stands on a surface: read from the options as the drawing is, with its heights and its sentence

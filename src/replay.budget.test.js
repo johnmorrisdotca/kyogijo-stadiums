@@ -17,3 +17,18 @@ describe("the replay's code", () => {
     for (const [file, text] of files) expect(text, file).not.toMatch(/\bsetInterval\s*\(|\bsetTimeout\s*\(/);
   });
 });
+
+describe("the replay on the 3D view's code", () => {
+  const files = ["src/turn.replay.ts", "src/turn.replay.dom.ts"].map((file) => [file, readFileSync(file, "utf8")]);
+
+  it("fetches nothing, sets no timer, and asks for frames only through the view's own requests", () => {
+    for (const [file, text] of files) {
+      expect(text, file).not.toMatch(/\bfetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon|\bimport\s*\(/);
+      expect(text, file).not.toMatch(/\bsetInterval\s*\(|\bsetTimeout\s*\(|\brequestAnimationFrame\s*\(/);
+    }
+  });
+
+  it("is small: under 20 kB of source", () => {
+    expect(files.reduce((sum, [, text]) => sum + text.length, 0)).toBeLessThan(20_000);
+  });
+});

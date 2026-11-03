@@ -6,7 +6,7 @@ A surface drawn flat hides what stands on it: a net, a basket, a goal, the posts
 
 It is plain DOM and CSS, with no dependency and no canvas. Each part that stands up (a net, a pane of glass, a backboard, the two strips that make a post) is a flat rectangle with a little SVG on it, and each carries its whole place on the screen in one `matrix3d`; the parts are stacked far to near by `z-index`. Nothing is nested in 3D (no `preserve-3d`, no `perspective` on a parent), so a browser that cannot keep nested 3D layers, as Safari on a phone sometimes cannot, draws it as it is meant. The drawing it is made from is the one `drawKyogijo` draws, so the 3D view is an enhancement over the static SVG, which stays what a server renders.
 
-A tournament layout (several surfaces on one floor) turns the same way: `mountMultiTurn` of [the layouts page](./multi.md#in-3d) gives it these viewpoints, controls and camera. So does a [judging assignment](./judging.md#in-3d): `mountJudgingTurn` stands the judges' table with a name card in front of each judge. A results board, a bout presentation or a medal table can lie over the view as a layer that does not turn with it: [boards over a surface](./boards.md#in-3d).
+A tournament layout (several surfaces on one floor) turns the same way: `mountMultiTurn` of [the layouts page](./multi.md#in-3d) gives it these viewpoints, controls and camera. So does a [judging assignment](./judging.md#in-3d): `mountJudgingTurn` stands the judges' table with a name card in front of each judge. A results board, a bout presentation or a medal table can lie over the view as a layer that does not turn with it: [boards over a surface](./boards.md#in-3d). A [replay](./replay.md#in-3d) plays on it too: `view.replay(timeline)` stands the players up on the surface as discs that face the eye and runs the ball or the puck on the floor, while the view goes on turning.
 
 ## Put one in a page
 
@@ -61,7 +61,7 @@ The steady scale is the smallest the old fit used over the turn, so the floor is
 - **A finger** drags sideways to turn the view and leaves a vertical swipe to the page, so that a page of views can still be scrolled with a thumb. `touch: "turn"` keeps every touch for the view, which then also tips it; **two fingers** pinch to zoom.
 - **The wheel** is the page's, so that the page scrolls over a view. Ctrl and the wheel (a pinch on a trackpad) zoom; with the view focused, the wheel tips it and Shift with the wheel turns it. Up always lifts the near edge of the surface toward the viewer, as if it were held there: a drag up, the wheel up, the up arrow and the \"Tip the surface away\" button all do it, and down lowers it.
 - **The keys**, with the view focused: the arrows turn and tip the way a drag toward that side does (Left and Right carry the near side that way; Up tips as a drag up does, Down as a drag down; Shift for bigger steps), plus and minus zoom, 1 to 4 pick a viewpoint, 0 or Home puts it back.
-- **Space**, with the view focused, starts and stops the [auto-turn](#the-auto-turn).
+- **Space**, with the view focused, starts and stops the [auto-turn](#the-auto-turn); with a [replay](./replay.md#in-3d) on the view it plays and pauses the replay, and the Auto-turn button turns the view.
 - **The buttons** under the view are the four viewpoints, turn left and right, the up and down arrows, zoom in and out, reset, and the Auto-turn toggle: each is 44 pixels square or more, and a button takes the view toward its side as the arrow key does. `nudge(view, "left" | "right" | "up" | "down", degrees)` is that step, for a page with controls of its own.
 
 ## What stands on each surface
@@ -189,7 +189,7 @@ In a drawing with a score the 3D view does not lay the score's panel on the floo
 | `qualityTuning` | How `auto` judges the frames: for a test or an unusual screen. |
 | `onQualityChange` | Called with the tier drawn and what was asked for when `auto` or `setQuality` changes it. |
 
-The handle `mountKyogijoTurn` gives back has `view()`, `set(view, glide?)`, `preset(name)`, `reset()`, `update(options, change?)`, `svg()` (the flat drawing that is the floor), `destroy()`, `mode`, `quality`, `tier` and `setQuality(quality)` (see [quality](./quality.md)), and for the auto-turn `playing`, `play()`, `pause()` and `togglePlay()`.
+The handle `mountKyogijoTurn` gives back has `view()`, `set(view, glide?)`, `preset(name)`, `reset()`, `update(options, change?)`, `svg()` (the flat drawing that is the floor), `destroy()`, `mode`, `quality`, `tier` and `setQuality(quality)` (see [quality](./quality.md)), for the auto-turn `playing`, `play()`, `pause()` and `togglePlay()`, and `replay(timeline, settings?)`, which plays tracking data on the view ([the replay in 3D](./replay.md#in-3d)).
 
 `update(options)` draws the scene again with new options and keeps the view and the auto-turn: a turning view goes on turning from where it is. `update(options, { venue: { roof, walls, boards, lighting } })` also changes what the venue's walls and roof stand on, so that a page can switch them on and off without mounting the view again (the demo's venues page does, with a button for each).
 

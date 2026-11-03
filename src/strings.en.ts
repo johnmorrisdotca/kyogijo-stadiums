@@ -446,6 +446,8 @@ export const WORDS_EN: KyogijoWords = {
     group: "Replay controls", play: "Play", pause: "Pause", back: "Previous frame", forward: "Next frame", stepBack: "Back", stepForward: "Forward", speed: "Speed", loop: "Loop", position: "Position", time: "Time", event: "Event", spokenSeconds: "0:{ss}", spokenMinutes: "{m}:{ss}", spokenHours: "{h}:{mm}:{ss}", positionValue: "{t} of {total}",
     keys: "Replay of the play. Space plays or pauses, the left and right arrow keys step by a frame, Shift with an arrow key moves 5 seconds, and Home and End go to the ends.",
     keysStep: "Replay of the play, in steps. Space or the right arrow key moves on, the left arrow key goes back, and Home and End go to the ends.",
+    keysTurn: "Replay of the play on the 3D view. Space plays or pauses; comma and full stop step back and on by a frame, and with Shift by 5 seconds; End goes to the end. The arrow keys still turn the view. On the replay's controls the arrow keys step, and Home and End go to the ends.",
+    keysTurnStep: "Replay of the play on the 3D view, in steps. Space or full stop moves on, comma goes back, and End goes to the end. The arrow keys still turn the view. On the replay's controls the right arrow key moves on and the left goes back.",
     region: "Replay",
   },
   turn: {

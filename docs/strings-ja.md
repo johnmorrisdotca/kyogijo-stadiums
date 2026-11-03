@@ -1276,6 +1276,8 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `replay.positionValue` | {t} of {total} | {total}中{t} |
 | `replay.keys` | Replay of the play. Space plays or pauses, the left and right arrow keys step by a frame, Shift with an arrow key moves 5 seconds, and Home and End go to the ends. | プレーのリプレイです。スペースキーで再生と一時停止、左右の矢印キーで1コマずつ前後に移動、Shiftキーを押しながら矢印キーで5秒ずつ移動、Homeキーで最初、Endキーで最後に移動します。 |
 | `replay.keysStep` | Replay of the play, in steps. Space or the right arrow key moves on, the left arrow key goes back, and Home and End go to the ends. | プレーのリプレイです。コマ送りで表示しています。スペースキーまたは右矢印キーで進み、左矢印キーで戻り、Homeキーで最初、Endキーで最後に移動します。 |
+| `replay.keysTurn` | Replay of the play on the 3D view. Space plays or pauses; comma and full stop step back and on by a frame, and with Shift by 5 seconds; End goes to the end. The arrow keys still turn the view. On the replay's controls the arrow keys step, and Home and End go to the ends. | 3Dビューでのプレーのリプレイです。スペースキーで再生と一時停止、カンマキーで1コマ戻り、ピリオドキーで1コマ進みます。Shiftキーを押しながらカンマキーかピリオドキーで5秒ずつ移動し、Endキーで最後に移動します。矢印キーではこれまでどおりビューを回せます。リプレイの操作ボタンにフォーカスがあるときは、左右の矢印キーで1コマずつ前後に移動し、Homeキーで最初、Endキーで最後に移動します。 |
+| `replay.keysTurnStep` | Replay of the play on the 3D view, in steps. Space or full stop moves on, comma goes back, and End goes to the end. The arrow keys still turn the view. On the replay's controls the right arrow key moves on and the left goes back. | 3Dビューでのプレーのリプレイです。コマ送りで表示しています。スペースキーまたはピリオドキーで進み、カンマキーで戻り、Endキーで最後に移動します。矢印キーではこれまでどおりビューを回せます。リプレイの操作ボタンにフォーカスがあるときは、右矢印キーで進み、左矢印キーで戻ります。 |
 | `replay.region` | Replay | リプレイ |
 | `turn.region` | 3D view | 3D表示 |
 | `turn.group` | Viewpoint | 視点 |
@@ -2040,6 +2042,21 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `replayRink` | A play on the rink, in the NHL API's frame: feet from centre ice | リンク上のプレー（NHL APIの座標系：センターアイスからの距離をフィートで表す） |
 | `replayPitch` | A play on the pitch, in Opta's frame: 0 to 100 each way | ピッチ上のプレー（Optaの座標系：縦横とも0〜100） |
 | `replayElement` | The same play as an element: loop and speed are attributes | 同じプレーを要素として表示（繰り返しと速度は属性で指定） |
+| `replayGame` | A whole game, in 3D too, is in the next section. | 1試合まるごとの再生は、3D表示も含めて次のセクションで紹介しています。 |
+| `gameTitle` | A game on the ice, in 3D | 氷上の試合を3Dで |
+| `gameText` | A whole made-up game of hockey, all three periods, played on the rink in 3D: the players stand up as discs that face you, the puck runs on the ice with its trail, and the passes, the shots and the goals are drawn as they happen. Turn, tip and zoom the rink while it plays. Space plays and pauses, comma and full stop step a frame, and the arrow keys still turn the view. The flat view plays the same game. | 架空のアイスホッケーの試合を、第1ピリオドから第3ピリオドまで丸ごと、3Dのリンク上で再生します。選手はこちらを向いて立つ円盤で表され、パックは軌跡を残しながら氷上を動き、パス、シュート、ゴールはプレーの進行に合わせて描かれます。再生中もリンクを回したり、傾けたり、拡大縮小したりできます。スペースキーで再生と一時停止、カンマキーで1コマ戻り、ピリオドキーで1コマ進みます。矢印キーではこれまでどおりビューを回せます。平面表示でも同じ試合を再生できます。 |
+| `gameNote` | A made-up game, shaped from a public NHL play-by-play; teams and players are invented. | 公開されているNHLのプレーバイプレーをもとに作った架空の試合です。チームも選手も架空のものです。 |
+| `gameViews` | How to show the game | 試合の表示方法 |
+| `gamePeriods` | Go to a period | ピリオドへ移動 |
+| `gamePeriod` | Period {n} | 第{n}ピリオド |
+| `gameLoading` | Loading the game… | 試合を読み込んでいます… |
+| `gameFailed` | The game could not be loaded. | 試合を読み込めませんでした。 |
+| `gameGoal` | Goal, {team}: {name} | {team}のゴール：{name} |
+| `gameFile` | The game as a file (JSON) | 試合のファイル（JSON） |
+| `gameDocs` | How to load and play it | 読み込みと再生のしかた |
+| `gameCode` | The code for this view | この表示のコード |
+| `heroGame` | Play a game | 試合を再生 |
+| `heroGameTip` | Play a made-up game of Canada and Japan on this ice. Press again for the empty ice. | カナダ対日本の架空の試合をこの氷上で再生します。もう一度押すと、氷だけの表示に戻ります。 |
 | `elementTitle` | As an element | 要素として |
 | `elementText` | Each of these is a <kyogijo-field> tag with attributes and no script of its own. | ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。 |
 | `moreText` | Everything here is a call of one function. | ここにあるものは、すべて1つの関数の呼び出しです。 |
@@ -2147,6 +2164,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `targets` | Goal mouths, the strike zone and the stumps | ゴールマウス・ストライクゾーン・スタンプ |
 | page `team-shape` | Team shape | チームの形 |
 | page `replay` | Replay | リプレイ |
+| page `example-games` | Example games | サンプルの試合データ |
 | page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |
